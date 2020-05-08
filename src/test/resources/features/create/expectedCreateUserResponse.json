@@ -1,0 +1,9 @@
+{
+  "status": 201,
+  "body": {
+    "name": "David Jones",
+    "job": "pirate",
+    "id": "[0-9]*",
+    "createdAt": ".*"
+  }
+}

@@ -1,0 +1,5 @@
+createUserRequestTemplate: |
+  {
+      "name": "#[name]",
+      "job": "#[job]"
+  }

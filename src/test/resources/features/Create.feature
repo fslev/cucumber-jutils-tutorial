@@ -1,0 +1,43 @@
+@all @create
+Feature: Create User feature
+
+  Scenario Template: Create user with valid data and check for correct response
+    Given param expectedCreateUserResponse=
+    """
+    {
+      "status": 201,
+      "body": {
+         "name": "<name>",
+         "job": "<job>",
+         "id": "[0-9]*",
+         "createdAt": ".*"
+      }
+    }
+    """
+    # login and compare response (if comparison passes, token is automatically set inside scenario properties)
+    When Login with email=eve.holt@reqres.in, password=cityslicka and extract token
+    # token is set as "authorization" header for Create user API
+    Then Create user with name=<name>, job=<job> and check response=#[expectedCreateUserResponse]
+    When param expectedCreateUserNegativeResponse=
+    """
+    {
+      "status": 201,
+      "body": {
+         "name": "Wrong",
+         "job": "<job>",
+         "id": "[0-9]*",
+         "createdAt": ".*"
+      }
+    }
+    """
+    Then Create user with name=<name>, job=<job> and check response!=#[expectedCreateUserNegativeResponse]
+    Examples:
+      | name   | job     |
+      | florin | tester  |
+      | john   | blogger |
+
+  Scenario: Create user with valid data and check for correct response from file
+  Same scenario as above, but define 'expectedCreateUserResponse' scenario property inside file
+    * load all scenario props from dir "create"
+    When Login with email=eve.holt@reqres.in, password=cityslicka and extract token
+    Then Create user with name=David Jones, job=pirate and check response=#[expectedCreateUserResponse]

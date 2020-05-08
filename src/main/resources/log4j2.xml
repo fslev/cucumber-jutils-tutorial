@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Appenders>
+        <Console name="CTutorialConsole" target="SYSTEM_OUT">
+            <PatternLayout
+                    pattern="%d{HH:mm:ss} [%t] %highlight{%-5level %logger{36}} - %highlight{%msg}{DEBUG=white, INFO=white}%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <logger name="com.cucumber.utils" level="info" additivity="false">
+            <AppenderRef ref="CTutorialConsole"/>
+        </logger>
+        <logger name="com.cucumber.tutorial" level="info" additivity="false">
+            <AppenderRef ref="CTutorialConsole"/>
+        </logger>
+    </Loggers>
+</Configuration>

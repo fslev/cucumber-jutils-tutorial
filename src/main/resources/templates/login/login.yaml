@@ -1,0 +1,11 @@
+loginRequestTemplate: |
+  {
+      "email": "#[email]",
+      "password": "#[password]"
+  }
+loginResponseTemplate: |
+  {   "status": 200,
+      "body": {
+          "token": "~[token]"
+      }
+  }
