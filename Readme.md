@@ -187,7 +187,7 @@ You can see that we used a pre-defined step from Cucumber-Utils:
 By loading values from separate files or directories, we do not burden the Gherkin scenario with bulky Strings representing our expected values. We do this with scenario properties.   
 Behind the scenes, Cucumber-Utils sets new scenario properties, each one having as property name the file name, and as property value the file content.  
 
-Taking the example from above, '#[expectedCreateUserResponse]' represents a scenario property, which has the name of a file (without extension) from 'create' directory and its value is actually the content of the file.     
+Taking the example from above, '#[expectedCreateUserResponse]' represents a scenario property, which has the name of a file (without extension) from 'scene1' directory and its value is actually the content of the file.     
 Cucumber-Utils has a special mechanism for parsing these variables '#[]' present inside the Gherkin steps. It replaces these variables with their values, before passing them to the parameters from the corresponding Java step definition methods.  
 
 
