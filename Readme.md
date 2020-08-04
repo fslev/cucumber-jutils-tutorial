@@ -199,7 +199,7 @@ https://github.com/fslev/cucumber-utils/wiki/Compare-mechanisms
 - Defined steps should be simple and reusable. Otherwise, you will end up writing both Java code and Gherkin syntax for each scenario  
 - One step should do two things: call an API and compare response  
 - Log scenario steps (Ex: log API call details; log compared values)  
-- Use comprehensive helper methods as much as possible (Ex: a single method which calls an API, compares the response and also logs the whole thing)   
+- Use helper methods as much as possible (Ex: a single method which calls an API, compares the response and also logs the whole thing)   
 
 <a name="run-maven"></a>
 ## Run Cucumber tests with Maven in serial or parallel mode
