@@ -4,7 +4,6 @@ import com.cucumber.tutorial.services.http.RestService;
 import com.cucumber.utils.clients.http.HttpClient;
 import com.cucumber.utils.clients.http.Method;
 import com.cucumber.utils.engineering.utils.JsonUtils;
-import com.cucumber.utils.engineering.utils.ResourceUtils;
 import com.cucumber.utils.engineering.utils.StringFormat;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
@@ -14,18 +13,14 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.util.Map;
 
+/**
+ * Decouple HTTP Service description from Cucumber context
+ * That way, it can be reused by different frameworks
+ */
 public class LoginService extends RestService {
 
     public static final String PATH = "/api/login";
-    public static String REQUEST_BODY_TEMPLATE;
-
-    static {
-        try {
-            REQUEST_BODY_TEMPLATE = ResourceUtils.readYaml("templates/login/login.yaml").get("loginRequestTemplate").toString();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    public static String REQUEST_BODY_TEMPLATE = "{\"email\": \"#[email]\", \"password\": \"#[password]\"}";
 
     public HttpClient.Builder prepare(String address, String email, String pwd) {
         return prepare(address, StringFormat.replaceProps(REQUEST_BODY_TEMPLATE, Map.of("email", email, "password", pwd)));

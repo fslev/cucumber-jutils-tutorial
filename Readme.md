@@ -60,12 +60,8 @@ Body:
 ```java
 @ScenarioScoped
 public class LoginSteps extends RestScenario {
-    private LoginService loginService = new LoginService();
-
     @Inject
-    public LoginSteps(Cucumbers cucumbers) {
-        cucumbers.loadScenarioPropsFromFile("templates/login/login.yaml");
-    }
+    LoginService loginService;
 
     @Then("Login with requestBody={} and check response={}")
     public void login(String requestBody, String expected) {
@@ -76,39 +72,8 @@ public class LoginSteps extends RestScenario {
     public void login(String email, String password, String expected) {
         executeAndCompare(loginService.prepare(scenarioProps.getAsString("reqresin.address"), email, password), expected);
     }
-
-    @Then("Login with email={}, password={} and extract token")
-    public void loginAndExtractToken(String email, String password) {
-        executeAndCompare(loginService.prepare(
-                scenarioProps.getAsString("reqresin.address"), email, password), scenarioProps.getAsString("loginResponseTemplate"));
-    }
 }
 ```
-, where _login.yaml_ file looks like:
-```
-loginRequestTemplate: |
-  {
-      "email": "#[email]",
-      "password": "#[password]"
-  }
-loginResponseTemplate: |
-  {   "status": 200,
-      "body": {
-          "token": "~[token]"
-      }
-  }
-```
-
-As you can see, we also defined a step which doesn't use the loginRequestTemplate:  
-```
-    @Then("Login with requestBody={} and check response={}")
-    public void login(String requestBody, String expected) {
-        executeAndCompare(loginService.prepare(scenarioProps.getAsString("reqresin.address"), requestBody), expected);
-    }
-```
-That way, we can use any type of JSON request body or any String value for that matter, directly from the Gherkin Scenario.  
-This has several advantages, such as when we have to deal with big JSON requests, which are hard to represent as a template in a separate file, or when we have to deal with negative test cases, such as: Call the API with an invalid JSON.  
-Define these kind of steps how you think they are suitable for your scenarios.      
   
 2. Define the test Gherkin scenarios:  
 ```gherkin
@@ -146,12 +111,8 @@ Body:
 ```java
 @ScenarioScoped
 public class CreateUserSteps extends RestScenario {
-    private UserService userService = new UserService();
-
     @Inject
-    public CreateUserSteps(Cucumbers cucumbers) {
-        cucumbers.loadScenarioPropsFromFile("templates/users/create.yaml");
-    }
+    private UserService userService;
 
     @Then("Create user with name={}, job={} and check response={}")
     public void createUserAndCompare(String name, String job, String expected) {
@@ -172,14 +133,6 @@ public class CreateUserSteps extends RestScenario {
     }
 }
 ```
-, where _create.yaml_ file looks like:
-```
-createUserRequestTemplate: |
-  {
-      "name": "#[name]",
-      "job": "#[job]"
-  }
-```
 2. Define the Cucumber test scenarios:
 ```gherkin
 @all @create
@@ -199,9 +152,22 @@ Feature: Create User feature
     }
     """
     # login and compare response (if comparison passes, token is automatically set inside scenario properties)
-    When Login with email=eve.holt@reqres.in, password=cityslicka and extract token
+    When Login with email=eve.holt@reqres.in, password=cityslicka and check response={"status": 200, "body": {"token": "~[token]"}}
     # token is set as "authorization" header for Create user API
     Then Create user with name=<name>, job=<job> and check response=#[expectedCreateUserResponse]
+    When param expectedCreateUserNegativeResponse=
+    """
+    {
+      "status": 201,
+      "body": {
+         "name": "Wrong",
+         "job": "<job>",
+         "id": "[0-9]*",
+         "createdAt": ".*"
+      }
+    }
+    """
+    Then Create user with name=<name>, job=<job> and check response!=#[expectedCreateUserNegativeResponse]
     Examples:
       | name   | job     |
       | florin | tester  |
@@ -209,8 +175,8 @@ Feature: Create User feature
 
   Scenario: Create user with valid data and check for correct response from file
   Same scenario as above, but define 'expectedCreateUserResponse' scenario property inside file
-    * load all scenario props from dir "create"
-    When Login with email=eve.holt@reqres.in, password=cityslicka and extract token
+    * load all scenario props from dir "UserCreate/scene1"
+    When Login with email=eve.holt@reqres.in, password=cityslicka and check response={"status": 200, "body": {"token": "~[token]"}}
     Then Create user with name=David Jones, job=pirate and check response=#[expectedCreateUserResponse]
 ```
  

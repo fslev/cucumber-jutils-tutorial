@@ -15,7 +15,7 @@ Feature: Create User feature
     }
     """
     # login and compare response (if comparison passes, token is automatically set inside scenario properties)
-    When Login with email=eve.holt@reqres.in, password=cityslicka and extract token
+    When Login with email=eve.holt@reqres.in, password=cityslicka and check response={"status": 200, "body": {"token": "~[token]"}}
     # token is set as "authorization" header for Create user API
     Then Create user with name=<name>, job=<job> and check response=#[expectedCreateUserResponse]
     When param expectedCreateUserNegativeResponse=
@@ -38,6 +38,6 @@ Feature: Create User feature
 
   Scenario: Create user with valid data and check for correct response from file
   Same scenario as above, but define 'expectedCreateUserResponse' scenario property inside file
-    * load all scenario props from dir "create"
-    When Login with email=eve.holt@reqres.in, password=cityslicka and extract token
+    * load all scenario props from dir "UserCreate/scene1"
+    When Login with email=eve.holt@reqres.in, password=cityslicka and check response={"status": 200, "body": {"token": "~[token]"}}
     Then Create user with name=David Jones, job=pirate and check response=#[expectedCreateUserResponse]
