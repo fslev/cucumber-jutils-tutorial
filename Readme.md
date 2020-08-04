@@ -192,8 +192,8 @@ Cucumber-Utils has a special mechanism for parsing these variables '#[]' present
 
 
 ## Comparing
-In current tutorial project, we compare JSONs.  
-Behind the scenes, Cucumber-Utils does this by using [**json-compare**](https://github.com/fslev/json-compare)
+In current tutorial project, we compare using the Cucumber-Utils compare mechanism:  
+https://github.com/fslev/cucumber-utils/wiki/Compare-mechanisms
 
 ## General best practices for writing Cucumber scenarios
 - Defined steps should be simple and reusable. Otherwise, you will end up writing both Java code and Gherkin syntax for each scenario  
