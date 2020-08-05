@@ -1,7 +1,7 @@
 package com.cucumber.tutorial.config;
 
 import com.cucumber.tutorial.services.http.mock.LoginService;
-import com.cucumber.utils.engineering.utils.ResourceUtils;
+import com.cucumber.utils.helper.ResourceUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

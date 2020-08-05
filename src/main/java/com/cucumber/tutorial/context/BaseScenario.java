@@ -1,8 +1,8 @@
 package com.cucumber.tutorial.context;
 
+import com.cucumber.utils.context.Cucumbers;
+import com.cucumber.utils.context.ScenarioUtils;
 import com.cucumber.utils.context.props.ScenarioProps;
-import com.cucumber.utils.context.utils.Cucumbers;
-import com.cucumber.utils.context.utils.ScenarioUtils;
 import com.google.inject.Inject;
 import io.cucumber.guice.ScenarioScoped;
 

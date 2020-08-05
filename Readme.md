@@ -1,12 +1,15 @@
-# Cucumber Utils tutorial
-Here is a small tutorial on how to use [**cucumber-utils**](https://github.com/fslev/cucumber-utils) library inside a test framework.  
+# Cucumber JUtils tutorial
+
+Cucumber-Utils has been renamed to Cucumber-JUtils  
+
+Here is a small tutorial on how to use [**cucumber-jutils**](https://github.com/fslev/cucumber-utils) library inside a test framework.  
 **Test target**: HTTP REST APIs, hosted by [reqres](https://reqres.in/).   
 
 ## Summary
 [*Reqres*](https://reqres.in/) provides a series of HTTPs REST APIs that accept fake test data and returns a limited set of static responses.  
 This tutorial describes how to setup a basic test-framework which executes Cucumber acceptance/integration tests that call these APIs and compares actual responses with expected data.    
 
-You will see some tips and tricks on how to use [**cucumber-utils**](https://github.com/fslev/cucumber-utils) library, as well on how to use **Cucumber** native *parallelization* feature. This will ease your work as a test engineer / developer.  
+You will see some tips and tricks on how to use [**cucumber-jutils**](https://github.com/fslev/cucumber-utils) library, as well on how to use **Cucumber** native *parallelization* feature. This will ease your work as a test engineer / developer.  
 This library contains many features such as:
  - easy to use HTTP clients  
  - database clients
@@ -17,7 +20,7 @@ This library contains many features such as:
    - querying and updating databases and compare results
    - loading Scenario properties directly from external resources  
  - etc.  
-More details you will find on the main Github [**cucumber-utils**](https://github.com/fslev/cucumber-utils) page.  
+More details you will find on the main Github [**cucumber-jutils**](https://github.com/fslev/cucumber-utils) page.  
 
 _Finally_, you will learn how to generate test reports with [**maven-cucumber-reporting**](https://github.com/damianszczepanik/maven-cucumber-reporting) plugin.  
 
@@ -180,19 +183,19 @@ Feature: Create User feature
     Then Create user with name=David Jones, job=pirate and check response=#[expectedCreateUserResponse]
 ```
  
-You can see that we used a pre-defined step from Cucumber-Utils:
+You can see that we used a pre-defined step from Cucumber-JUtils:
 ```gherkin
     * load all scenario props from dir "UserCreate/scene1"
 ```  
 By loading values from separate files or directories, we do not burden the Gherkin scenario with bulky Strings representing our expected values. We do this with scenario properties.   
-Behind the scenes, Cucumber-Utils sets new scenario properties, each one having as property name the file name, and as property value the file content.  
+Behind the scenes, Cucumber-JUtils sets new scenario properties, each one having as property name the file name, and as property value the file content.  
 
 Taking the example from above, '#[expectedCreateUserResponse]' represents a scenario property, which has the name of a file (without extension) from 'UserCreate/scene1' directory and its value is actually the content of the file.     
-Cucumber-Utils has a special mechanism for parsing these variables '#[]' present inside the Gherkin steps. It replaces these variables with their values, before passing them to the parameters from the corresponding Java step definition methods.  
+Cucumber-JUtils has a special mechanism for parsing these variables '#[]' present inside the Gherkin steps. It replaces these variables with their values, before passing them to the parameters from the corresponding Java step definition methods.  
 
 
 ## Comparing
-In current tutorial project, we compare using the Cucumber-Utils compare mechanism:  
+In current tutorial project, we compare using the Cucumber-JUtils compare mechanism:  
 https://github.com/fslev/cucumber-utils/wiki/Compare-mechanisms
 
 ## General best practices for writing Cucumber scenarios

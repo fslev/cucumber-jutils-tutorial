@@ -29,8 +29,8 @@
     <dependencies>
         <dependency>
             <groupId>io.github.fslev</groupId>
-            <artifactId>cucumber-utils</artifactId>
-            <version>5.39</version>
+            <artifactId>cucumber-jutils</artifactId>
+            <version>6.0</version>
         </dependency>
     </dependencies>
 
