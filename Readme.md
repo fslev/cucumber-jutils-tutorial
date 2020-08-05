@@ -183,7 +183,7 @@ Feature: Create User feature
     Then Create user with name=David Jones, job=pirate and check response=#[expectedCreateUserResponse]
 ```
  
-You can see that we used a pre-defined step from Cucumber-JUtils:
+You can see that we used inside the second scenario a pre-defined step from Cucumber-JUtils:
 ```gherkin
     * load all scenario props from dir "UserCreate/scene1"
 ```  
