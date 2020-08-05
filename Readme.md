@@ -77,6 +77,28 @@ public class LoginSteps extends RestScenario {
     }
 }
 ```
+where LoginService looks like this:
+```java
+/**
+ * Decouple HTTP Service description from Cucumber context
+ * That way, it can be reused by different frameworks
+ */
+public class LoginService extends RestService {
+
+    public static final String PATH = "/api/login";
+    public static String REQUEST_BODY_TEMPLATE = "{\"email\": \"#[email]\", \"password\": \"#[password]\"}";
+
+    public HttpClient.Builder prepare(String address, String email, String pwd) {
+        return prepare(address, StringFormat.replaceProps(REQUEST_BODY_TEMPLATE, Map.of("email", email, "password", pwd)));
+    }
+
+    public HttpClient.Builder prepare(String address, String requestBody) {
+        return getDefaultClientBuilder().address(address).path(PATH)
+                .method(Method.POST)
+                .entity(requestBody);
+    }
+}
+```
   
 2. Define the test Gherkin scenarios:  
 ```gherkin
