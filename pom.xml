@@ -111,7 +111,7 @@
                 <configuration>
                     <testFailureIgnore>true</testFailureIgnore>
                     <systemPropertyVariables>
-                        <cucumber.options>--tags ${tags}</cucumber.options>
+                        <cucumber.filter.tags>--tags ${tags}</cucumber.filter.tags>
                     </systemPropertyVariables>
                     <suiteXmlFiles>
                         <suiteXmlFile>src/test/resources/${testng.config.file}</suiteXmlFile>
