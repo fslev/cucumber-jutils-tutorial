@@ -38,6 +38,9 @@ _Finally_, you will learn how to generate test reports with [**maven-cucumber-re
 - Latest version of __Cucumber for Java__ and __Gherkin__ plugins
 
 ### Cucumber for Java Plugin Configuration
+
+If plugin is not configured, configuration is read from _cucumber.properties_  
+
 Setup _Glue_ packages and _Program arguments_:
 - **Run -> Edit Configurations**:  
   - Clean any "Cucumber java" configuration instances that ran in the past
