@@ -1,6 +1,7 @@
 package com.cucumber.tutorial.context.services.http.mock;
 
 import com.cucumber.tutorial.context.services.http.RestService;
+import io.cucumber.guice.ScenarioScoped;
 import io.jtest.utils.clients.http.HttpClient;
 import io.jtest.utils.clients.http.Method;
 import io.jtest.utils.common.ResourceUtils;
@@ -9,6 +10,7 @@ import io.jtest.utils.common.StringFormat;
 import java.io.IOException;
 import java.util.Map;
 
+@ScenarioScoped
 public class UserService extends RestService {
 
     public static final String USERS_PATH = "/api/users";
