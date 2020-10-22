@@ -1,10 +1,11 @@
-package com.cucumber.tutorial.services.http.mock;
+package com.cucumber.tutorial.context.services.http.mock;
 
-import com.cucumber.tutorial.services.http.RestService;
-import com.cucumber.utils.clients.http.HttpClient;
-import com.cucumber.utils.clients.http.Method;
-import com.cucumber.utils.helper.JsonUtils;
-import com.cucumber.utils.helper.StringFormat;
+import com.cucumber.tutorial.context.services.http.RestService;
+import io.cucumber.guice.ScenarioScoped;
+import io.jtest.utils.clients.http.HttpClient;
+import io.jtest.utils.clients.http.Method;
+import io.jtest.utils.common.JsonUtils;
+import io.jtest.utils.common.StringFormat;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -13,28 +14,23 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.util.Map;
 
-/**
- * Decouple HTTP Service description from Cucumber context
- * That way, it can be reused by different frameworks
- */
+@ScenarioScoped
 public class LoginService extends RestService {
 
     public static final String PATH = "/api/login";
     public static String REQUEST_BODY_TEMPLATE = "{\"email\": \"#[email]\", \"password\": \"#[password]\"}";
 
-    public HttpClient.Builder prepare(String address, String email, String pwd) {
-        return prepare(address, StringFormat.replaceProps(REQUEST_BODY_TEMPLATE, Map.of("email", email, "password", pwd)));
+    public HttpClient buildLogin(String email, String pwd) {
+        return buildLogin(StringFormat.replaceProps(REQUEST_BODY_TEMPLATE, Map.of("email", email, "password", pwd)));
     }
 
-    public HttpClient.Builder prepare(String address, String requestBody) {
-        return getDefaultClientBuilder().address(address).path(PATH)
-                .method(Method.POST)
-                .entity(requestBody);
+    public HttpClient buildLogin(String requestBody) {
+        return getBuilder(address()).path(PATH).method(Method.POST).entity(requestBody).build();
     }
 
-    public String loginAndGetToken(String address, String email, String pwd) {
+    public String loginAndGetToken(String email, String pwd) {
         HttpEntity entity = null;
-        try (CloseableHttpResponse response = prepare(address, email, pwd).build().execute()) {
+        try (CloseableHttpResponse response = buildLogin(email, pwd).execute()) {
             if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
                 throw new RuntimeException(response.getStatusLine().toString());
             }
@@ -51,5 +47,9 @@ public class LoginService extends RestService {
                 }
             }
         }
+    }
+
+    protected String address() {
+        return scenarioProps.getAsString("reqresin.address");
     }
 }

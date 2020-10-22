@@ -12,15 +12,15 @@ This tutorial describes how to setup a basic test-framework which executes Cucum
 You will see some tips and tricks on how to use [**cucumber-jutils**](https://github.com/fslev/cucumber-utils) library, as well on how to use **Cucumber** native *parallelization* feature. This will ease your work as a test engineer / developer.  
 This library contains many features such as:
  - easy to use HTTP clients  
- - database clients
- - Mechanisms for comparing HTTP responses, JSONs, XMLs and strings using REGEX patterns.    
+ - database clients ([**jtest-utils**](https://github.com/fslev/jtest-utils))  
+ - Mechanisms for comparing HTTP responses, JSONs, XMLs and strings using REGEX patterns ([**jtest-utils**](https://github.com/fslev/jtest-utils))      
  - predefined Cucumber steps for:
    - instantiating Scenario properties (sharing state between steps within a Scenario)  
    - defining and comparing Dates
    - querying and updating databases and compare results
    - loading Scenario properties directly from external resources  
  - etc.  
-More details you will find on the main Github [**cucumber-jutils**](https://github.com/fslev/cucumber-utils) page.  
+For more details read about [**cucumber-jutils**](https://github.com/fslev/cucumber-utils) and [**jtest-utils**](https://github.com/fslev/jtest-utils).    
 
 _Finally_, you will learn how to generate test reports with [**maven-cucumber-reporting**](https://github.com/damianszczepanik/maven-cucumber-reporting) plugin.  
 
@@ -64,38 +64,37 @@ Body:
 @ScenarioScoped
 public class LoginSteps extends RestScenario {
     @Inject
-    LoginService loginService;
+    private LoginService loginService;
 
     @Then("Login with requestBody={} and check response={}")
     public void login(String requestBody, String expected) {
-        executeAndCompare(loginService.prepare(scenarioProps.getAsString("reqresin.address"), requestBody), expected);
+        executeAndCompare(loginService.buildLogin(requestBody), expected);
     }
 
     @Then("Login with email={}, password={} and check response={}")
     public void login(String email, String password, String expected) {
-        executeAndCompare(loginService.prepare(scenarioProps.getAsString("reqresin.address"), email, password), expected);
+        executeAndCompare(loginService.buildLogin(email, password), expected);
     }
 }
 ```
 where LoginService looks like this:
 ```java
-/**
- * Decouple HTTP Service description from Cucumber context
- * That way, it can be reused by different frameworks
- */
+@ScenarioScoped
 public class LoginService extends RestService {
 
     public static final String PATH = "/api/login";
     public static String REQUEST_BODY_TEMPLATE = "{\"email\": \"#[email]\", \"password\": \"#[password]\"}";
 
-    public HttpClient.Builder prepare(String address, String email, String pwd) {
-        return prepare(address, StringFormat.replaceProps(REQUEST_BODY_TEMPLATE, Map.of("email", email, "password", pwd)));
+    public HttpClient buildLogin(String email, String pwd) {
+        return buildLogin(StringFormat.replaceProps(REQUEST_BODY_TEMPLATE, Map.of("email", email, "password", pwd)));
     }
 
-    public HttpClient.Builder prepare(String address, String requestBody) {
-        return getDefaultClientBuilder().address(address).path(PATH)
-                .method(Method.POST)
-                .entity(requestBody);
+    public HttpClient buildLogin(String requestBody) {
+        return getBuilder(address()).path(PATH).method(Method.POST).entity(requestBody).build();
+    }
+
+    protected String address() {
+        return scenarioProps.getAsString("reqresin.address");
     }
 }
 ```
@@ -141,19 +140,17 @@ public class CreateUserSteps extends RestScenario {
 
     @Then("Create user with name={}, job={} and check response={}")
     public void createUserAndCompare(String name, String job, String expected) {
-        executeAndCompare(userService.prepareCreate(
-                scenarioProps.getAsString("reqresin.address"), name, job, scenarioProps.getAsString("token")), expected);
+        executeAndCompare(userService.buildCreate(name, job, scenarioProps.getAsString("token")), expected);
     }
 
     @Then("Create user with name={}, job={} and check response!={}")
     public void createUserAndCompareNegative(String name, String job, String expected) {
-        executeAndNegativeCompare(userService.prepareCreate(
-                scenarioProps.getAsString("reqresin.address"), name, job, scenarioProps.getAsString("token")), expected);
+        executeAndCompare(userService.buildCreate(name, job, scenarioProps.getAsString("token")), expected, MatchCondition.DO_NOT_MATCH_HTTP_RESPONSE_BY_BODY);
     }
 
     @Then("Create user with request={} and check response={}")
     public void createUserAndCompare(String request, String expected) {
-        executeAndCompare(userService.prepareCreate(
+        executeAndCompare(userService.buildCreate(
                 scenarioProps.getAsString("reqresin.address"), request, scenarioProps.getAsString("token")), expected);
     }
 }
@@ -217,8 +214,8 @@ Cucumber-JUtils has a special mechanism for parsing these variables '#[]' presen
 
 
 ## Comparing
-In current tutorial project, we compare using the Cucumber-JUtils compare mechanism:  
-https://github.com/fslev/cucumber-utils/wiki/Compare-mechanisms
+In current tutorial project, we compare using the JTest-Utils compare mechanism:  
+https://github.com/fslev/jtest-utils/wiki/Compare-mechanisms
 
 ## General best practices for writing Cucumber scenarios
 - Defined steps should be simple and reusable. Otherwise, you will end up writing both Java code and Gherkin syntax for each scenario  

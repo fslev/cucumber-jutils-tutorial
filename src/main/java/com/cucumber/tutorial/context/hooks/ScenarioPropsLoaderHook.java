@@ -8,7 +8,7 @@ import io.cucumber.java.Before;
 import java.util.Map;
 
 @ScenarioScoped
-public class ScenarioDecorator extends BaseScenario {
+public class ScenarioPropsLoaderHook extends BaseScenario {
 
     @Before(order = Integer.MAX_VALUE)
     public void fillScenarioProps() {

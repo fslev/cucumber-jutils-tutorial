@@ -30,7 +30,7 @@
         <dependency>
             <groupId>io.github.fslev</groupId>
             <artifactId>cucumber-jutils</artifactId>
-            <version>6.0</version>
+            <version>6.7</version>
         </dependency>
     </dependencies>
 
@@ -111,6 +111,7 @@
                 <configuration>
                     <testFailureIgnore>true</testFailureIgnore>
                     <systemPropertyVariables>
+                        <testng.dtd.https>false</testng.dtd.https>
                         <cucumber.filter.tags>${tags}</cucumber.filter.tags>
                     </systemPropertyVariables>
                     <suiteXmlFiles>

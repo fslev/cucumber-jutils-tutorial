@@ -1,14 +1,14 @@
 package com.cucumber.tutorial.context;
 
-import com.cucumber.utils.clients.http.HttpClient;
-import com.cucumber.utils.engineering.match.condition.MatchCondition;
-import com.cucumber.utils.helper.JsonUtils;
+import com.cucumber.utils.context.Cucumbers;
+import com.google.inject.Inject;
 import io.cucumber.guice.ScenarioScoped;
+import io.jtest.utils.clients.http.HttpClient;
+import io.jtest.utils.common.JsonUtils;
+import io.jtest.utils.matcher.condition.MatchCondition;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.util.EntityUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -16,18 +16,25 @@ import java.util.concurrent.atomic.AtomicReference;
 
 @ScenarioScoped
 public class RestScenario extends BaseScenario {
-    protected Logger log = LogManager.getLogger();
 
-    public String executeAndCompare(HttpClient.Builder builder, String expected, MatchCondition... matchConditions) {
-        return executeAndCompare(builder, expected, null, matchConditions);
+    @Inject
+    protected Cucumbers cucumbers;
+
+    public String executeAndCompare(HttpClient client, String expected, MatchCondition... matchConditions) {
+        return executeAndCompare(client, expected, null, matchConditions);
     }
 
-    public String executeAndCompare(HttpClient.Builder builder, String expected, Integer pollDurationInSeconds, MatchCondition... matchConditions) {
-        return executeAndCompare(builder, expected, pollDurationInSeconds, null, null, matchConditions);
+    public String executeAndCompare(HttpClient client, String expected, Integer pollDurationInSeconds, MatchCondition... matchConditions) {
+        return executeAndCompare(client, expected, pollDurationInSeconds, 3000, matchConditions);
     }
 
-    public String executeAndCompare(HttpClient.Builder builder, String expected, Integer pollDurationInSeconds, Long retryIntervalMillis, Double exponentialBackOff, MatchCondition... matchConditions) {
-        HttpClient client = builder.build();
+    public String executeAndCompare(HttpClient client, String expected, Integer pollDurationInSeconds,
+                                    long retryIntervalMillis, MatchCondition... matchConditions) {
+        return executeAndCompare(client, expected, pollDurationInSeconds, retryIntervalMillis, null, matchConditions);
+    }
+
+    public String executeAndCompare(HttpClient client, String expected, Integer pollDurationInSeconds,
+                                    Long retryIntervalMillis, Double exponentialBackOff, MatchCondition... matchConditions) {
         logRequest(client);
         final AtomicReference<CloseableHttpResponse> responseWrapper = new AtomicReference<>();
         String responseBody;
@@ -74,13 +81,13 @@ public class RestScenario extends BaseScenario {
                 scenarioUtils.log("ACTUAL Response headers: {}", Arrays.asList(actual.getAllHeaders()).toString());
             }
         } catch (IOException e) {
-            log.error(e);
+            LOG.error(e);
         } finally {
             if (entity != null) {
                 try {
                     EntityUtils.consume(entity);
                 } catch (IOException e) {
-                    log.error(e);
+                    LOG.error(e);
                 }
             }
             try {
@@ -88,7 +95,7 @@ public class RestScenario extends BaseScenario {
                     actual.close();
                 }
             } catch (IOException e) {
-                log.error(e);
+                LOG.error(e);
             }
         }
         return responseBody;
