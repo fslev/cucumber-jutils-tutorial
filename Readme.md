@@ -11,7 +11,7 @@ This tutorial describes how to setup a basic test-framework which executes Cucum
 
 You will see some tips and tricks on how to use [**cucumber-jutils**](https://github.com/fslev/cucumber-utils) library, as well on how to use **Cucumber** native *parallelization* feature. This will ease your work as a test engineer / developer.  
 This library contains many features such as:
- - easy to use HTTP clients  ([**jtest-utils**](https://github.com/fslev/jtest-utils))  
+ - easy to use HTTP client  ([**jtest-utils**](https://github.com/fslev/jtest-utils))  
  - database clients ([**jtest-utils**](https://github.com/fslev/jtest-utils))  
  - Mechanisms for comparing HTTP responses, JSONs, XMLs and strings using REGEX patterns ([**jtest-utils**](https://github.com/fslev/jtest-utils))      
  - predefined Cucumber steps for:
