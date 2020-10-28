@@ -52,21 +52,16 @@ public class RestScenario extends BaseScenario {
         } catch (Exception e) {
             throw (e);
         } finally {
-            scenarioUtils.log("----------- Comparison -----------");
-            scenarioUtils.log("EXPECTED Response:\n{}", expected);
-            scenarioUtils.log("--------------- vs ---------------");
+            scenarioUtils.log("----------- EXPECTED RESPONSE -----------\n{}", expected);
             responseBody = logAndGetResponse(responseWrapper.get());
         }
         return responseBody;
     }
 
     private void logRequest(HttpClient client) {
-        scenarioUtils.log("--------- API call details ---------");
-        scenarioUtils.log("REQUEST: {}", client.getMethod() + " " + client.getUri());
-        scenarioUtils.log("REQUEST HEADERS: {}", client.getHeaders());
-        if (client.getRequestEntity() != null) {
-            scenarioUtils.log("REQUEST BODY:\n{}", client.getRequestEntity());
-        }
+        scenarioUtils.log("-------------- API REQUEST --------------\n{}\nHEADERS: {}\nBODY: {}\n",
+                client.getMethod() + " " + client.getUri(), client.getHeaders(),
+                client.getRequestEntity() != null ? "\n" + client.getRequestEntity() : "N/A");
     }
 
     private String logAndGetResponse(CloseableHttpResponse actual) {
@@ -74,14 +69,15 @@ public class RestScenario extends BaseScenario {
         String responseBody = null;
         try {
             if (actual != null) {
-                scenarioUtils.log("ACTUAL Response status: {}", actual.getStatusLine().getStatusCode());
                 entity = actual.getEntity();
                 responseBody = (entity != null) ? EntityUtils.toString(entity) : null;
-                scenarioUtils.log("ACTUAL Response body:\n{}", (responseBody != null) ? JsonUtils.prettyPrint(responseBody) : "Empty data <∅>");
-                scenarioUtils.log("ACTUAL Response headers: {}", Arrays.asList(actual.getAllHeaders()).toString());
+                scenarioUtils.log("------------ ACTUAL RESPONSE ------------\nSTATUS: {} {}\nBODY: \n{}\nHEADERS:\n{}\n",
+                        actual.getStatusLine().getStatusCode(), actual.getStatusLine().getReasonPhrase(),
+                        (responseBody != null) ? JsonUtils.prettyPrint(responseBody) : "Empty data <∅>",
+                        Arrays.asList(actual.getAllHeaders()).toString());
             }
         } catch (IOException e) {
-            LOG.error(e);
+            throw new RuntimeException(e);
         } finally {
             if (entity != null) {
                 try {
