@@ -2,7 +2,6 @@ package com.cucumber.tutorial.context.services.http.mock;
 
 import com.cucumber.tutorial.context.services.http.RestService;
 import io.cucumber.guice.ScenarioScoped;
-import io.jtest.utils.clients.http.HttpClient;
 import io.jtest.utils.clients.http.Method;
 import io.jtest.utils.common.JsonUtils;
 import io.jtest.utils.common.StringFormat;
@@ -20,12 +19,13 @@ public class LoginService extends RestService {
     public static final String PATH = "/api/login";
     public static String REQUEST_BODY_TEMPLATE = "{\"email\": \"#[email]\", \"password\": \"#[password]\"}";
 
-    public HttpClient buildLogin(String email, String pwd) {
+    public RestService buildLogin(String email, String pwd) {
         return buildLogin(StringFormat.replaceProps(REQUEST_BODY_TEMPLATE, Map.of("email", email, "password", pwd)));
     }
 
-    public HttpClient buildLogin(String requestBody) {
-        return getBuilder(address()).path(PATH).method(Method.POST).entity(requestBody).build();
+    public RestService buildLogin(String requestBody) {
+        this.client = getBuilder().path(PATH).method(Method.POST).entity(requestBody).build();
+        return this;
     }
 
     public String loginAndGetToken(String email, String pwd) {
@@ -49,6 +49,7 @@ public class LoginService extends RestService {
         }
     }
 
+    @Override
     protected String address() {
         return scenarioProps.getAsString("reqresin.address");
     }

@@ -2,7 +2,6 @@ package com.cucumber.tutorial.context.services.http.mock;
 
 import com.cucumber.tutorial.context.services.http.RestService;
 import io.cucumber.guice.ScenarioScoped;
-import io.jtest.utils.clients.http.HttpClient;
 import io.jtest.utils.clients.http.Method;
 import io.jtest.utils.common.ResourceUtils;
 import io.jtest.utils.common.StringFormat;
@@ -24,15 +23,17 @@ public class UserService extends RestService {
         }
     }
 
-    public HttpClient buildCreate(String name, String job, String token) {
+    public RestService buildCreate(String name, String job, String token) {
         return buildCreate(StringFormat.replaceProps(REQUEST_BODY_TEMPLATE, Map.of("name", name, "job", job)), token);
     }
 
-    public HttpClient buildCreate(String requestBody, String token) {
-        return getBuilder(address()).path(USERS_PATH).method(Method.POST).addHeader("Authorization", token).entity(requestBody).build();
+    public RestService buildCreate(String requestBody, String token) {
+        this.client = getBuilder().path(USERS_PATH).method(Method.POST).addHeader("Authorization", token).entity(requestBody).build();
+        return this;
     }
 
-    private String address() {
+    @Override
+    public String address() {
         return scenarioProps.getAsString("reqresin.address");
     }
 }
