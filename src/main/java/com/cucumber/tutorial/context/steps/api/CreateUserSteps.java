@@ -14,19 +14,16 @@ public class CreateUserSteps extends BaseScenario {
 
     @Then("Create user with name={}, job={} and check response={}")
     public void createUserAndCompare(String name, String job, String expected) {
-        userService.buildCreate(name, job, scenarioProps.getAsString("token"))
-                .executeAndCompare(expected);
+        userService.buildCreate(name, job, scenarioProps.getAsString("token")).executeAndCompare(expected);
     }
 
     @Then("Create user with name={}, job={} and check response!={}")
     public void createUserAndCompareNegative(String name, String job, String expected) {
-        userService.buildCreate(name, job, scenarioProps.getAsString("token"))
-                .executeAndCompare(expected, MatchCondition.DO_NOT_MATCH_HTTP_RESPONSE_BY_BODY);
+        userService.buildCreate(name, job, scenarioProps.getAsString("token")).executeAndCompare(expected, MatchCondition.DO_NOT_MATCH_HTTP_RESPONSE_BY_BODY);
     }
 
     @Then("Create user with request={} and check response={}")
     public void createUserAndCompare(String request, String expected) {
-        userService.buildCreate(scenarioProps.getAsString("reqresin.address"), request, scenarioProps.getAsString("token"))
-                .executeAndCompare(expected);
+        userService.buildCreate(request, scenarioProps.getAsString("token")).executeAndCompare(expected);
     }
 }

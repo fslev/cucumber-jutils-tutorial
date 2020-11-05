@@ -65,18 +65,18 @@ Body:
 1. Define Cucumber Java step definitions:
 ```java
 @ScenarioScoped
-public class LoginSteps extends RestScenario {
+public class LoginSteps extends BaseScenario {
     @Inject
     private LoginService loginService;
 
     @Then("Login with requestBody={} and check response={}")
     public void login(String requestBody, String expected) {
-        executeAndCompare(loginService.buildLogin(requestBody), expected);
+        loginService.buildLogin(requestBody).executeAndCompare(expected);
     }
 
     @Then("Login with email={}, password={} and check response={}")
     public void login(String email, String password, String expected) {
-        executeAndCompare(loginService.buildLogin(email, password), expected);
+        loginService.buildLogin(email, password).executeAndCompare(expected);
     }
 }
 ```
@@ -88,14 +88,16 @@ public class LoginService extends RestService {
     public static final String PATH = "/api/login";
     public static String REQUEST_BODY_TEMPLATE = "{\"email\": \"#[email]\", \"password\": \"#[password]\"}";
 
-    public HttpClient buildLogin(String email, String pwd) {
+    public RestService buildLogin(String email, String pwd) {
         return buildLogin(StringFormat.replaceProps(REQUEST_BODY_TEMPLATE, Map.of("email", email, "password", pwd)));
     }
 
-    public HttpClient buildLogin(String requestBody) {
-        return getBuilder(address()).path(PATH).method(Method.POST).entity(requestBody).build();
+    public RestService buildLogin(String requestBody) {
+        this.client = getBuilder().path(PATH).method(Method.POST).entity(requestBody).build();
+        return this;
     }
 
+    @Override
     protected String address() {
         return scenarioProps.getAsString("reqresin.address");
     }
@@ -137,24 +139,23 @@ Body:
 1. Define Cucumber Java step definitions:
 ```java
 @ScenarioScoped
-public class CreateUserSteps extends RestScenario {
+public class CreateUserSteps extends BaseScenario {
     @Inject
     private UserService userService;
 
     @Then("Create user with name={}, job={} and check response={}")
     public void createUserAndCompare(String name, String job, String expected) {
-        executeAndCompare(userService.buildCreate(name, job, scenarioProps.getAsString("token")), expected);
+        userService.buildCreate(name, job, scenarioProps.getAsString("token")).executeAndCompare(expected);
     }
 
     @Then("Create user with name={}, job={} and check response!={}")
     public void createUserAndCompareNegative(String name, String job, String expected) {
-        executeAndCompare(userService.buildCreate(name, job, scenarioProps.getAsString("token")), expected, MatchCondition.DO_NOT_MATCH_HTTP_RESPONSE_BY_BODY);
+        userService.buildCreate(name, job, scenarioProps.getAsString("token")).executeAndCompare(expected, MatchCondition.DO_NOT_MATCH_HTTP_RESPONSE_BY_BODY);
     }
 
     @Then("Create user with request={} and check response={}")
     public void createUserAndCompare(String request, String expected) {
-        executeAndCompare(userService.buildCreate(
-                scenarioProps.getAsString("reqresin.address"), request, scenarioProps.getAsString("token")), expected);
+        userService.buildCreate(request, scenarioProps.getAsString("token")).executeAndCompare(expected);
     }
 }
 ```
@@ -229,7 +230,7 @@ https://github.com/fslev/jtest-utils/wiki/Compare-mechanisms
 <a name="run-maven"></a>
 ## Run Cucumber tests with Maven in serial or parallel mode
 _Maven command_:  
-mvn clean verify -P{environment} (optional -Dtags=@foo -Dconcurrent=true)
+mvn clean verify -P{environment} (optional -Dtags=@all -Dconcurrent=true)
 ```
 mvn clean verify -Pprod -Dtags=@all -Dconcurrent=true
 ```   
