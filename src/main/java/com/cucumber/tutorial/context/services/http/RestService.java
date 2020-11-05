@@ -1,10 +1,9 @@
 package com.cucumber.tutorial.context.services.http;
 
 import com.cucumber.tutorial.context.BaseScenario;
-import com.cucumber.utils.context.Cucumbers;
-import com.google.inject.Inject;
 import io.jtest.utils.clients.http.HttpClient;
 import io.jtest.utils.common.JsonUtils;
+import io.jtest.utils.matcher.ObjectMatcher;
 import io.jtest.utils.matcher.condition.MatchCondition;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -16,9 +15,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 public abstract class RestService extends BaseScenario {
-
-    @Inject
-    protected Cucumbers cucumbers;
 
     protected HttpClient client;
 
@@ -54,13 +50,12 @@ public abstract class RestService extends BaseScenario {
         try {
             if (pollDurationInSeconds == null || pollDurationInSeconds == 0) {
                 responseWrapper.set(client.execute());
-                cucumbers.compareHttpResponse(null, expected, responseWrapper.get(), matchConditions);
+                scenarioProps.putAll(ObjectMatcher.matchHttpResponse(null, expected, responseWrapper.get(), matchConditions));
             } else {
-                cucumbers.pollAndCompareHttpResponse(null, expected, pollDurationInSeconds, retryIntervalMillis, exponentialBackOff,
-                        () -> {
-                            responseWrapper.set(client.execute());
-                            return responseWrapper.get();
-                        }, matchConditions);
+                scenarioProps.putAll(ObjectMatcher.pollAndMatchHttpResponse(null, expected, () -> {
+                    responseWrapper.set(client.execute());
+                    return responseWrapper.get();
+                }, pollDurationInSeconds, retryIntervalMillis, exponentialBackOff, matchConditions));
             }
         } catch (Exception e) {
             throw (e);
