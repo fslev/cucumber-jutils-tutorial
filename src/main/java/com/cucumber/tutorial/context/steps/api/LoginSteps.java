@@ -13,11 +13,11 @@ public class LoginSteps extends BaseScenario {
 
     @Then("Login with requestBody={} and check response={}")
     public void login(String requestBody, String expected) {
-        loginService.buildLogin(requestBody).executeAndCompare(expected);
+        loginService.buildLogin(requestBody).executeAndMatch(expected);
     }
 
     @Then("Login with email={}, password={} and check response={}")
     public void login(String email, String password, String expected) {
-        loginService.buildLogin(email, password).executeAndCompare(expected);
+        loginService.buildLogin(email, password).executeAndMatch(expected);
     }
 }

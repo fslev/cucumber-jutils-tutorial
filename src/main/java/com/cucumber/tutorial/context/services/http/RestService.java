@@ -29,21 +29,21 @@ public abstract class RestService extends BaseScenario {
         return client.execute();
     }
 
-    public String executeAndCompare(String expected, MatchCondition... matchConditions) {
-        return executeAndCompare(expected, null, matchConditions);
+    public String executeAndMatch(String expected, MatchCondition... matchConditions) {
+        return executeAndMatch(expected, null, matchConditions);
     }
 
-    public String executeAndCompare(String expected, Integer pollDurationInSeconds, MatchCondition... matchConditions) {
-        return executeAndCompare(expected, pollDurationInSeconds, 3000, matchConditions);
+    public String executeAndMatch(String expected, Integer pollDurationInSeconds, MatchCondition... matchConditions) {
+        return executeAndMatch(expected, pollDurationInSeconds, 3000, matchConditions);
     }
 
-    public String executeAndCompare(String expected, Integer pollDurationInSeconds,
-                                    long retryIntervalMillis, MatchCondition... matchConditions) {
-        return executeAndCompare(expected, pollDurationInSeconds, retryIntervalMillis, null, matchConditions);
+    public String executeAndMatch(String expected, Integer pollDurationInSeconds,
+                                  long retryIntervalMillis, MatchCondition... matchConditions) {
+        return executeAndMatch(expected, pollDurationInSeconds, retryIntervalMillis, null, matchConditions);
     }
 
-    public String executeAndCompare(String expected, Integer pollDurationInSeconds,
-                                    Long retryIntervalMillis, Double exponentialBackOff, MatchCondition... matchConditions) {
+    public String executeAndMatch(String expected, Integer pollDurationInSeconds,
+                                  Long retryIntervalMillis, Double exponentialBackOff, MatchCondition... matchConditions) {
         logRequest(client);
         final AtomicReference<CloseableHttpResponse> responseWrapper = new AtomicReference<>();
         String responseBody;
