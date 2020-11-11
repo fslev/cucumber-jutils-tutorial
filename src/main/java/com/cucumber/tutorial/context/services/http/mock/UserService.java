@@ -28,7 +28,7 @@ public class UserService extends RestService {
     }
 
     public RestService buildCreate(String requestBody, String token) {
-        this.client = getBuilder().path(USERS_PATH).method(Method.POST).addHeader("Authorization", token).entity(requestBody).build();
+        this.client = getBuilder().path(USERS_PATH).method(Method.POST).header("Authorization", token).entity(requestBody).build();
         return this;
     }
 

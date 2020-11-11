@@ -22,7 +22,7 @@ public abstract class RestService extends BaseScenario {
 
     protected HttpClient.Builder getBuilder() {
         return new HttpClient.Builder().address(address())
-                .setHeaders(Map.of("Content-Type", "application/json", "Accept", "application/json"));
+                .headers(Map.of("Content-Type", "application/json", "Accept", "application/json"));
     }
 
     public CloseableHttpResponse execute() {
@@ -57,8 +57,6 @@ public abstract class RestService extends BaseScenario {
                     return responseWrapper.get();
                 }, pollDurationInSeconds, retryIntervalMillis, exponentialBackOff, matchConditions));
             }
-        } catch (Exception e) {
-            throw (e);
         } finally {
             scenarioUtils.log("----------- EXPECTED RESPONSE -----------\n{}", expected);
             responseBody = logAndGetResponse(responseWrapper.get());
