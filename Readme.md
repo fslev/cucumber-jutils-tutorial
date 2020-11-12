@@ -217,15 +217,15 @@ Taking the example from above, '#[expectedCreateUserResponse]' represents a scen
 Cucumber-JUtils has a special mechanism for parsing these variables '#[]' present inside the Gherkin steps. It replaces these variables with their values, before passing them to the parameters from the corresponding Java step definition methods.  
 
 
-## Comparing
-In current tutorial project, we compare using the JTest-Utils compare mechanism:  
-https://github.com/fslev/jtest-utils/wiki/Compare-mechanisms
+## Matching
+In current tutorial project, we match expected data with actual one using the JTest-Utils matching mechanisms:  
+https://github.com/fslev/jtest-utils/wiki/Matching-mechanisms
 
 ## General best practices for writing Cucumber scenarios
 - Defined steps should be simple and reusable. Otherwise, you will end up writing both Java code and Gherkin syntax for each scenario  
-- One step should do two things: call an API and compare response  
-- Log scenario steps (Ex: log API call details; log compared values)  
-- Use helper methods as much as possible (Ex: a single method which calls an API, compares the response and also logs the whole thing)   
+- One step should do two things: call an API and match response with expected   
+- Log scenario steps (Ex: log API call details; log any matching data)  
+- Use helper methods as much as possible (Ex: a single method which makes an API request, matches the response and also logs the whole thing)   
 
 <a name="run-maven"></a>
 ## Run Cucumber tests with Maven in serial or parallel mode
