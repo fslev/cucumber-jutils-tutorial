@@ -17,7 +17,7 @@ This library contains many features such as:
  - predefined Cucumber steps for:
    - instantiating Scenario properties (sharing state between steps within a Scenario)  
    - defining and comparing Dates
-   - querying and updating databases and compare results
+   - querying and updating databases and match results
    - loading Scenario properties directly from external resources  
  - etc.  
 For more details read about [**cucumber-jutils**](https://github.com/fslev/cucumber-utils) and [**jtest-utils**](https://github.com/fslev/jtest-utils).    
@@ -71,12 +71,12 @@ public class LoginSteps extends BaseScenario {
 
     @Then("Login with requestBody={} and check response={}")
     public void login(String requestBody, String expected) {
-        loginService.buildLogin(requestBody).executeAndCompare(expected);
+        loginService.buildLogin(requestBody).executeAndMatch(expected);
     }
 
     @Then("Login with email={}, password={} and check response={}")
     public void login(String email, String password, String expected) {
-        loginService.buildLogin(email, password).executeAndCompare(expected);
+        loginService.buildLogin(email, password).executeAndMatch(expected);
     }
 }
 ```
@@ -145,17 +145,17 @@ public class CreateUserSteps extends BaseScenario {
 
     @Then("Create user with name={}, job={} and check response={}")
     public void createUserAndCompare(String name, String job, String expected) {
-        userService.buildCreate(name, job, scenarioProps.getAsString("token")).executeAndCompare(expected);
+        userService.buildCreate(name, job, scenarioProps.getAsString("token")).executeAndMatch(expected);
     }
 
     @Then("Create user with name={}, job={} and check response!={}")
     public void createUserAndCompareNegative(String name, String job, String expected) {
-        userService.buildCreate(name, job, scenarioProps.getAsString("token")).executeAndCompare(expected, MatchCondition.DO_NOT_MATCH_HTTP_RESPONSE_BY_BODY);
+        userService.buildCreate(name, job, scenarioProps.getAsString("token")).executeAndMatch(expected, MatchCondition.DO_NOT_MATCH_HTTP_RESPONSE_BY_BODY);
     }
 
     @Then("Create user with request={} and check response={}")
     public void createUserAndCompare(String request, String expected) {
-        userService.buildCreate(request, scenarioProps.getAsString("token")).executeAndCompare(expected);
+        userService.buildCreate(request, scenarioProps.getAsString("token")).executeAndMatch(expected);
     }
 }
 ```
@@ -177,7 +177,7 @@ Feature: Create User feature
       }
     }
     """
-    # login and compare response (if comparison passes, token is automatically set inside scenario properties)
+    # login and match response (if matching is successful, token is automatically set inside scenario properties)
     When Login with email=eve.holt@reqres.in, password=cityslicka and check response={"status": 200, "body": {"token": "~[token]"}}
     # token is set as "authorization" header for Create user API
     Then Create user with name=<name>, job=<job> and check response=#[expectedCreateUserResponse]
