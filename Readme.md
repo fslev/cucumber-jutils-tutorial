@@ -217,8 +217,8 @@ Taking the example from above, '#[expectedCreateUserResponse]' represents a scen
 Cucumber-JUtils has a special mechanism for parsing these variables '#[]' present inside the Gherkin steps. It replaces these variables with their values, before passing them to the parameters from the corresponding Java step definition methods.  
 
 
-## Comparing
-In current tutorial project, we compare using the JTest-Utils compare mechanism:  
+## Matching
+In current tutorial project, we match objects using the JTest-Utils matching mechanism:  
 https://github.com/fslev/jtest-utils/wiki/Compare-mechanisms
 
 ## General best practices for writing Cucumber scenarios
