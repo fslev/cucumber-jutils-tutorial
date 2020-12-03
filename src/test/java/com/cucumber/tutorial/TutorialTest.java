@@ -15,11 +15,11 @@ import java.util.function.Predicate;
         glue = {"com.cucumber.utils", "com.cucumber.tutorial"},
         plugin = {"pretty", "junit:output", "json:target/cucumber-report/report.json"}, tags = "not @Ignore and not @ignore")
 public class TutorialTest implements ITest {
+    private final static Logger LOG = LogManager.getLogger();
 
     private static final Predicate<Pickle> isSerial = pickle -> pickle.getTags().contains("@Serial")
             || pickle.getTags().contains("@serial");
 
-    private Logger log = LogManager.getLogger();
     private ThreadLocal<String> testName = new ThreadLocal<>();
     private TestNGCucumberRunner testNGCucumberRunner;
 
@@ -30,13 +30,13 @@ public class TutorialTest implements ITest {
 
     @Test(groups = "cucumber", description = "Runs Cucumber Parallel Scenarios", dataProvider = "parallelScenarios")
     public void runParallelScenario(PickleWrapper pickleWrapper, FeatureWrapper featureWrapper) throws Throwable {
-        log.info("Preparing Parallel scenario ---> {}", pickleWrapper.getPickle().getName());
+        LOG.info("Preparing Parallel scenario ---> {}", pickleWrapper.getPickle().getName());
         testNGCucumberRunner.runScenario(pickleWrapper.getPickle());
     }
 
     @Test(groups = "cucumber", description = "Runs Cucumber Scenarios in the Serial group", dataProvider = "serialScenarios")
     public void runSerialScenario(PickleWrapper pickleWrapper, FeatureWrapper featureWrapper) throws Throwable {
-        log.info("Preparing Serial scenario ---> {}", pickleWrapper.getPickle().getName());
+        LOG.info("Preparing Serial scenario ---> {}", pickleWrapper.getPickle().getName());
         testNGCucumberRunner.runScenario(pickleWrapper.getPickle());
     }
 
