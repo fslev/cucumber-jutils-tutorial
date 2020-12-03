@@ -20,7 +20,7 @@ public class TutorialTest implements ITest {
     private static final Predicate<Pickle> isSerial = pickle -> pickle.getTags().contains("@Serial")
             || pickle.getTags().contains("@serial");
 
-    private ThreadLocal<String> testName = new ThreadLocal<>();
+    private final ThreadLocal<String> testName = new ThreadLocal<>();
     private TestNGCucumberRunner testNGCucumberRunner;
 
     @BeforeClass(alwaysRun = true)
