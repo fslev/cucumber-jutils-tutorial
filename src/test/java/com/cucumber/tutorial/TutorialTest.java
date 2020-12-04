@@ -93,7 +93,7 @@ public class TutorialTest implements ITest {
 
     @AfterMethod
     public void AfterMethod(Method method, Object[] testData, ITestContext ctx) {
-        LOG.info("Finished scenario {} of {}. Progress: {}%", testCount.incrementAndGet(), totalTestCount.get(),
+        LOG.info("Finished scenario {}/{}. Progress: {}%", testCount.incrementAndGet(), totalTestCount.get(),
                 (testCount.get() * 100) / totalTestCount.get());
     }
 
