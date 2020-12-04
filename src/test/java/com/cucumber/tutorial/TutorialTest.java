@@ -9,6 +9,7 @@ import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
 @CucumberOptions(features = "src/test/resources/features",
@@ -22,6 +23,9 @@ public class TutorialTest implements ITest {
 
     private final ThreadLocal<String> testName = new ThreadLocal<>();
     private TestNGCucumberRunner testNGCucumberRunner;
+
+    private final AtomicInteger totalTestCount = new AtomicInteger();
+    private final AtomicInteger testCount = new AtomicInteger();
 
     @BeforeClass(alwaysRun = true)
     public void setUpClass() {
@@ -43,17 +47,23 @@ public class TutorialTest implements ITest {
     @DataProvider(parallel = true)
     public Object[][] parallelScenarios() {
         if (testNGCucumberRunner == null) {
+            totalTestCount.getAndAdd(1);
             return new Object[0][0];
         }
-        return filter(testNGCucumberRunner.provideScenarios(), isSerial.negate());
+        Object[][] scenarios = filter(testNGCucumberRunner.provideScenarios(), isSerial.negate());
+        totalTestCount.getAndAdd(scenarios.length);
+        return scenarios;
     }
 
     @DataProvider
     public Object[][] serialScenarios() {
         if (testNGCucumberRunner == null) {
+            totalTestCount.getAndAdd(1);
             return new Object[0][0];
         }
-        return filter(testNGCucumberRunner.provideScenarios(), isSerial);
+        Object[][] scenarios = filter(testNGCucumberRunner.provideScenarios(), isSerial);
+        totalTestCount.getAndAdd(scenarios.length);
+        return scenarios;
     }
 
     @AfterClass(alwaysRun = true)
@@ -79,6 +89,12 @@ public class TutorialTest implements ITest {
             ctx.setAttribute("testName", testName.get());
         } else
             ctx.setAttribute("testName", method.getName());
+    }
+
+    @AfterMethod
+    public void AfterMethod(Method method, Object[] testData, ITestContext ctx) {
+        LOG.info("Finished scenario {} of {}. Progress: {}%", testCount.incrementAndGet(), totalTestCount.get(),
+                (testCount.get() * 100) / totalTestCount.get());
     }
 
     @Override
