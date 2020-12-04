@@ -78,7 +78,6 @@ public class TutorialTest implements ITest {
         }).toArray(Object[][]::new);
     }
 
-
     @BeforeMethod
     public void BeforeMethod(Method method, Object[] testData, ITestContext ctx) {
         if (testData.length > 0) {
