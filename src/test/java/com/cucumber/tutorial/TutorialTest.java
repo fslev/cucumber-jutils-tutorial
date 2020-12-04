@@ -47,23 +47,19 @@ public class TutorialTest implements ITest {
     @DataProvider(parallel = true)
     public Object[][] parallelScenarios() {
         if (testNGCucumberRunner == null) {
-            totalTestCount.getAndAdd(1);
+            totalTestCount.set(1);
             return new Object[0][0];
         }
-        Object[][] scenarios = filter(testNGCucumberRunner.provideScenarios(), isSerial.negate());
-        totalTestCount.getAndAdd(scenarios.length);
-        return scenarios;
+        return filter(testNGCucumberRunner.provideScenarios(), isSerial.negate());
     }
 
     @DataProvider
     public Object[][] serialScenarios() {
         if (testNGCucumberRunner == null) {
-            totalTestCount.getAndAdd(1);
+            totalTestCount.set(1);
             return new Object[0][0];
         }
-        Object[][] scenarios = filter(testNGCucumberRunner.provideScenarios(), isSerial);
-        totalTestCount.getAndAdd(scenarios.length);
-        return scenarios;
+        return filter(testNGCucumberRunner.provideScenarios(), isSerial);
     }
 
     @AfterClass(alwaysRun = true)
@@ -75,6 +71,7 @@ public class TutorialTest implements ITest {
     }
 
     private Object[][] filter(Object[][] scenarios, Predicate<Pickle> accept) {
+        totalTestCount.set(scenarios.length);
         return Arrays.stream(scenarios).filter(objects -> {
             PickleWrapper candidate = (PickleWrapper) objects[0];
             return accept.test(candidate.getPickle());
