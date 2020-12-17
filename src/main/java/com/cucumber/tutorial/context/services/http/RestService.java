@@ -33,29 +33,29 @@ public abstract class RestService extends BaseScenario {
         return executeAndMatch(expected, null, matchConditions);
     }
 
-    public String executeAndMatch(String expected, Integer pollDurationInSeconds, MatchCondition... matchConditions) {
-        return executeAndMatch(expected, pollDurationInSeconds, 3000, matchConditions);
+    public String executeAndMatch(String expected, Integer pollingTimeoutSeconds, MatchCondition... matchConditions) {
+        return executeAndMatch(expected, pollingTimeoutSeconds, 3000, matchConditions);
     }
 
-    public String executeAndMatch(String expected, Integer pollDurationInSeconds,
+    public String executeAndMatch(String expected, Integer pollingTimeoutSeconds,
                                   long retryIntervalMillis, MatchCondition... matchConditions) {
-        return executeAndMatch(expected, pollDurationInSeconds, retryIntervalMillis, null, matchConditions);
+        return executeAndMatch(expected, pollingTimeoutSeconds, retryIntervalMillis, null, matchConditions);
     }
 
-    public String executeAndMatch(String expected, Integer pollDurationInSeconds,
+    public String executeAndMatch(String expected, Integer pollingTimeoutSeconds,
                                   Long retryIntervalMillis, Double exponentialBackOff, MatchCondition... matchConditions) {
         logRequest(client);
         final AtomicReference<CloseableHttpResponse> responseWrapper = new AtomicReference<>();
         String responseBody;
         try {
-            if (pollDurationInSeconds == null || pollDurationInSeconds == 0) {
+            if (pollingTimeoutSeconds == null || pollingTimeoutSeconds == 0) {
                 responseWrapper.set(client.execute());
                 scenarioProps.putAll(ObjectMatcher.matchHttpResponse(null, expected, responseWrapper.get(), matchConditions));
             } else {
-                scenarioProps.putAll(ObjectMatcher.pollAndMatchHttpResponse(null, expected, () -> {
+                scenarioProps.putAll(ObjectMatcher.matchHttpResponse(null, expected, () -> {
                     responseWrapper.set(client.execute());
                     return responseWrapper.get();
-                }, pollDurationInSeconds, retryIntervalMillis, exponentialBackOff, matchConditions));
+                }, pollingTimeoutSeconds, retryIntervalMillis, exponentialBackOff, matchConditions));
             }
         } finally {
             scenarioUtils.log("----------- EXPECTED RESPONSE -----------\n{}", expected);
