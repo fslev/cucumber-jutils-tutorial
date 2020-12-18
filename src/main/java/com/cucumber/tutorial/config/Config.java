@@ -5,6 +5,7 @@ import io.jtest.utils.common.ResourceUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
 import java.util.Properties;
 
 public class Config {
@@ -19,7 +20,11 @@ public class Config {
 
     private static Properties loadConfig() {
         LOG.info("Get config");
-        return ResourceUtils.readProps("env.properties");
+        try {
+            return ResourceUtils.readProps("env.properties");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 
