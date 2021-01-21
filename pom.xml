@@ -112,7 +112,8 @@
                     <testFailureIgnore>true</testFailureIgnore>
                     <systemPropertyVariables>
                         <testng.dtd.https>false</testng.dtd.https>
-                        <cucumber.filter.tags>${tags}</cucumber.filter.tags>
+                        <!--suppress UnresolvedMavenProperty -->
+                        <cucumber.filter.tags>not @Ignore and not @ignore and ${tags}</cucumber.filter.tags>
                     </systemPropertyVariables>
                     <suiteXmlFiles>
                         <suiteXmlFile>src/test/resources/${testng.config.file}</suiteXmlFile>
