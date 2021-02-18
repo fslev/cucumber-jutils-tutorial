@@ -30,7 +30,7 @@
         <dependency>
             <groupId>io.github.fslev</groupId>
             <artifactId>cucumber-jutils</artifactId>
-            <version>6.35</version>
+            <version>6.37</version>
         </dependency>
     </dependencies>
 
