@@ -12,7 +12,6 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 
 public abstract class RestService extends BaseScenario {
 
@@ -45,21 +44,21 @@ public abstract class RestService extends BaseScenario {
     public String executeAndMatch(String expected, Integer pollingTimeoutSeconds,
                                   Long retryIntervalMillis, Double exponentialBackOff, MatchCondition... matchConditions) {
         logRequest(client);
-        final AtomicReference<CloseableHttpResponse> responseWrapper = new AtomicReference<>();
+        final HttpResponseReference responseRef = new HttpResponseReference();
         String responseBody;
         try {
             if (pollingTimeoutSeconds == null || pollingTimeoutSeconds == 0) {
-                responseWrapper.set(client.execute());
-                scenarioProps.putAll(ObjectMatcher.matchHttpResponse(null, expected, responseWrapper.get(), matchConditions));
+                responseRef.set(client.execute());
+                scenarioProps.putAll(ObjectMatcher.matchHttpResponse(null, expected, responseRef.get(), matchConditions));
             } else {
                 scenarioProps.putAll(ObjectMatcher.matchHttpResponse(null, expected, () -> {
-                    responseWrapper.set(client.execute());
-                    return responseWrapper.get();
+                    responseRef.set(client.execute());
+                    return responseRef.get();
                 }, pollingTimeoutSeconds, retryIntervalMillis, exponentialBackOff, matchConditions));
             }
         } finally {
             scenarioUtils.log("----------- EXPECTED RESPONSE -----------\n{}", expected);
-            responseBody = logAndGetResponse(responseWrapper.get());
+            responseBody = logAndGetResponse(responseRef.get());
         }
         return responseBody;
     }
@@ -101,5 +100,24 @@ public abstract class RestService extends BaseScenario {
             }
         }
         return responseBody;
+    }
+
+    private static class HttpResponseReference {
+        private CloseableHttpResponse response;
+
+        public void set(CloseableHttpResponse response) {
+            if (this.response != null) {
+                try {
+                    this.response.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            this.response = response;
+        }
+
+        public CloseableHttpResponse get() {
+            return response;
+        }
     }
 }
