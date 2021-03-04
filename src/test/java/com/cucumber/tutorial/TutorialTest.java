@@ -25,7 +25,6 @@ public class TutorialTest implements ITest {
     private TestNGCucumberRunner testNGCucumberRunner;
 
     private final AtomicInteger totalTestCount = new AtomicInteger();
-    private final AtomicInteger testCount = new AtomicInteger();
 
     @BeforeClass(alwaysRun = true)
     public void setUpClass() {
@@ -89,8 +88,11 @@ public class TutorialTest implements ITest {
 
     @AfterMethod
     public void AfterMethod(Method method, Object[] testData, ITestContext ctx) {
-        LOG.info("Finished scenario {}/{}. Progress: {}%", testCount.incrementAndGet(), totalTestCount.get(),
-                (testCount.get() * 100) / totalTestCount.get());
+        int passed = ctx.getPassedTests().size();
+        int failed = ctx.getFailedTests().size();
+        int skipped = ctx.getSkippedTests().size();
+        LOG.info("Finished scenario. Passed: {} | Failed: {} | Skipped: {} | Total: {} | Progress: {}%", passed, failed, skipped,
+                totalTestCount.get(), (passed + failed + skipped) * 100 / totalTestCount.get());
     }
 
     @Override
