@@ -14,7 +14,7 @@ import java.util.function.Predicate;
 
 @CucumberOptions(features = "src/test/resources/features",
         glue = {"com.cucumber.utils", "com.cucumber.tutorial"},
-        plugin = {"pretty", "junit:output", "json:target/cucumber-report/report.json"}, tags = "not @Ignore and not @ignore")
+        plugin = {"junit:output", "json:target/cucumber-report/report.json"}, tags = "not @Ignore and not @ignore")
 public class TutorialTest implements ITest {
     private final static Logger LOG = LogManager.getLogger();
 
