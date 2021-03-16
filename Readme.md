@@ -165,7 +165,7 @@ public class CreateUserSteps extends BaseScenario {
 Feature: Create User feature
 
   Scenario Template: Create user with valid data and check for correct response
-    Given param expectedCreateUserResponse=
+    Given var expectedCreateUserResponse=
     """
     {
       "status": 201,
@@ -181,7 +181,7 @@ Feature: Create User feature
     When Login with email=eve.holt@reqres.in, password=cityslicka and check response={"status": 200, "body": {"token": "~[token]"}}
     # token is set as "authorization" header for Create user API
     Then Create user with name=<name>, job=<job> and check response=#[expectedCreateUserResponse]
-    When param expectedCreateUserNegativeResponse=
+    When var expectedCreateUserNegativeResponse=
     """
     {
       "status": 201,
@@ -201,14 +201,14 @@ Feature: Create User feature
 
   Scenario: Create user with valid data and check for correct response from file
   Same scenario as above, but define 'expectedCreateUserResponse' scenario property inside file
-    * load all scenario props from dir "UserCreate/scene1"
+    * load vars from dir "UserCreate/scene1"
     When Login with email=eve.holt@reqres.in, password=cityslicka and check response={"status": 200, "body": {"token": "~[token]"}}
     Then Create user with name=David Jones, job=pirate and check response=#[expectedCreateUserResponse]
 ```
  
 You can see that we used inside the second scenario a pre-defined step from Cucumber-JUtils:
 ```gherkin
-    * load all scenario props from dir "UserCreate/scene1"
+    * load vars from dir "UserCreate/scene1"
 ```  
 By loading values from separate files or directories, we do not burden the Gherkin scenario with bulky Strings representing our expected values. We do this with scenario properties.   
 Behind the scenes, Cucumber-JUtils sets new scenario properties, each one having as property name the file name, and as property value the file content.  
