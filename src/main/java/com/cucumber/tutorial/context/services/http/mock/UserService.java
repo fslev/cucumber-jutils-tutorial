@@ -8,23 +8,27 @@ import io.jtest.utils.common.StringFormat;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.function.BiFunction;
 
 @ScenarioScoped
 public class UserService extends RestService {
 
     public static final String USERS_PATH = "/api/users";
-    public static String REQUEST_BODY_TEMPLATE;
+    public static BiFunction<String, String, String> REQUEST_BODY_TEMPLATE;
 
     static {
-        try {
-            REQUEST_BODY_TEMPLATE = ResourceUtils.read("templates/user_api/requestBodyTemplate.json");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        REQUEST_BODY_TEMPLATE = (name, job) -> {
+            try {
+                return StringFormat.replaceProps(ResourceUtils.read("templates/user_api/requestBodyTemplate.json"),
+                        Map.of("name", name, "job", job));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        };
     }
 
     public RestService buildCreate(String name, String job, String token) {
-        return buildCreate(StringFormat.replaceProps(REQUEST_BODY_TEMPLATE, Map.of("name", name, "job", job)), token);
+        return buildCreate(REQUEST_BODY_TEMPLATE.apply(name, job), token);
     }
 
     public RestService buildCreate(String requestBody, String token) {

@@ -12,15 +12,18 @@ import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.function.BiFunction;
 
 @ScenarioScoped
 public class LoginService extends RestService {
 
     public static final String PATH = "/api/login";
-    public static String REQUEST_BODY_TEMPLATE = "{\"email\": \"#[email]\", \"password\": \"#[password]\"}";
+
+    public static BiFunction<String, String, String> REQUEST_BODY_TEMPLATE = (email, pwd) -> StringFormat.replaceProps(
+            "{\"email\": \"#[email]\", \"password\": \"#[pwd]\"}", Map.of("email", email, "password", pwd));
 
     public RestService buildLogin(String email, String pwd) {
-        return buildLogin(StringFormat.replaceProps(REQUEST_BODY_TEMPLATE, Map.of("email", email, "password", pwd)));
+        return buildLogin(REQUEST_BODY_TEMPLATE.apply(email, pwd));
     }
 
     public RestService buildLogin(String requestBody) {
