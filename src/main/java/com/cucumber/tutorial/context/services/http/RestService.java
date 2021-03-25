@@ -60,14 +60,14 @@ public abstract class RestService extends BaseScenario {
                 }, pollingTimeoutSeconds, retryIntervalMillis, exponentialBackOff, matchConditions));
             }
         } finally {
-            scenarioUtils.log("----------- EXPECTED RESPONSE -----------\n{}", expected);
+            scenarioUtils.log("----------- EXPECTED RESPONSE -----------\n{}\n\n", expected);
             responseBody = logAndGetResponse(responseRef.get());
         }
         return responseBody;
     }
 
     private void logRequest(HttpClient client) {
-        scenarioUtils.log("-------------- API REQUEST --------------\n{}\nHEADERS: {}\nBODY: {}\n",
+        scenarioUtils.log("-------------- API REQUEST --------------\n{}\nHEADERS: {}\nBODY: {}\n\n",
                 client.getMethod() + " " + client.getUri(), client.getHeaders(),
                 client.getRequestEntity() != null ? "\n" + client.getRequestEntity() : "N/A");
     }
