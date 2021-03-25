@@ -1,4 +1,5 @@
 @all @login
+@local @prod
 Feature: Test Login feature
 
   Scenario Template: Call login API with invalid data <request> and check for correct error message

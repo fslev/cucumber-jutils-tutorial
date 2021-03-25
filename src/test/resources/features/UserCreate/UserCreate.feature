@@ -1,4 +1,5 @@
 @all @create
+@local @prod
 Feature: Create User feature
 
   Scenario Template: Create user with valid data and check for correct response

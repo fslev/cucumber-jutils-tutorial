@@ -2,6 +2,7 @@ package com.cucumber.tutorial.context.services.http.mock;
 
 import com.cucumber.tutorial.context.services.http.RestService;
 import io.cucumber.guice.ScenarioScoped;
+import io.jtest.utils.clients.http.HttpClient;
 import io.jtest.utils.clients.http.Method;
 import io.jtest.utils.common.JsonUtils;
 import io.jtest.utils.common.StringFormat;
@@ -31,9 +32,11 @@ public class LoginService extends RestService {
         return this;
     }
 
-    public String loginAndGetToken(String email, String pwd) {
+    // Called outside Cucumber context
+    public static String loginAndGetToken(String address, String email, String pwd) {
         HttpEntity entity = null;
-        try (CloseableHttpResponse response = buildLogin(email, pwd).execute()) {
+        try (CloseableHttpResponse response = new HttpClient.Builder().address(address).path(PATH).method(Method.POST)
+                .headers(defaultHeaders()).entity(REQUEST_BODY_TEMPLATE.apply(email, pwd)).build().execute()) {
             if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
                 throw new RuntimeException(response.getStatusLine().toString());
             }
@@ -46,7 +49,7 @@ public class LoginService extends RestService {
                 try {
                     EntityUtils.consume(entity);
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    LOG.error(e);
                 }
             }
         }

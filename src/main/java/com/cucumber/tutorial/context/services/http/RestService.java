@@ -20,8 +20,11 @@ public abstract class RestService extends BaseScenario {
     protected abstract String address();
 
     protected HttpClient.Builder getBuilder() {
-        return new HttpClient.Builder().address(address())
-                .headers(Map.of("Content-Type", "application/json", "Accept", "application/json"));
+        return new HttpClient.Builder().address(address()).headers(defaultHeaders());
+    }
+
+    protected static Map<String, String> defaultHeaders() {
+        return Map.of("Content-Type", "application/json", "Accept", "application/json");
     }
 
     public CloseableHttpResponse execute() {

@@ -10,16 +10,19 @@ import java.util.Properties;
 
 public class Config {
     private static final Logger LOG = LogManager.getLogger();
-    public static Properties properties = loadConfig();
-    public static final String TOKEN = new LoginService() {
-        @Override
-        protected String address() {
-            return properties.getProperty("reqresin.address");
-        }
-    }.loginAndGetToken("eve.holt@reqres.in", "cityslicka");
+
+    public static final Properties PROPS = loadConfig();
+    public static final String ENV = PROPS.getProperty("env");
+
+    public static boolean isProdEnv() {
+        return ENV.equals("prod");
+    }
+
+    public static final String TOKEN =
+            LoginService.loginAndGetToken(PROPS.getProperty("reqresin.address"), "eve.holt@reqres.in", "cityslicka");
 
     private static Properties loadConfig() {
-        LOG.info("Get config");
+        LOG.info("Get config properties...");
         try {
             return ResourceUtils.readProps("env.properties");
         } catch (IOException e) {
@@ -27,5 +30,3 @@ public class Config {
         }
     }
 }
-
-
