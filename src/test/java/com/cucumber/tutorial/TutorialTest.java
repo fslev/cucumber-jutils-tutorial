@@ -80,7 +80,8 @@ public class TutorialTest implements ITest {
     @BeforeMethod
     public void BeforeMethod(Method method, Object[] testData, ITestContext ctx) {
         if (testData.length > 0) {
-            testName.set(testData[0].toString());
+            Pickle pickle = ((PickleWrapper) testData[0]).getPickle();
+            testName.set(pickle.getName() + " [" + pickle.hashCode() + "]");
             ctx.setAttribute("testName", testName.get());
         } else
             ctx.setAttribute("testName", method.getName());
