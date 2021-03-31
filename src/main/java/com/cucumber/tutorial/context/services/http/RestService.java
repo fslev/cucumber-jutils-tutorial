@@ -10,6 +10,9 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -67,9 +70,13 @@ public abstract class RestService extends BaseScenario {
     }
 
     private void logRequest(HttpClient client) {
-        scenarioUtils.log("-------------- API REQUEST --------------\n{}\nHEADERS: {}\nBODY: {}\n\n",
-                client.getMethod() + " " + client.getUri(), client.getHeaders(),
-                client.getRequestEntity() != null ? "\n" + client.getRequestEntity() : "N/A");
+        try {
+            scenarioUtils.log("-------------- API REQUEST --------------\n{}\nHEADERS: {}\nBODY: {}\n\n",
+                    client.getMethod() + " " + URLDecoder.decode(client.getUri(), StandardCharsets.UTF_8.name()),
+                    client.getHeaders(), client.getRequestEntity() != null ? "\n" + client.getRequestEntity() : "N/A");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private String logAndGetResponse(CloseableHttpResponse actual) {
