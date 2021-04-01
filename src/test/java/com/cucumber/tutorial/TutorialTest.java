@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.testng.ITest;
 import org.testng.ITestContext;
+import org.testng.ITestResult;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
@@ -32,15 +33,15 @@ public class TutorialTest implements ITest {
     }
 
     @Test(groups = "cucumber", description = "Runs Cucumber Parallel Scenarios", dataProvider = "parallelScenarios")
-    public void runParallelScenario(PickleWrapper pickleWrapper, FeatureWrapper featureWrapper) throws Throwable {
-        LOG.info("Preparing Parallel scenario ---> {}", pickleWrapper.getPickle().getName());
+    public void runParallelScenario(PickleWrapper pickleWrapper, FeatureWrapper featureWrapper) {
+        LOG.info("Running parallel scenario: [{}]", pickleWrapper.getPickle().getName());
         testNGCucumberRunner.runScenario(pickleWrapper.getPickle());
     }
 
     @Test(groups = "cucumber", description = "Runs Cucumber Scenarios in the Serial group", dataProvider = "serialScenarios")
-    public void runSerialScenario(PickleWrapper pickleWrapper, FeatureWrapper featureWrapper) throws Throwable {
-        LOG.info("Preparing Serial scenario ---> {}", pickleWrapper.getPickle().getName());
+    public void runSerialScenario(PickleWrapper pickleWrapper, FeatureWrapper featureWrapper) {
         testNGCucumberRunner.runScenario(pickleWrapper.getPickle());
+        LOG.info("Running serial scenario: [{}]", pickleWrapper.getPickle().getName());
     }
 
     @DataProvider(parallel = true)
@@ -78,7 +79,7 @@ public class TutorialTest implements ITest {
     }
 
     @BeforeMethod
-    public void BeforeMethod(Method method, Object[] testData, ITestContext ctx) {
+    public void testName(Method method, Object[] testData, ITestContext ctx) {
         if (testData.length > 0) {
             Pickle pickle = ((PickleWrapper) testData[0]).getPickle();
             testName.set(pickle.getName() + " [" + pickle.hashCode() + "]");
@@ -88,17 +89,34 @@ public class TutorialTest implements ITest {
     }
 
     @AfterMethod
-    public void AfterMethod(Method method, Object[] testData, ITestContext ctx) {
+    public void testResult(ITestResult result) {
+        LOG.info("{} | {}", getStatus(result.getStatus()), result.getName());
+    }
+
+    @AfterMethod
+    public void progress(Method method, Object[] testData, ITestContext ctx) {
         int passed = ctx.getPassedTests().size();
         int failed = ctx.getFailedTests().size();
         int skipped = ctx.getSkippedTests().size();
-        LOG.info("Finished scenario. Passed: {} | Failed: {} | Skipped: {} | Total: {} | Progress: {}%", passed, failed, skipped,
-                totalTestCount.get(), (passed + failed + skipped) * 100 / totalTestCount.get());
+        LOG.info("Progress: {}% (passed: {}, failed: {}, skipped: {}, total: {})", (passed + failed + skipped) * 100 / totalTestCount.get(),
+                passed, failed, skipped, totalTestCount.get());
     }
 
     @Override
     public String getTestName() {
         return testName.get();
+    }
+
+    private static String getStatus(int status) {
+        switch (status) {
+            case ITestResult.FAILURE:
+                return "FAILURE";
+            case ITestResult.SUCCESS:
+                return "SUCCESS";
+            case ITestResult.SKIP:
+                return "SKIP";
+        }
+        return "UNKNOWN";
     }
 }
 
