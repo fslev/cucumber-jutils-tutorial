@@ -47,7 +47,7 @@ Setup _Glue_ packages and _Program arguments_:
   - Inside **Templates -> Cucumber java**, setup the followings:
     - **Glue**: _com.cucumber.utils com.cucumber.tutorial_
     - **Program arguments**: _--plugin junit:output_
-    - Optional: for parallelization add "--threads 5" at the beginning inside **Program arguments**
+    - Optional (though, feature is buggy): for parallelization add "--threads 5" at the beginning inside **Program arguments**
     - Rest of the fields, leave them as they are
 
 
