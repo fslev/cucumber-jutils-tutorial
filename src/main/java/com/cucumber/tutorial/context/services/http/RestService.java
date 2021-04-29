@@ -75,7 +75,8 @@ public abstract class RestService extends BaseScenario {
                     client.getMethod() + " " + URLDecoder.decode(client.getUri(), StandardCharsets.UTF_8.name()),
                     client.getHeaders(), client.getRequestEntity() != null ? "\n" + client.getRequestEntity() : "N/A");
         } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
+            scenarioUtils.log("Error logging request:\n{}", e);
+            LOG.error(e);
         }
     }
 
@@ -92,7 +93,8 @@ public abstract class RestService extends BaseScenario {
                         Arrays.asList(actual.getAllHeaders()).toString());
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            scenarioUtils.log("Error logging response:\n{}", e);
+            LOG.error(e);
         } finally {
             if (entity != null) {
                 try {
