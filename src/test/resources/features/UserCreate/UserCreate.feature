@@ -2,6 +2,7 @@
 @local @prod
 Feature: Create User feature
 
+  @serial_group1
   Scenario Template: Create user with valid data and check for correct response
     Given var expectedCreateUserResponse=
     """

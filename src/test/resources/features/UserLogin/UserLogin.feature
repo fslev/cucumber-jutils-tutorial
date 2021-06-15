@@ -4,11 +4,12 @@ Feature: Test Login feature
 
   Scenario Template: Call login API with invalid data <request> and check for correct error message
     Then Login with requestBody=<request> and check response=<response>
+    @serial_group2
     Examples:
       | request                                        | response                                               |
       | { "email": "peter@klaven" }                    | {"status": 400, "body": {"error": "Missing password"}} |
       | { "email": "peter", "password": "cityslicka" } | {"status": 400, "body": {"error": "user not found"}}   |
-    @serial
+    @serial_group1
     Examples:
       | request                 | response                                                        |
       | { "password": "12345" } | {"status": 400, "body": {"error": "Missing email or username"}} |

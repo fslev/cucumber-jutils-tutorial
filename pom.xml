@@ -26,6 +26,7 @@
         <guice.version>5.0.1</guice.version>
         <surefire.version>2.22.2</surefire.version>
         <tags>@all</tags>
+        <concurrent>true</concurrent>
         <junit.jupiter.version>5.7.2</junit.jupiter.version>
         <junit.platform.version>1.7.2</junit.platform.version>
     </properties>
@@ -90,19 +91,6 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
         </profile>
-        <!-- Run serial Tests via JUnit or parallel Tests via TestNG-->
-        <profile>
-            <id>concurrent</id>
-            <activation>
-                <property>
-                    <name>concurrent</name>
-                    <value>true</value>
-                </property>
-            </activation>
-            <properties>
-                <testng.config.file>concurrent-testng.xml</testng.config.file>
-            </properties>
-        </profile>
     </profiles>
 
     <build>
@@ -154,13 +142,15 @@
                     <systemPropertyVariables>
                         <testng.dtd.https>false</testng.dtd.https>
                         <!--suppress UnresolvedMavenProperty -->
+                        <cucumber.filter.tags>${tags} and not @ignore and not @Ignore</cucumber.filter.tags>
+                        <cucumber.execution.parallel.enabled>${concurrent}</cucumber.execution.parallel.enabled>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>net.masterthought</groupId>
                 <artifactId>maven-cucumber-reporting</artifactId>
-                <version>5.4.0</version>
+                <version>5.5.0</version>
                 <executions>
                     <execution>
                         <id>execution</id>
