@@ -31,7 +31,8 @@ _Finally_, you will learn how to generate test reports with [**maven-cucumber-re
 <a name="test-cases"></a>
 
 <a name="run-idea"></a>
-## Configure Intellij Idea to run Cucumber feature files 
+## (Optional )Configure Intellij Idea to run Cucumber feature files 
+This step is optional. Cucumber configuration should automatically be read from _cucumber.properties_ file.
 ### Requirements
 - __Intellij Idea__ version >= 2019.3
 - Latest version of __Cucumber for Java__ and __Gherkin__ plugins
