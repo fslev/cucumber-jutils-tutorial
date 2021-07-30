@@ -1,6 +1,5 @@
 # Cucumber JUtils tutorial
 
-Cucumber-Utils has been renamed to Cucumber-JUtils  
 
 Here is a small tutorial on how to use [**cucumber-jutils**](https://github.com/fslev/cucumber-utils) library inside a test framework.  
 **Test target**: HTTP REST APIs, hosted by [reqres](https://reqres.in/).   
