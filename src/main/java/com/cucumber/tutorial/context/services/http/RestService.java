@@ -29,7 +29,11 @@ public abstract class RestService extends BaseScenario {
     }
 
     public CloseableHttpResponse execute() {
-        return client.execute();
+        try {
+            return client.execute();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public HttpResponseWrapper executeAndMatch(String expected, MatchCondition... matchConditions) {
@@ -55,10 +59,16 @@ public abstract class RestService extends BaseScenario {
                 scenarioProps.putAll(ObjectMatcher.matchHttpResponse(null, expected, responseRef.get(), matchConditions));
             } else {
                 scenarioProps.putAll(ObjectMatcher.matchHttpResponse(null, expected, () -> {
-                    responseRef.set(client.execute());
+                    try {
+                        responseRef.set(client.execute());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                     return responseRef.get();
                 }, pollingDurationSeconds, retryIntervalMillis, exponentialBackOff, matchConditions));
             }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         } finally {
             scenarioUtils.log("----------- EXPECTED RESPONSE -----------\n{}\n\n", expected);
             try {
