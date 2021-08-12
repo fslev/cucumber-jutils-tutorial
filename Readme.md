@@ -39,7 +39,7 @@ This step is optional. Cucumber configuration should automatically be read from 
 
 ### Cucumber for Java Plugin Configuration
 
-Cucumber for Java IntelliJ plugin should read configuration from project _cucumber.properties_  
+Cucumber for Java IntelliJ plugin should read configuration from project _src/test/resources/cucumber.properties_  
 
 ## Test cases
 ### Test Login API 
