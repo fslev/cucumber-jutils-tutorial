@@ -97,6 +97,9 @@
             <testResource>
                 <directory>src/test/resources</directory>
             </testResource>
+            <testResource>
+                <directory>src/test/resources/features</directory>
+            </testResource>
         </testResources>
         <resources>
             <resource>
