@@ -68,13 +68,6 @@ public class TutorialTest implements ITest {
         return filter(testNGCucumberRunner.provideScenarios(), isSerial);
     }
 
-    @AfterClass(alwaysRun = true)
-    public void tearDownClass() {
-        if (this.testNGCucumberRunner != null) {
-            this.testNGCucumberRunner.finish();
-        }
-    }
-
     private Object[][] filter(Object[][] scenarios, Predicate<Pickle> accept) {
         totalTestCount.set(scenarios.length);
         return Arrays.stream(scenarios).filter(objects -> {
@@ -106,6 +99,13 @@ public class TutorialTest implements ITest {
         int skipped = ctx.getSkippedTests().size();
         LOG.log(failed > 0 ? Level.WARN : Level.INFO, "Progress: {}% (passed: {}, failed: {}, skipped: {}, total: {})",
                 (passed + failed + skipped) * 100 / totalTestCount.get(), passed, failed, skipped, totalTestCount.get());
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void tearDownClass() {
+        if (this.testNGCucumberRunner != null) {
+            this.testNGCucumberRunner.finish();
+        }
     }
 
     @Override
