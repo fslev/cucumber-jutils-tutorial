@@ -16,6 +16,7 @@ import java.util.Map;
 
 public abstract class RestService extends BaseScenario {
 
+    private boolean logDetails = true;
     protected HttpClient client;
 
     protected abstract String address();
@@ -26,6 +27,11 @@ public abstract class RestService extends BaseScenario {
 
     protected static Map<String, String> defaultHeaders() {
         return Map.of("Content-Type", "application/json", "Accept", "application/json");
+    }
+
+    public RestService logDetails(boolean value) {
+        this.logDetails = value;
+        return this;
     }
 
     public CloseableHttpResponse execute() {
@@ -51,6 +57,7 @@ public abstract class RestService extends BaseScenario {
 
     public HttpResponseWrapper executeAndMatch(String expected, Integer pollingDurationSeconds, long retryIntervalMillis, Double exponentialBackOff, MatchCondition... matchConditions) {
         logRequest(client);
+        logExpected(expected);
         final HttpResponseReference responseRef = new HttpResponseReference();
         HttpResponseWrapper responseWrapper = null;
         try {
@@ -70,13 +77,10 @@ public abstract class RestService extends BaseScenario {
         } catch (IOException e) {
             throw new RuntimeException(e);
         } finally {
-            scenarioUtils.log("----------- EXPECTED RESPONSE -----------\n{}\n\n", expected);
             try {
-                if (responseRef.get() != null) {
-                    responseWrapper = new HttpResponseWrapper(responseRef.get());
-                    logResponse(responseWrapper);
-                    responseRef.get().close();
-                }
+                responseWrapper = new HttpResponseWrapper(responseRef.get());
+                logActual(responseWrapper);
+                responseRef.get().close();
             } catch (Exception e) {
                 LOG.error(e);
             }
@@ -98,11 +102,19 @@ public abstract class RestService extends BaseScenario {
         }
     }
 
-    private void logResponse(HttpResponseWrapper response) {
-        scenarioUtils.log("------------ ACTUAL RESPONSE ------------\nSTATUS: {} {}\nBODY: \n{}\nHEADERS:\n{}\n",
-                response.getStatus(), response.getReasonPhrase(),
-                (response.getEntity() != null) ? JsonUtils.prettyPrint(response.getEntity().toString()) : "Empty data <∅>",
-                response.getHeaders());
+    private void logExpected(String expected) {
+        if (logDetails) {
+            scenarioUtils.log("----------- EXPECTED RESPONSE -----------\n{}\n\n", expected);
+        }
+    }
+
+    private void logActual(HttpResponseWrapper response) {
+        if (logDetails) {
+            scenarioUtils.log("------------ ACTUAL RESPONSE ------------\nSTATUS: {} {}\nBODY: \n{}\nHEADERS:\n{}\n",
+                    response.getStatus(), response.getReasonPhrase(),
+                    (response.getEntity() != null) ? JsonUtils.prettyPrint(response.getEntity().toString()) : "Empty data <∅>",
+                    response.getHeaders());
+        }
     }
 
     private static class HttpResponseReference {

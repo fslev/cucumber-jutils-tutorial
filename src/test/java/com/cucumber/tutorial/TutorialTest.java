@@ -104,8 +104,8 @@ public class TutorialTest implements ITest {
         int passed = ctx.getPassedTests().size();
         int failed = ctx.getFailedTests().size();
         int skipped = ctx.getSkippedTests().size();
-        LOG.info("Progress: {}% (passed: {}, failed: {}, skipped: {}, total: {})", (passed + failed + skipped) * 100 / totalTestCount.get(),
-                passed, failed, skipped, totalTestCount.get());
+        LOG.log(failed > 0 ? Level.WARN : Level.INFO, "Progress: {}% (passed: {}, failed: {}, skipped: {}, total: {})",
+                (passed + failed + skipped) * 100 / totalTestCount.get(), passed, failed, skipped, totalTestCount.get());
     }
 
     @Override
