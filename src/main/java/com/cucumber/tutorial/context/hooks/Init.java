@@ -9,19 +9,18 @@ import io.cucumber.java.PendingException;
 import java.util.Map;
 
 @ScenarioScoped
-public class ScenarioInitHook extends BaseScenario {
+public class Init extends BaseScenario {
 
-    @Before(order = Integer.MIN_VALUE)
+    @Before(order = 0)
     public void safetyCheck() {
         if (Config.isProdEnv() && !scenarioUtils.getScenario().getSourceTagNames().contains("@prod")) {
             throw new PendingException("Safety exception: I am not running scenarios on LIVE environment without '@prod' tag");
         }
     }
 
-    @Before(order = Integer.MAX_VALUE)
+    @Before(order = 1)
     public void fillScenarioProps() {
         scenarioProps.putAll((Map) Config.PROPS);
         scenarioProps.putAll(Map.of("token", Config.TOKEN));
     }
-
 }

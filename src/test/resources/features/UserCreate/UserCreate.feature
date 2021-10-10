@@ -2,7 +2,6 @@
 @local @prod
 Feature: Create User feature
 
-  @serial_group1
   Scenario Template: Create user with valid data and check for correct response
     Given var expectedCreateUserResponse=
     """
@@ -38,6 +37,7 @@ Feature: Create User feature
       | florin | tester  |
       | john   | blogger |
 
+  @serial_group1
   Scenario: Create user with valid data and check for correct response from file
   Same scenario as above, but define 'expectedCreateUserResponse' scenario property inside file
     * load vars from dir "UserCreate/scene1"

@@ -15,7 +15,7 @@ Feature: Test Login feature
       | { "password": "12345" } | {"status": 400, "body": {"error": "Missing email or username"}} |
       | []                      | {"status": 400, "body": {"error": "Missing email or username"}} |
 
-
+  @isolated
   Scenario Template: Call login API with valid username <email> and password and check for correct response
     Then Login with email=<email>, password=<password> and check response=<response>
     Examples:

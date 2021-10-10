@@ -32,24 +32,15 @@ _Finally_, you will learn how to generate test reports with [**maven-cucumber-re
 <a name="test-cases"></a>
 
 <a name="run-idea"></a>
-## Configure Intellij Idea to run Cucumber feature files 
+## (Optional) Configure Intellij Idea to run Cucumber feature files 
+This step is optional. Cucumber configuration should automatically be read from _cucumber.properties_ file.
 ### Requirements
 - __Intellij Idea__ version >= 2019.3
 - Latest version of __Cucumber for Java__ and __Gherkin__ plugins
 
 ### Cucumber for Java Plugin Configuration
 
-If plugin is not configured, configuration is read from _cucumber.properties_  
-
-Setup _Glue_ packages and _Program arguments_:
-- **Run -> Edit Configurations**:  
-  - Clean any "Cucumber java" configuration instances that ran in the past
-  - Inside **Templates -> Cucumber java**, setup the followings:
-    - **Glue**: _com.cucumber.utils com.cucumber.tutorial_
-    - **Program arguments**: _--plugin junit:output_
-    - Optional (though, feature is buggy): for parallelization add "--threads 5" at the beginning inside **Program arguments**
-    - Rest of the fields, leave them as they are
-
+Cucumber for Java IntelliJ plugin should read configuration from project _src/test/resources/cucumber.properties_  
 
 ## Test cases
 ### Test Login API 

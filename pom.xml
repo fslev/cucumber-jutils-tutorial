@@ -21,14 +21,15 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <cucumber.version>6.10.4</cucumber.version>
-        <cucumber.jutils.version>6.67</cucumber.jutils.version>
+        <cucumber.version>7.0.0</cucumber.version>
+        <cucumber.jutils.version>6.75</cucumber.jutils.version>
         <guice.version>5.0.1</guice.version>
         <surefire.version>2.22.2</surefire.version>
         <tags>@all</tags>
         <concurrent>true</concurrent>
-        <junit.jupiter.version>5.7.2</junit.jupiter.version>
-        <junit.platform.version>1.7.2</junit.platform.version>
+        <junit.jupiter.version>5.8.1</junit.jupiter.version>
+        <junit.platform.version>1.8.1</junit.platform.version>
+        <concurrent>false</concurrent>
     </properties>
 
     <dependencies>
@@ -63,14 +64,14 @@
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
+            <artifactId>junit-jupiter-api</artifactId>
             <version>${junit.jupiter.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit.jupiter.version}</version>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-suite</artifactId>
+            <version>${junit.platform.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -123,21 +124,14 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>${surefire.version}</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.junit.jupiter</groupId>
-                        <artifactId>junit-jupiter-engine</artifactId>
-                        <version>${junit.jupiter.version}</version>
-                    </dependency>
-                </dependencies>
+                <version>3.0.0-M5</version>
                 <executions>
                     <execution>
                         <phase>test</phase>
                     </execution>
                 </executions>
                 <configuration>
-                    <printSummary>false</printSummary>
+                    <printSummary>true</printSummary>
                     <testFailureIgnore>true</testFailureIgnore>
                     <systemPropertyVariables>
                         <testng.dtd.https>false</testng.dtd.https>
