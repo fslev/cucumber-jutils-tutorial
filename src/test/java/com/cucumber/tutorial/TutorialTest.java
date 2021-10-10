@@ -1,15 +1,18 @@
 package com.cucumber.tutorial;
 
 import io.cucumber.testng.*;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.testng.ITest;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
+import org.testng.xml.XmlTest;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
@@ -28,8 +31,11 @@ public class TutorialTest implements ITest {
     private final AtomicInteger totalTestCount = new AtomicInteger();
 
     @BeforeClass(alwaysRun = true)
-    public void setUpClass() {
-        testNGCucumberRunner = new TestNGCucumberRunner(this.getClass());
+    public void setUpClass(ITestContext context) {
+        XmlTest currentXmlTest = context.getCurrentXmlTest();
+        Objects.requireNonNull(currentXmlTest);
+        CucumberPropertiesProvider properties = currentXmlTest::getParameter;
+        testNGCucumberRunner = new TestNGCucumberRunner(this.getClass(), properties);
     }
 
     @Test(groups = "cucumber", description = "Runs Cucumber Parallel Scenarios", dataProvider = "parallelScenarios")
@@ -64,10 +70,9 @@ public class TutorialTest implements ITest {
 
     @AfterClass(alwaysRun = true)
     public void tearDownClass() {
-        if (testNGCucumberRunner == null) {
-            return;
+        if (this.testNGCucumberRunner != null) {
+            this.testNGCucumberRunner.finish();
         }
-        testNGCucumberRunner.finish();
     }
 
     private Object[][] filter(Object[][] scenarios, Predicate<Pickle> accept) {
@@ -90,7 +95,8 @@ public class TutorialTest implements ITest {
 
     @AfterMethod
     public void testResult(ITestResult result) {
-        LOG.info("{} | {}", getStatus(result.getStatus()), result.getName());
+        LOG.log(ITestResult.FAILURE == result.getStatus() ? Level.ERROR : Level.INFO,
+                "{} | {}", getStatus(result.getStatus()), result.getName());
     }
 
     @AfterMethod

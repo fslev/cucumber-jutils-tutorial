@@ -7,7 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public abstract class BaseScenario {
-    protected static Logger LOG = LogManager.getLogger();
+    protected static final Logger LOG = LogManager.getLogger();
     @Inject
     protected ScenarioUtils scenarioUtils;
     @Inject
