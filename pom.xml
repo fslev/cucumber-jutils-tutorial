@@ -131,13 +131,16 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <properties>
+                        <configurationParameters>
+                            cucumber.filter.tags=${tags} and not @ignore and not @Ignore
+                            cucumber.execution.parallel.enabled=${concurrent}
+                        </configurationParameters>
+                    </properties>
                     <printSummary>false</printSummary>
                     <testFailureIgnore>true</testFailureIgnore>
                     <systemPropertyVariables>
                         <testng.dtd.https>false</testng.dtd.https>
-                        <!--suppress UnresolvedMavenProperty -->
-                        <cucumber.filter.tags>${tags} and not @ignore and not @Ignore</cucumber.filter.tags>
-                        <cucumber.execution.parallel.enabled>${concurrent}</cucumber.execution.parallel.enabled>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>

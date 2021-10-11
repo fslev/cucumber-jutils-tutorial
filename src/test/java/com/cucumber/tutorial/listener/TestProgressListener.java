@@ -8,6 +8,7 @@ import org.junit.platform.launcher.TestPlan;
 public class TestProgressListener implements TestExecutionListener {
     @Override
     public void testPlanExecutionStarted(TestPlan testPlan) {
+        System.out.println(testPlan.getConfigurationParameters());
         System.out.println(testPlan.countTestIdentifiers(ti -> ti.isTest()));
     }
 
