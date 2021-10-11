@@ -23,6 +23,13 @@ public class TestProgressListener implements TestExecutionListener {
     }
 
     @Override
+    public void executionStarted(TestIdentifier testIdentifier) {
+        if (testIdentifier.isTest()) {
+            LOG.info("Running scenario [{}]", testIdentifier.getDisplayName());
+        }
+    }
+
+    @Override
     public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
         if (testIdentifier.isTest()) {
             LOG.log(testExecutionResult.getStatus().equals(TestExecutionResult.Status.FAILED) ? Level.ERROR : Level.INFO,
