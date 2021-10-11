@@ -20,7 +20,7 @@ Feature: Create User feature
     # token is set as "authorization" header for Create user API
     Then Create user with name=<name>, job=<job> and check response=#[expectedCreateUserResponse]
     When var expectedCreateUserNegativeResponse=
-    """
+    """json
     {
       "status": 201,
       "body": {
