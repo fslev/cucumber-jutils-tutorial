@@ -63,9 +63,9 @@ public abstract class RestService extends BaseScenario {
         try {
             if (pollingDurationSeconds == null || pollingDurationSeconds == 0) {
                 responseRef.set(client.execute());
-                scenarioProps.putAll(ObjectMatcher.matchHttpResponse(null, expected, responseRef.get(), matchConditions));
+                scenarioVars.putAll(ObjectMatcher.matchHttpResponse(null, expected, responseRef.get(), matchConditions));
             } else {
-                scenarioProps.putAll(ObjectMatcher.matchHttpResponse(null, expected, () -> {
+                scenarioVars.putAll(ObjectMatcher.matchHttpResponse(null, expected, () -> {
                     try {
                         responseRef.set(client.execute());
                     } catch (IOException e) {

@@ -38,6 +38,6 @@ public class UserService extends RestService {
 
     @Override
     public String address() {
-        return scenarioProps.getAsString("reqresin.address");
+        return scenarioVars.getAsString("reqresin.address");
     }
 }

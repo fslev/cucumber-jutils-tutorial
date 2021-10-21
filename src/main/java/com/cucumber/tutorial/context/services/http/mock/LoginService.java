@@ -57,6 +57,6 @@ public class LoginService extends RestService {
 
     @Override
     protected String address() {
-        return scenarioProps.getAsString("reqresin.address");
+        return scenarioVars.getAsString("reqresin.address");
     }
 }

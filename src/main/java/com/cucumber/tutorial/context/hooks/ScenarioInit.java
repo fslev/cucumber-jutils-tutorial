@@ -23,8 +23,8 @@ public class ScenarioInit extends BaseScenario {
 
     @Before(order = 1)
     public void fillScenarioProps() {
-        scenarioProps.putAll((Map) PROPS);
-        scenarioProps.putAll(Map.of("token", AUTH_TOKEN));
+        scenarioVars.putAll((Map) PROPS);
+        scenarioVars.putAll(Map.of("token", AUTH_TOKEN));
     }
 
 }
