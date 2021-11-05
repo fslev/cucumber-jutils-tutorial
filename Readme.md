@@ -14,7 +14,7 @@ This library contains many features such as:
  - database clients ([**jtest-utils**](https://github.com/fslev/jtest-utils))  
  - Mechanisms for comparing HTTP responses, JSONs, XMLs and strings using REGEX patterns ([**jtest-utils**](https://github.com/fslev/jtest-utils))      
  - predefined Cucumber steps for:
-   - instantiating Scenario properties (sharing state between steps within a Scenario)  
+   - setting Scenario variables (sharing state between steps within a Scenario)  
    - defining and comparing Dates
    - querying and updating databases and match results
    - loading Scenario properties directly from external resources  
@@ -91,7 +91,7 @@ public class LoginService extends RestService {
 
     @Override
     protected String address() {
-        return scenarioProps.getAsString("reqresin.address");
+        return scenarioVars.getAsString("reqresin.address");
     }
 }
 ```
@@ -202,10 +202,10 @@ You can see that we used inside the second scenario a pre-defined step from Cucu
 ```gherkin
     * load vars from dir "UserCreate/scene1"
 ```  
-By loading values from separate files or directories, we do not burden the Gherkin scenario with bulky Strings representing our expected values. We do this with scenario properties.   
+By loading values from separate files or directories, we do not burden the Gherkin scenario with bulky Strings representing our expected values. We do this with scenario variables.   
 Behind the scenes, Cucumber-JUtils sets new scenario properties, each one having as property name the file name, and as property value the file content.  
 
-Taking the example from above, '#[expectedCreateUserResponse]' represents a scenario property, which has the name of a file (without extension) from 'UserCreate/scene1' directory and its value is actually the content of the file.     
+Taking the example from above, '#[expectedCreateUserResponse]' represents a scenario variable, which has the name of a file (without extension) from 'UserCreate/scene1' directory and its value is actually the content of the file.     
 Cucumber-JUtils has a special mechanism for parsing these variables '#[]' present inside the Gherkin steps. It replaces these variables with their values, before passing them to the parameters from the corresponding Java step definition methods.  
 
 
