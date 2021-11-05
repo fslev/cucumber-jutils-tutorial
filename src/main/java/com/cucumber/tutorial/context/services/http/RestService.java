@@ -1,6 +1,7 @@
 package com.cucumber.tutorial.context.services.http;
 
 import com.cucumber.tutorial.context.BaseScenario;
+import com.cucumber.tutorial.util.DateUtils;
 import io.jtest.utils.clients.http.HttpClient;
 import io.jtest.utils.clients.http.wrappers.HttpResponseWrapper;
 import io.jtest.utils.common.JsonUtils;
@@ -90,8 +91,8 @@ public abstract class RestService extends BaseScenario {
 
     private void logRequest(HttpClient client) {
         try {
-            scenarioUtils.log("-------------- API REQUEST --------------\n{}\nHEADERS: {}\nBODY: {}\n\n",
-                    client.getMethod() + " " + URLDecoder.decode(client.getUri(), StandardCharsets.UTF_8.name()),
+            scenarioUtils.log("------- API REQUEST ({}) -------\n{}\nHEADERS: {}\nBODY: {}\n\n",
+                    DateUtils.currentDateTime(), client.getMethod() + " " + URLDecoder.decode(client.getUri(), StandardCharsets.UTF_8.name()),
                     client.getHeaders(), client.getRequestEntity() != null ? "\n" + client.getRequestEntity() : "N/A");
         } catch (UnsupportedEncodingException e) {
             scenarioUtils.log("Error logging request:\n{}", e);
@@ -104,13 +105,13 @@ public abstract class RestService extends BaseScenario {
 
     private void logExpected(String expected) {
         if (logDetails) {
-            scenarioUtils.log("----------- EXPECTED RESPONSE -----------\n{}\n\n", expected);
+            scenarioUtils.log("----------------- EXPECTED RESPONSE -----------------\n{}\n\n", expected);
         }
     }
 
     private void logActual(HttpResponseWrapper response) {
         if (logDetails) {
-            scenarioUtils.log("------------ ACTUAL RESPONSE ------------\nSTATUS: {} {}\nBODY: \n{}\nHEADERS:\n{}\n",
+            scenarioUtils.log("------------------ ACTUAL RESPONSE ------------------\nSTATUS: {} {}\nBODY: \n{}\nHEADERS:\n{}\n",
                     response.getStatus(), response.getReasonPhrase(),
                     (response.getEntity() != null) ? JsonUtils.prettyPrint(response.getEntity().toString()) : "Empty data <∅>",
                     response.getHeaders());
