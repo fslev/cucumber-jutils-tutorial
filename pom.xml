@@ -141,9 +141,6 @@
                     <forkCount>0</forkCount>
                     <printSummary>false</printSummary>
                     <testFailureIgnore>true</testFailureIgnore>
-                    <systemPropertyVariables>
-                        <testng.dtd.https>false</testng.dtd.https>
-                    </systemPropertyVariables>
                 </configuration>
             </plugin>
             <plugin>
