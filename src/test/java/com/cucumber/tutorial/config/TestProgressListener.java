@@ -1,4 +1,4 @@
-package com.cucumber.tutorial.listener;
+package com.cucumber.tutorial.config;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;

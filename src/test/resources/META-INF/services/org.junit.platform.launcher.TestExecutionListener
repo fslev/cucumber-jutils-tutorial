@@ -1,1 +1,1 @@
-com.cucumber.tutorial.listener.TestProgressListener
+com.cucumber.tutorial.config.TestProgressListener

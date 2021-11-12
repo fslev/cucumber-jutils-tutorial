@@ -135,7 +135,6 @@
                         <configurationParameters>
                             cucumber.filter.tags=${tags} and not @ignore and not @Ignore
                             cucumber.execution.parallel.enabled=${concurrent}
-                            cucumber.execution.parallel.config.fixed.parallelism=${threads}
                         </configurationParameters>
                     </properties>
                     <forkCount>0</forkCount>
