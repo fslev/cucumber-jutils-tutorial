@@ -12,7 +12,7 @@ public class FixedParallelExecutionConfigurationStrategy implements ParallelExec
     private static final int FIXED_PARALLELISM = Integer.parseInt(System.getProperty("threads", "8"));
 
     static {
-        LOG.info("Scenarios will run on {} threads", FIXED_PARALLELISM);
+        LOG.info("Concurrent scenarios will run on {} threads", FIXED_PARALLELISM);
     }
 
     @Override
