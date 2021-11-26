@@ -22,11 +22,11 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <cucumber.version>7.0.0</cucumber.version>
-        <cucumber.jutils.version>7.2</cucumber.jutils.version>
+        <cucumber.jutils.version>7.3</cucumber.jutils.version>
         <guice.version>5.0.1</guice.version>
         <junit.jupiter.version>5.8.1</junit.jupiter.version>
         <junit.platform.version>1.8.1</junit.platform.version>
-        <surefire.version>2.22.2</surefire.version>
+        <surefire.version>3.0.0-M5</surefire.version>
         <tags>@all</tags>
         <concurrent>false</concurrent>
         <threads>5</threads>
