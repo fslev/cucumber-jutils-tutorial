@@ -131,7 +131,7 @@
                         </configurationParameters>
                     </properties>
                     <forkCount>0</forkCount>
-                    <printSummary>true</printSummary>
+                    <printSummary>false</printSummary>
                     <testFailureIgnore>true</testFailureIgnore>
                 </configuration>
             </plugin>
