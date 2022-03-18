@@ -14,8 +14,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.function.Consumer;
 
-public abstract class RestService extends BaseScenario {
+public abstract class HttpService extends BaseScenario {
 
     private boolean logDetails = true;
     protected HttpClient client;
@@ -30,7 +31,7 @@ public abstract class RestService extends BaseScenario {
         return Map.of("Content-Type", "application/json", "Accept", "application/json");
     }
 
-    public RestService logDetails(boolean value) {
+    public HttpService logDetails(boolean value) {
         this.logDetails = value;
         return this;
     }
@@ -44,19 +45,33 @@ public abstract class RestService extends BaseScenario {
     }
 
     public HttpResponseWrapper executeAndMatch(String expected, MatchCondition... matchConditions) {
-        return executeAndMatch(expected, null, matchConditions);
+        return executeAndMatch(expected, null, null, matchConditions);
+    }
+
+    public HttpResponseWrapper executeAndMatch(String expected, Consumer<CloseableHttpResponse> consumer, MatchCondition... matchConditions) {
+        return executeAndMatch(expected, consumer, null, matchConditions);
     }
 
     public HttpResponseWrapper executeAndMatch(String expected, Integer pollingTimeoutSeconds, MatchCondition... matchConditions) {
         return executeAndMatch(expected, pollingTimeoutSeconds, 3000, matchConditions);
     }
 
-    public HttpResponseWrapper executeAndMatch(String expected, Integer pollingTimeoutSeconds,
-                                               long retryIntervalMillis, MatchCondition... matchConditions) {
-        return executeAndMatch(expected, pollingTimeoutSeconds, retryIntervalMillis, null, matchConditions);
+    public HttpResponseWrapper executeAndMatch(String expected, Consumer<CloseableHttpResponse> consumer, Integer pollingTimeoutSeconds, MatchCondition... matchConditions) {
+        return executeAndMatch(expected, consumer, pollingTimeoutSeconds, 3000, matchConditions);
     }
 
-    public HttpResponseWrapper executeAndMatch(String expected, Integer pollingDurationSeconds, long retryIntervalMillis, Double exponentialBackOff, MatchCondition... matchConditions) {
+    public HttpResponseWrapper executeAndMatch(String expected, Integer pollingTimeoutSeconds,
+                                               long retryIntervalMillis, MatchCondition... matchConditions) {
+        return executeAndMatch(expected, null, pollingTimeoutSeconds, retryIntervalMillis, null, matchConditions);
+    }
+
+    public HttpResponseWrapper executeAndMatch(String expected, Consumer<CloseableHttpResponse> consumer, Integer pollingTimeoutSeconds,
+                                               long retryIntervalMillis, MatchCondition... matchConditions) {
+        return executeAndMatch(expected, consumer, pollingTimeoutSeconds, retryIntervalMillis, null, matchConditions);
+    }
+
+    public HttpResponseWrapper executeAndMatch(String expected, Consumer<CloseableHttpResponse> consumer, Integer pollingDurationSeconds, long retryIntervalMillis,
+                                               Double exponentialBackOff, MatchCondition... matchConditions) {
         logRequest(client);
         logExpected(expected);
         final HttpResponseReference responseRef = new HttpResponseReference();
@@ -81,9 +96,13 @@ public abstract class RestService extends BaseScenario {
             try {
                 responseWrapper = new HttpResponseWrapper(responseRef.get());
                 logActual(responseWrapper);
-                responseRef.get().close();
+                if (consumer != null) {
+                    consumer.accept(responseRef.get());
+                } else {
+                    responseRef.get().close();
+                }
             } catch (Exception e) {
-                LOG.error(e);
+                throw new RuntimeException(e);
             }
         }
         return responseWrapper;

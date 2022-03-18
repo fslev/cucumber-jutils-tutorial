@@ -1,6 +1,6 @@
 package com.cucumber.tutorial.context.services.http.mock;
 
-import com.cucumber.tutorial.context.services.http.RestService;
+import com.cucumber.tutorial.context.services.http.HttpService;
 import io.cucumber.guice.ScenarioScoped;
 import io.jtest.utils.clients.http.Method;
 import io.jtest.utils.common.ResourceUtils;
@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.function.BiFunction;
 
 @ScenarioScoped
-public class UserService extends RestService {
+public class UserService extends HttpService {
 
     public static final String USERS_PATH = "/api/users";
     public static BiFunction<String, String, String> REQUEST_BODY_TEMPLATE;
@@ -27,11 +27,11 @@ public class UserService extends RestService {
         };
     }
 
-    public RestService buildCreate(String name, String job, String token) {
+    public HttpService buildCreate(String name, String job, String token) {
         return buildCreate(REQUEST_BODY_TEMPLATE.apply(name, job), token);
     }
 
-    public RestService buildCreate(String requestBody, String token) {
+    public HttpService buildCreate(String requestBody, String token) {
         this.client = getBuilder().path(USERS_PATH).method(Method.POST).header("Authorization", token).entity(requestBody).build();
         return this;
     }

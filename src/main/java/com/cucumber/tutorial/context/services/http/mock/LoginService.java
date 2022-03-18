@@ -1,6 +1,6 @@
 package com.cucumber.tutorial.context.services.http.mock;
 
-import com.cucumber.tutorial.context.services.http.RestService;
+import com.cucumber.tutorial.context.services.http.HttpService;
 import io.cucumber.guice.ScenarioScoped;
 import io.jtest.utils.clients.http.HttpClient;
 import io.jtest.utils.clients.http.Method;
@@ -16,18 +16,18 @@ import java.util.Map;
 import java.util.function.BiFunction;
 
 @ScenarioScoped
-public class LoginService extends RestService {
+public class LoginService extends HttpService {
 
     public static final String PATH = "/api/login";
 
     public static BiFunction<String, String, String> REQUEST_BODY_TEMPLATE = (email, pwd) -> StringFormat.replaceProps(
             "{\"email\": \"#[email]\", \"password\": \"#[pwd]\"}", Map.of("email", email, "password", pwd));
 
-    public RestService buildLogin(String email, String pwd) {
+    public HttpService buildLogin(String email, String pwd) {
         return buildLogin(REQUEST_BODY_TEMPLATE.apply(email, pwd));
     }
 
-    public RestService buildLogin(String requestBody) {
+    public HttpService buildLogin(String requestBody) {
         this.client = getBuilder().path(PATH).method(Method.POST).entity(requestBody).build();
         return this;
     }
