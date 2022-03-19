@@ -75,7 +75,7 @@ public abstract class HttpService extends BaseScenario {
         logRequest(client);
         logExpected(expected);
         final HttpResponseReference responseRef = new HttpResponseReference();
-        HttpResponseWrapper responseWrapper = null;
+        HttpResponseWrapper responseWrapper;
         try {
             if (pollingDurationSeconds == null || pollingDurationSeconds == 0) {
                 responseRef.set(client.execute());
