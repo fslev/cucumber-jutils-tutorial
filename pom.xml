@@ -25,7 +25,7 @@
         <cucumber.jutils.version>7.13</cucumber.jutils.version>
         <guice.version>5.1.0</guice.version>
         <junit.platform.version>1.8.2</junit.platform.version>
-        <surefire.version>3.0.0-M6</surefire.version>
+        <surefire.version>3.0.0-M5</surefire.version>
         <tags>@all</tags>
         <concurrent>false</concurrent>
         <threads>5</threads>
@@ -130,6 +130,7 @@
                             cucumber.execution.parallel.enabled=${concurrent}
                         </configurationParameters>
                     </properties>
+                    <forkCount>0</forkCount>
                     <printSummary>false</printSummary>
                     <testFailureIgnore>true</testFailureIgnore>
                 </configuration>
