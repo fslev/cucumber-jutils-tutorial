@@ -3,7 +3,7 @@ package com.cucumber.tutorial.context.services.http;
 import com.cucumber.tutorial.context.BaseScenario;
 import com.cucumber.tutorial.util.DateUtils;
 import io.jtest.utils.clients.http.HttpClient;
-import io.jtest.utils.clients.http.wrappers.HttpResponseWrapper;
+import io.jtest.utils.clients.http.PlainHttpResponse;
 import io.jtest.utils.common.JsonUtils;
 import io.jtest.utils.matcher.ObjectMatcher;
 import io.jtest.utils.matcher.condition.MatchCondition;
@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -44,38 +45,38 @@ public abstract class HttpService extends BaseScenario {
         }
     }
 
-    public HttpResponseWrapper executeAndMatch(String expected, MatchCondition... matchConditions) {
+    public PlainHttpResponse executeAndMatch(String expected, MatchCondition... matchConditions) {
         return executeAndMatch(expected, null, null, matchConditions);
     }
 
-    public HttpResponseWrapper executeAndMatch(String expected, Consumer<CloseableHttpResponse> consumer, MatchCondition... matchConditions) {
+    public PlainHttpResponse executeAndMatch(String expected, Consumer<CloseableHttpResponse> consumer, MatchCondition... matchConditions) {
         return executeAndMatch(expected, consumer, null, matchConditions);
     }
 
-    public HttpResponseWrapper executeAndMatch(String expected, Integer pollingTimeoutSeconds, MatchCondition... matchConditions) {
+    public PlainHttpResponse executeAndMatch(String expected, Integer pollingTimeoutSeconds, MatchCondition... matchConditions) {
         return executeAndMatch(expected, pollingTimeoutSeconds, 3000, matchConditions);
     }
 
-    public HttpResponseWrapper executeAndMatch(String expected, Consumer<CloseableHttpResponse> consumer, Integer pollingTimeoutSeconds, MatchCondition... matchConditions) {
+    public PlainHttpResponse executeAndMatch(String expected, Consumer<CloseableHttpResponse> consumer, Integer pollingTimeoutSeconds, MatchCondition... matchConditions) {
         return executeAndMatch(expected, consumer, pollingTimeoutSeconds, 3000, matchConditions);
     }
 
-    public HttpResponseWrapper executeAndMatch(String expected, Integer pollingTimeoutSeconds,
-                                               long retryIntervalMillis, MatchCondition... matchConditions) {
+    public PlainHttpResponse executeAndMatch(String expected, Integer pollingTimeoutSeconds,
+                                             long retryIntervalMillis, MatchCondition... matchConditions) {
         return executeAndMatch(expected, null, pollingTimeoutSeconds, retryIntervalMillis, null, matchConditions);
     }
 
-    public HttpResponseWrapper executeAndMatch(String expected, Consumer<CloseableHttpResponse> consumer, Integer pollingTimeoutSeconds,
-                                               long retryIntervalMillis, MatchCondition... matchConditions) {
+    public PlainHttpResponse executeAndMatch(String expected, Consumer<CloseableHttpResponse> consumer, Integer pollingTimeoutSeconds,
+                                             long retryIntervalMillis, MatchCondition... matchConditions) {
         return executeAndMatch(expected, consumer, pollingTimeoutSeconds, retryIntervalMillis, null, matchConditions);
     }
 
-    public HttpResponseWrapper executeAndMatch(String expected, Consumer<CloseableHttpResponse> consumer, Integer pollingDurationSeconds, long retryIntervalMillis,
-                                               Double exponentialBackOff, MatchCondition... matchConditions) {
+    public PlainHttpResponse executeAndMatch(String expected, Consumer<CloseableHttpResponse> consumer, Integer pollingDurationSeconds, long retryIntervalMillis,
+                                             Double exponentialBackOff, MatchCondition... matchConditions) {
         logRequest(client);
         logExpected(expected);
         final HttpResponseReference responseRef = new HttpResponseReference();
-        HttpResponseWrapper responseWrapper;
+        PlainHttpResponse plainResponse;
         try {
             if (pollingDurationSeconds == null || pollingDurationSeconds == 0) {
                 responseRef.set(client.execute());
@@ -88,14 +89,14 @@ public abstract class HttpService extends BaseScenario {
                         throw new RuntimeException(e);
                     }
                     return responseRef.get();
-                }, pollingDurationSeconds, retryIntervalMillis, exponentialBackOff, matchConditions));
+                }, Duration.ofSeconds(pollingDurationSeconds), retryIntervalMillis, exponentialBackOff, matchConditions));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         } finally {
             try {
-                responseWrapper = new HttpResponseWrapper(responseRef.get());
-                logActual(responseWrapper);
+                plainResponse = PlainHttpResponse.from(responseRef.get());
+                logActual(plainResponse);
                 if (consumer != null) {
                     consumer.accept(responseRef.get());
                 } else {
@@ -105,7 +106,7 @@ public abstract class HttpService extends BaseScenario {
                 throw new RuntimeException(e);
             }
         }
-        return responseWrapper;
+        return plainResponse;
     }
 
     private void logRequest(HttpClient client) {
@@ -128,7 +129,7 @@ public abstract class HttpService extends BaseScenario {
         }
     }
 
-    private void logActual(HttpResponseWrapper response) {
+    private void logActual(PlainHttpResponse response) {
         if (logDetails) {
             scenarioUtils.log("------------------ ACTUAL RESPONSE ------------------\nSTATUS: {} {}\nBODY: \n{}\nHEADERS:\n{}\n",
                     response.getStatus(), response.getReasonPhrase(),
