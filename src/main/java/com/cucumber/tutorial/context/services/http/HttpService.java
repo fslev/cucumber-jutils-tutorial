@@ -76,7 +76,7 @@ public abstract class HttpService extends BaseScenario {
         logRequest(client);
         logExpected(expected);
         final HttpResponseReference responseRef = new HttpResponseReference();
-        PlainHttpResponse plainResponse;
+        PlainHttpResponse plainResponse = null;
         try {
             if (pollingDurationSeconds == null || pollingDurationSeconds == 0) {
                 responseRef.set(client.execute());
@@ -103,7 +103,8 @@ public abstract class HttpService extends BaseScenario {
                     responseRef.get().close();
                 }
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                scenarioUtils.log(e);
+                LOG.error(e);
             }
         }
         return plainResponse;
