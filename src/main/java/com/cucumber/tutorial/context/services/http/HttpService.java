@@ -92,7 +92,7 @@ public abstract class HttpService extends BaseScenario {
                 }, Duration.ofSeconds(pollingDurationSeconds), retryIntervalMillis, exponentialBackOff, matchConditions));
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Could not execute HTTP request", e);
         } finally {
             try {
                 plainResponse = PlainHttpResponse.from(responseRef.get());
