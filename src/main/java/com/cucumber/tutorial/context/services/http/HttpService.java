@@ -101,7 +101,7 @@ public abstract class HttpService extends BaseScenario {
                 if (consumer != null) {
                     consumer.accept(responseRef.get());
                 } else {
-                    EntityUtils.consume(responseRef.get().getEntity());
+                    EntityUtils.consumeQuietly(responseRef.get().getEntity());
                     responseRef.get().close();
                 }
             } catch (Exception e) {
@@ -147,7 +147,7 @@ public abstract class HttpService extends BaseScenario {
         public void set(CloseableHttpResponse response) {
             if (this.response != null) {
                 try {
-                    EntityUtils.consume(this.response.getEntity());
+                    EntityUtils.consumeQuietly(this.response.getEntity());
                     this.response.close();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
