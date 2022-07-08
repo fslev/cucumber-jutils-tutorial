@@ -6,6 +6,9 @@ import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.support.hierarchical.ParallelExecutionConfiguration;
 import org.junit.platform.engine.support.hierarchical.ParallelExecutionConfigurationStrategy;
 
+import java.util.concurrent.ForkJoinPool;
+import java.util.function.Predicate;
+
 public class FixedParallelExecutionConfigurationStrategy implements ParallelExecutionConfiguration, ParallelExecutionConfigurationStrategy {
     private static final Logger LOG = LogManager.getLogger();
 
@@ -19,6 +22,12 @@ public class FixedParallelExecutionConfigurationStrategy implements ParallelExec
     public ParallelExecutionConfiguration createConfiguration(final ConfigurationParameters configurationParameters) {
         return this;
     }
+
+    @Override
+    public Predicate<? super ForkJoinPool> getSaturatePredicate() {
+        return (ForkJoinPool p) -> true;
+    }
+
 
     @Override
     public int getParallelism() {
