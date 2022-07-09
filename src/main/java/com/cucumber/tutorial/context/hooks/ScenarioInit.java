@@ -8,7 +8,6 @@ import io.cucumber.java.PendingException;
 
 import java.util.Map;
 
-import static com.cucumber.tutorial.config.Config.AUTH_TOKEN;
 import static com.cucumber.tutorial.config.Config.PROPS;
 
 @ScenarioScoped
@@ -22,9 +21,8 @@ public class ScenarioInit extends BaseScenario {
     }
 
     @Before(order = 1)
-    public void fillScenarioProps() {
+    public void initScenarioProps() {
         scenarioVars.putAll((Map) PROPS);
-        scenarioVars.putAll(Map.of("token", AUTH_TOKEN));
     }
 
 }

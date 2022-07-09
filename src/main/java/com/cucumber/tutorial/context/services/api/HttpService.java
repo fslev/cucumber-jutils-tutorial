@@ -1,4 +1,4 @@
-package com.cucumber.tutorial.context.services.http;
+package com.cucumber.tutorial.context.services.api;
 
 import com.cucumber.tutorial.context.BaseScenario;
 import com.cucumber.tutorial.util.DateUtils;
@@ -20,7 +20,6 @@ import java.util.function.Consumer;
 
 public abstract class HttpService extends BaseScenario {
 
-    private boolean logDetails = true;
     protected HttpClient client;
 
     protected abstract String address();
@@ -31,11 +30,6 @@ public abstract class HttpService extends BaseScenario {
 
     protected static Map<String, String> defaultHeaders() {
         return Map.of("Content-Type", "application/json", "Accept", "application/json");
-    }
-
-    public HttpService logDetails(boolean value) {
-        this.logDetails = value;
-        return this;
     }
 
     public CloseableHttpResponse execute() {
@@ -127,18 +121,14 @@ public abstract class HttpService extends BaseScenario {
     }
 
     private void logExpected(String expected) {
-        if (logDetails) {
-            scenarioUtils.log("----------------- EXPECTED RESPONSE -----------------\n{}\n\n", expected);
-        }
+        scenarioUtils.log("----------------- EXPECTED RESPONSE -----------------\n{}\n\n", expected);
     }
 
     private void logActual(PlainHttpResponse response) {
-        if (logDetails) {
-            scenarioUtils.log("------------------ ACTUAL RESPONSE ------------------\nSTATUS: {} {}\nBODY: \n{}\nHEADERS:\n{}\n",
-                    response.getStatus(), response.getReasonPhrase(),
-                    (response.getEntity() != null) ? JsonUtils.prettyPrint(response.getEntity().toString()) : "Empty data <∅>",
-                    response.getHeaders());
-        }
+        scenarioUtils.log("------------------ ACTUAL RESPONSE ------------------\nSTATUS: {} {}\nBODY: \n{}\nHEADERS:\n{}\n",
+                response.getStatus(), response.getReasonPhrase(),
+                (response.getEntity() != null) ? JsonUtils.prettyPrint(response.getEntity().toString()) : "Empty data <∅>",
+                response.getHeaders());
     }
 
     private static class HttpResponseReference {
