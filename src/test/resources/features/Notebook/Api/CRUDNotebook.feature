@@ -9,7 +9,7 @@ Feature: CRUD notebook feature
     * Create notebook with requestBody=#[createNotebookRequest1] and check response={"status":201,"body":{"id":"~[notebookId1]"}}
     * # Get all notebooks and check previous notebook is present inside the list
     * Get notebooks with queryParams={"page":0, "pageSize":100} and check 0s until response=#[getNotebooksResponse1]
-    * # Create notebook with missing price
+    * # Create another notebook with missing price
     * Create notebook with requestBody={"name":"Notebook without price"} and check response={"status":201,"body":{"id":"~[notebookId2]"}}
     * Get notebooks with queryParams={"page":0, "pageSize":100} and check 0s until response=#[getNotebooksResponse2]
     * # Get notebooks from page very far away. Check field "_embedded" is missing from response body
