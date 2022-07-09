@@ -7,6 +7,11 @@ Feature: CRUD notebook feature [ERROR cases]
     * # Create notebook with invalid request body
     * Create notebook with requestBody=invalid json and check response={"status":500}
 
+  Scenario: Create notebooks with same name
+    * Create notebook with requestBody={"name":"notebookA"} and check response={"status":201}
+    * # Conflict should be raised
+    * Create notebook with requestBody={"name":"notebookA"} and check response={"status":409}
+
   Scenario: Get notebook with invalid data
     * Get notebook with id=abc and check response={"status":400}
     * Get notebook with id=99999999999999 and check response={"status":400}

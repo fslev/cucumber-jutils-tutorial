@@ -33,6 +33,22 @@ Feature: CRUD notebook feature
     * Get notebook with id=#[notebookId] and check response=#[getNotebookResponse2]
     * Get notebooks with queryParams={"page":0, "pageSize":100} and check 0s until response=#[getNotebooksResponse1]
 
+  Scenario Template: Update existing notebook with id <notebookId>
+    * load vars from dir "Notebook/Api/scene3a"
+    * var id="<notebookId>"
+    * Update notebook having id=#[id] with requestBody=<updateNotebookRequest> and check response={"status":202}
+    * Get notebook with id=#[id] and check response=<getNotebookResponse>
+    @notebook_1
+    Examples:
+      | notebookId | updateNotebookRequest       | getNotebookResponse       |
+      | 1          | #[updateNotebook1Request]   | #[getNotebook1Response]   |
+      | 1          | #[updateNotebook1Request_a] | #[getNotebook1Response_a] |
+    @notebook_2
+    Examples:
+      | notebookId | updateNotebookRequest       | getNotebookResponse       |
+      | 2          | #[updateNotebook2Request]   | #[getNotebook2Response]   |
+      | 2          | #[updateNotebook2Request_a] | #[getNotebook2Response_a] |
+
   Scenario: Create notebook and delete it
     * load vars from dir "Notebook/Api/scene4"
     * # Create notebook and extract its id
