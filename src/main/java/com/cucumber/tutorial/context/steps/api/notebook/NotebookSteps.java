@@ -27,9 +27,9 @@ public class NotebookSteps extends BaseScenario {
         notebookService.buildGetNotebooks(queryParams).executeAndMatch(expected, pollingTimeout);
     }
 
-    @Then("Get notebook with id={} and check response={}")
-    public void getNotebookAndMatch(String id, String expected) {
-        notebookService.buildGetNotebook(id).executeAndMatch(expected);
+    @Then("Get notebook with id={} and check {}s until response={}")
+    public void getNotebookAndMatch(String id, Integer pollingTimeout, String expected) {
+        notebookService.buildGetNotebook(id).executeAndMatch(expected, pollingTimeout);
     }
 
     @Then("Create notebook with requestBody={} and check response={}")

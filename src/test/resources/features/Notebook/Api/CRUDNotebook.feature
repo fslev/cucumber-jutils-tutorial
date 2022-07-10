@@ -20,24 +20,24 @@ Feature: CRUD notebook feature
     * # Create notebook and extract its id
     * Create notebook with requestBody=#[createNotebookRequest1] and check response={"status":201,"body":{"id":"~[notebookId]"}}
     * # Check notebook details
-    * Get notebook with id=#[notebookId] and check response=#[getNotebookResponse1]
+    * Get notebook with id=#[notebookId] and check 0s until response=#[getNotebookResponse1]
 
   Scenario: Create notebook and update it
     * load vars from dir "Notebook/Api/scene3"
     * # Create notebook and extract its id
     * Create notebook with requestBody=#[createNotebookRequest1] and check response={"status":201,"body":{"id":"~[notebookId]"}}
     * # Check notebook details
-    * Get notebook with id=#[notebookId] and check response=#[getNotebookResponse1]
+    * Get notebook with id=#[notebookId] and check 0s until response=#[getNotebookResponse1]
     * # Update notebook and check details
     * Update notebook having id=#[notebookId] with requestBody=#[updateNotebookRequest1] and check response={"status":202}
-    * Get notebook with id=#[notebookId] and check response=#[getNotebookResponse2]
+    * Get notebook with id=#[notebookId] and check 5s until response=#[getNotebookResponse2]
     * Get notebooks with queryParams={"page":0, "pageSize":100} and check 0s until response=#[getNotebooksResponse1]
 
   Scenario Template: Update existing notebook with id <notebookId>
     * load vars from dir "Notebook/Api/scene3a"
     * var id="<notebookId>"
     * Update notebook having id=#[id] with requestBody=<updateNotebookRequest> and check response={"status":202}
-    * Get notebook with id=#[id] and check response=<getNotebookResponse>
+    * Get notebook with id=#[id] and check 5s until response=<getNotebookResponse>
     @notebook_1
     Examples:
       | notebookId | updateNotebookRequest       | getNotebookResponse       |
@@ -54,11 +54,11 @@ Feature: CRUD notebook feature
     * # Create notebook and extract its id
     * Create notebook with requestBody=#[createNotebookRequest1] and check response={"status":201,"body":{"id":"~[notebookId]"}}
     * # Check notebook details
-    * Get notebook with id=#[notebookId] and check response=#[getNotebookResponse1]
+    * Get notebook with id=#[notebookId] and check 0s until response=#[getNotebookResponse1]
     * # Delete notebook
     * Delete notebook with id=#[notebookId] and check response={"status":202}
     * # Check notebook does not exist anymore
-    * Get notebook with id=#[notebookId] and check response={"status":404}
+    * Get notebook with id=#[notebookId] and check 5s until response={"status":404}
     * Get notebooks with queryParams={"page":0, "pageSize":100} and check 0s until response=#[getNotebooksResponse1]
     * # Delete notebook again and check for 404 Not Found status
     * Delete notebook with id=#[notebookId] and check response={"status":404}

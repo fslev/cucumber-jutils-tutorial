@@ -13,10 +13,10 @@ Feature: CRUD notebook feature [ERROR cases]
     * Create notebook with requestBody={"name":"notebookA"} and check response={"status":409}
 
   Scenario: Get notebook with invalid data
-    * Get notebook with id=abc and check response={"status":400}
-    * Get notebook with id=99999999999999 and check response={"status":400}
-    * Get notebook with id=0 and check response={"status":404}
-    * Get notebook with id=-1 and check response={"status":404}
+    * Get notebook with id=abc and check 0s until response={"status":400}
+    * Get notebook with id=99999999999999 and check 0s until response={"status":400}
+    * Get notebook with id=0 and check 0s until response={"status":404}
+    * Get notebook with id=-1 and check 0s until response={"status":404}
 
   Scenario: Get notebooks with invalid query params
     * # Missing query params
@@ -32,9 +32,9 @@ Feature: CRUD notebook feature [ERROR cases]
     * Get notebooks with queryParams={"page":1,"pageSize":10000000000000} and check 0s until response={"status":400}
 
   Scenario: Get notebook with invalid id
-    * Get notebook with id=0 and check response={"status":404}
-    * Get notebook with id=-1 and check response={"status":404}
-    * Get notebook with id=abc and check response={"status":400}
+    * Get notebook with id=0 and check 0s until response={"status":404}
+    * Get notebook with id=-1 and check 0s until response={"status":404}
+    * Get notebook with id=abc and check 0s until response={"status":400}
 
   Scenario: Create notebook and update it with invalid data
     * load vars from dir "Notebook/Api/Error/scene1"
