@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.github.fslev</groupId>
-    <artifactId>cucumber-utils-tutorial</artifactId>
+    <artifactId>cucumber-jutils-tutorial</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <description>
-        A simple test-framework tutorial on how to use cucumber-utils
+        A simple test-framework tutorial on how to use cucumber-jutils
     </description>
 
     <developers>
@@ -158,7 +158,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <projectName>cucumber-utils-tutorial</projectName>
+                            <projectName>cucumber-jutils-tutorial</projectName>
                             <skip>false</skip>
                             <outputDirectory>${project.build.directory}</outputDirectory>
                             <inputDirectory>${project.build.directory}/cucumber-report</inputDirectory>
