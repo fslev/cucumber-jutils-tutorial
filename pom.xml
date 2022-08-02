@@ -26,7 +26,7 @@
         <guice.version>[5.1.0,)</guice.version>
         <junit.platform.version>[1.9.0,)</junit.platform.version>
         <surefire.version>3.0.0-M7</surefire.version>
-        <tags>@all</tags>
+        <tags>@notebook</tags>
         <concurrent>false</concurrent>
         <threads>8</threads>
     </properties>
