@@ -38,7 +38,7 @@ _Finally_, you will learn how to generate test reports with [**maven-cucumber-re
 
 ### Cucumber for Java Plugin Configuration
 
-Cucumber for Java IntelliJ plugin should read configuration from project _src/test/resources/cucumber.properties_  
+Cucumber for Java IntelliJ plugin should read configuration from project _src/test/resources/junit-platform.properties_  
 
 ## Test cases
 ### Test Login API 
