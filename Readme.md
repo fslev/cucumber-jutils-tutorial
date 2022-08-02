@@ -1,14 +1,14 @@
 # Cucumber JUtils tutorial
 
 
-Here is a small tutorial on how to use [**cucumber-jutils**](https://github.com/fslev/cucumber-utils) library inside a test framework.  
+Here is a small tutorial on how to use [**cucumber-jutils**](https://github.com/fslev/cucumber-jutils) library inside a test framework.  
 **Test target**: HTTP REST APIs, hosted by [reqres](https://reqres.in/).   
 
 ## Summary
 [*Reqres*](https://reqres.in/) provides a series of HTTPs REST APIs that accept fake test data and returns a limited set of static responses.  
 This tutorial describes how to setup a basic test-framework which executes Cucumber acceptance/integration tests that call these APIs and compares actual responses with expected data.    
 
-You will see some tips and tricks on how to use [**cucumber-jutils**](https://github.com/fslev/cucumber-utils) library, as well on how to use **Cucumber** native *parallelization* feature. This will ease your work as a test engineer / developer.  
+You will see some tips and tricks on how to use [**cucumber-jutils**](https://github.com/fslev/cucumber-jutils) library, as well on how to use **Cucumber** native *parallelization* feature. This will ease your work as a test engineer / developer.  
 This library contains many features such as:
  - easy to use HTTP client  ([**jtest-utils**](https://github.com/fslev/jtest-utils))  
  - database clients ([**jtest-utils**](https://github.com/fslev/jtest-utils))  
@@ -19,7 +19,7 @@ This library contains many features such as:
    - querying and updating databases and match results
    - loading Scenario variables directly from external resources  
  - etc.  
-For more details read about [**cucumber-jutils**](https://github.com/fslev/cucumber-utils) and [**jtest-utils**](https://github.com/fslev/jtest-utils).    
+For more details read about [**cucumber-jutils**](https://github.com/fslev/cucumber-jutils) and [**jtest-utils**](https://github.com/fslev/jtest-utils).    
 
 _Finally_, you will learn how to generate test reports with [**maven-cucumber-reporting**](https://github.com/damianszczepanik/maven-cucumber-reporting) plugin.  
 
@@ -38,7 +38,7 @@ _Finally_, you will learn how to generate test reports with [**maven-cucumber-re
 
 ### Cucumber for Java Plugin Configuration
 
-Cucumber for Java IntelliJ plugin should read configuration from project _src/test/resources/cucumber.properties_  
+Cucumber for Java IntelliJ plugin should read configuration from project _src/test/resources/junit-platform.properties_  
 
 ## Test cases
 ### Test Login API 
@@ -230,5 +230,5 @@ mvn clean verify -Pprod -Dtags=@all -Dconcurrent=true
 ## Cucumber Test Report
 The report is generated in HTML format inside target/cucumber-html-reports:  
 
-![Features overview](https://github.com/fslev/cucumber-utils-tutorial/blob/master/reports/1a.png)
-![Scenario overview](https://github.com/fslev/cucumber-utils-tutorial/blob/master/reports/1b.png)
+![Features overview](https://github.com/fslev/cucumber-jutils-tutorial/blob/master/reports/1a.png)
+![Scenario overview](https://github.com/fslev/cucumber-jutils-tutorial/blob/master/reports/1b.png)
