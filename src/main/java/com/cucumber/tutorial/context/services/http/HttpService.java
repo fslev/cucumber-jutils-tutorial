@@ -95,18 +95,20 @@ public abstract class HttpService extends BaseScenario {
         } catch (IOException e) {
             throw new RuntimeException("Could not execute HTTP request", e);
         } finally {
-            try {
-                plainResponse = PlainHttpResponse.from(responseRef.get());
-                logActual(plainResponse);
-                if (consumer != null) {
-                    consumer.accept(responseRef.get());
-                } else {
-                    EntityUtils.consumeQuietly(responseRef.get().getEntity());
-                    responseRef.get().close();
+            if (responseRef.get() != null) {
+                try {
+                    plainResponse = PlainHttpResponse.from(responseRef.get());
+                    logActual(plainResponse);
+                    if (consumer != null) {
+                        consumer.accept(responseRef.get());
+                    } else {
+                        EntityUtils.consumeQuietly(responseRef.get().getEntity());
+                        responseRef.get().close();
+                    }
+                } catch (Exception e) {
+                    scenarioUtils.log(e);
+                    LOG.error(e);
                 }
-            } catch (Exception e) {
-                scenarioUtils.log(e);
-                LOG.error(e);
             }
         }
         return plainResponse;
