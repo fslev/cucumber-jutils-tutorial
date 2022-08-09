@@ -2,9 +2,9 @@ package com.cucumber.tutorial.context.services.http;
 
 import com.cucumber.tutorial.context.BaseScenario;
 import com.cucumber.tutorial.util.DateUtils;
+import io.json.compare.util.JsonUtils;
 import io.jtest.utils.clients.http.HttpClient;
 import io.jtest.utils.clients.http.PlainHttpResponse;
-import io.jtest.utils.common.JsonUtils;
 import io.jtest.utils.matcher.ObjectMatcher;
 import io.jtest.utils.matcher.condition.MatchCondition;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -138,8 +138,16 @@ public abstract class HttpService extends BaseScenario {
         if (logDetails) {
             scenarioUtils.log("------------------ ACTUAL RESPONSE ------------------\nSTATUS: {} {}\nBODY: \n{}\nHEADERS:\n{}\n",
                     response.getStatus(), response.getReasonPhrase(),
-                    (response.getEntity() != null) ? JsonUtils.prettyPrint(response.getEntity().toString()) : "Empty data <∅>",
+                    (response.getEntity() != null) ? prettyPrint(response.getEntity().toString()) : "Empty data <∅>",
                     response.getHeaders());
+        }
+    }
+
+    private static String prettyPrint(String content) {
+        try {
+            return JsonUtils.prettyPrint(content);
+        } catch (IOException e) {
+            return content;
         }
     }
 

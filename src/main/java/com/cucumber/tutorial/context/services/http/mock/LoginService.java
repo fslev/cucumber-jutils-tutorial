@@ -2,9 +2,9 @@ package com.cucumber.tutorial.context.services.http.mock;
 
 import com.cucumber.tutorial.context.services.http.HttpService;
 import io.cucumber.guice.ScenarioScoped;
+import io.json.compare.util.JsonUtils;
 import io.jtest.utils.clients.http.HttpClient;
 import io.jtest.utils.clients.http.Method;
-import io.jtest.utils.common.JsonUtils;
 import io.jtest.utils.common.StringFormat;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
