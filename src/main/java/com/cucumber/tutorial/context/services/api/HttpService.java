@@ -2,9 +2,9 @@ package com.cucumber.tutorial.context.services.api;
 
 import com.cucumber.tutorial.context.BaseScenario;
 import com.cucumber.tutorial.util.DateUtils;
+import io.json.compare.util.JsonUtils;
 import io.jtest.utils.clients.http.HttpClient;
 import io.jtest.utils.clients.http.PlainHttpResponse;
-import io.jtest.utils.common.JsonUtils;
 import io.jtest.utils.matcher.ObjectMatcher;
 import io.jtest.utils.matcher.condition.MatchCondition;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -20,6 +20,7 @@ import java.util.function.Consumer;
 
 public abstract class HttpService extends BaseScenario {
 
+    private boolean logDetails = true;
     protected HttpClient client;
 
     protected abstract String address();
@@ -30,6 +31,11 @@ public abstract class HttpService extends BaseScenario {
 
     protected static Map<String, String> defaultHeaders() {
         return Map.of("Content-Type", "application/json", "Accept", "application/json");
+    }
+
+    public HttpService logDetails(boolean value) {
+        this.logDetails = value;
+        return this;
     }
 
     public CloseableHttpResponse execute() {
@@ -127,10 +133,20 @@ public abstract class HttpService extends BaseScenario {
     }
 
     private void logActual(PlainHttpResponse response) {
-        scenarioUtils.log("------------------ ACTUAL RESPONSE ------------------\nSTATUS: {} {}\nBODY: \n{}\nHEADERS:\n{}\n",
-                response.getStatus(), response.getReasonPhrase(),
-                (response.getEntity() != null) ? JsonUtils.prettyPrint(response.getEntity().toString()) : "Empty data <∅>",
-                response.getHeaders());
+        if (logDetails) {
+            scenarioUtils.log("------------------ ACTUAL RESPONSE ------------------\nSTATUS: {} {}\nBODY: \n{}\nHEADERS:\n{}\n",
+                    response.getStatus(), response.getReasonPhrase(),
+                    (response.getEntity() != null) ? prettyPrint(response.getEntity().toString()) : "Empty data <∅>",
+                    response.getHeaders());
+        }
+    }
+
+    private static String prettyPrint(String content) {
+        try {
+            return JsonUtils.prettyPrint(content);
+        } catch (IOException e) {
+            return content;
+        }
     }
 
     private static class HttpResponseReference {
