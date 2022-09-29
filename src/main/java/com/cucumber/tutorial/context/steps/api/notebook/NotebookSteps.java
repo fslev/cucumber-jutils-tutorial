@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.inject.Inject;
 import io.cucumber.guice.ScenarioScoped;
 import io.cucumber.java.en.Then;
-import io.jtest.utils.common.JsonUtils;
+import io.json.compare.util.JsonUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.util.EntityUtils;
