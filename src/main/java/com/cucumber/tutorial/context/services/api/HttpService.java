@@ -34,7 +34,7 @@ import static com.cucumber.tutorial.util.PlainHttpResponseUtils.from;
 
 public abstract class HttpService extends BaseScenario {
 
-    protected static CloseableHttpClient client = HttpClients.custom()
+    private final static CloseableHttpClient client = HttpClients.custom()
             .setConnectionManager(new PoolingHttpClientConnectionManager()).build();
 
     protected HttpUriRequestBase request;
