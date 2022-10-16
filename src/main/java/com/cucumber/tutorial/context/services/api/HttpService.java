@@ -3,44 +3,76 @@ package com.cucumber.tutorial.context.services.api;
 import com.cucumber.tutorial.context.BaseScenario;
 import com.cucumber.tutorial.util.DateUtils;
 import io.json.compare.util.JsonUtils;
-import io.jtest.utils.clients.http.HttpClient;
-import io.jtest.utils.clients.http.PlainHttpResponse;
 import io.jtest.utils.matcher.ObjectMatcher;
 import io.jtest.utils.matcher.condition.MatchCondition;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.util.EntityUtils;
+import io.jtest.utils.matcher.http.PlainHttpResponse;
+import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.core5.http.Header;
+import org.apache.hc.core5.http.Method;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.hc.core5.http.message.BasicHeader;
+import org.apache.hc.core5.http.message.BasicNameValuePair;
+import org.apache.hc.core5.net.URIBuilder;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+
+import static com.cucumber.tutorial.util.PlainHttpResponseUtils.from;
 
 public abstract class HttpService extends BaseScenario {
 
-    private boolean logDetails = true;
-    protected HttpClient client;
+    protected static CloseableHttpClient client = HttpClients.custom()
+            .setConnectionManager(new PoolingHttpClientConnectionManager()).build();
+
+    protected HttpUriRequestBase request;
 
     protected abstract String address();
 
-    protected HttpClient.Builder getBuilder() {
-        return new HttpClient.Builder().address(address()).headers(defaultHeaders());
+    protected HttpUriRequestBase getDefaultRequest(Method method, URI uri) {
+        HttpUriRequestBase requestBase = new HttpUriRequestBase(method.toString(), uri);
+        requestBase.setHeaders(headers(defaultHeaders()));
+        return requestBase;
     }
 
     protected static Map<String, String> defaultHeaders() {
         return Map.of("Content-Type", "application/json", "Accept", "application/json");
     }
 
-    public HttpService logDetails(boolean value) {
-        this.logDetails = value;
-        return this;
+    protected static URI uri(String uri, Map<String, String> queryParams) {
+        URIBuilder uriBuilder;
+        try {
+            uriBuilder = new URIBuilder(uri);
+            if (queryParams != null) {
+                uriBuilder.addParameters(queryParams.entrySet().stream().map(param ->
+                        new BasicNameValuePair(param.getKey(), param.getValue())).collect(Collectors.toList()));
+            }
+            return uriBuilder.build();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected static Header[] headers(Map<String, String> headers) {
+        return headers.entrySet().stream()
+                .map(h -> new BasicHeader(h.getKey(), h.getValue())).collect(Collectors.toList())
+                .toArray(Header[]::new);
     }
 
     public CloseableHttpResponse execute() {
         try {
-            return client.execute();
+            return client.execute(request);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -80,16 +112,16 @@ public abstract class HttpService extends BaseScenario {
         PlainHttpResponse plainResponse = null;
         try {
             if (pollingDurationSeconds == null || pollingDurationSeconds == 0) {
-                responseRef.set(client.execute());
-                scenarioVars.putAll(ObjectMatcher.matchHttpResponse(null, expected, responseRef.get(), matchConditions));
+                responseRef.set(client.execute(request));
+                scenarioVars.putAll(ObjectMatcher.matchHttpResponse(null, from(expected), from(responseRef.get()), matchConditions));
             } else {
-                scenarioVars.putAll(ObjectMatcher.matchHttpResponse(null, expected, () -> {
+                scenarioVars.putAll(ObjectMatcher.matchHttpResponse(null, from(expected), () -> {
                     try {
-                        responseRef.set(client.execute());
+                        responseRef.set(client.execute(request));
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-                    return responseRef.get();
+                    return from(responseRef.get());
                 }, Duration.ofSeconds(pollingDurationSeconds), retryIntervalMillis, exponentialBackOff, matchConditions));
             }
         } catch (IOException e) {
@@ -97,7 +129,7 @@ public abstract class HttpService extends BaseScenario {
         } finally {
             if (responseRef.get() != null) {
                 try {
-                    plainResponse = PlainHttpResponse.from(responseRef.get());
+                    plainResponse = from(responseRef.get());
                     logActual(plainResponse);
                     if (consumer != null) {
                         consumer.accept(responseRef.get());
@@ -117,14 +149,14 @@ public abstract class HttpService extends BaseScenario {
     private void logRequest(HttpClient client) {
         try {
             scenarioUtils.log("------- API REQUEST ({}) -------\n{}\nHEADERS: {}\nBODY: {}\n\n",
-                    DateUtils.currentDateTime(), client.getMethod() + " " + URLDecoder.decode(client.getUri(), StandardCharsets.UTF_8.name()),
-                    client.getHeaders(), client.getRequestEntity() != null ? "\n" + client.getRequestEntity() : "N/A");
-        } catch (UnsupportedEncodingException e) {
-            scenarioUtils.log("Error logging request:\n{}", e);
-            LOG.error(e);
-        }
-        if (client.getProxyHost() != null) {
-            scenarioUtils.log("via PROXY HOST: {}", client.getProxyHost());
+                    DateUtils.currentDateTime(), request.getMethod() + " " +
+                            URLDecoder.decode(request.getUri().toString(), StandardCharsets.UTF_8),
+                    request.getHeaders(), request.getEntity() != null ? "\n" + request.getEntity() : "N/A");
+            if (request.getConfig() != null && request.getConfig().getProxy() != null) {
+                scenarioUtils.log("via PROXY HOST: {}", request.getConfig().getProxy());
+            }
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -133,12 +165,10 @@ public abstract class HttpService extends BaseScenario {
     }
 
     private void logActual(PlainHttpResponse response) {
-        if (logDetails) {
-            scenarioUtils.log("------------------ ACTUAL RESPONSE ------------------\nSTATUS: {} {}\nBODY: \n{}\nHEADERS:\n{}\n",
-                    response.getStatus(), response.getReasonPhrase(),
-                    (response.getEntity() != null) ? prettyPrint(response.getEntity().toString()) : "Empty data <∅>",
-                    response.getHeaders());
-        }
+        scenarioUtils.log("------------------ ACTUAL RESPONSE ------------------\nSTATUS: {} {}\nBODY: \n{}\nHEADERS:\n{}\n",
+                response.getStatus(), response.getReasonPhrase(),
+                (response.getEntity() != null) ? prettyPrint(response.getEntity().toString()) : "Empty data <∅>",
+                response.getHeaders());
     }
 
     private static String prettyPrint(String content) {

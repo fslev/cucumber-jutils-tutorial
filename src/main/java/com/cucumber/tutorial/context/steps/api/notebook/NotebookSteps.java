@@ -8,9 +8,10 @@ import com.google.inject.Inject;
 import io.cucumber.guice.ScenarioScoped;
 import io.cucumber.java.en.Then;
 import io.json.compare.util.JsonUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpStatus;
-import org.apache.http.util.EntityUtils;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.HttpStatus;
+import org.apache.hc.core5.http.ParseException;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
 
 import java.io.IOException;
 import java.util.Map;
@@ -38,12 +39,12 @@ public class NotebookSteps extends BaseScenario {
         notebookService.buildCreateNotebook(requestBody).executeAndMatch(expected, response -> {
             HttpEntity entity = null;
             try (response) {
-                if (response.getStatusLine().getStatusCode() == HttpStatus.SC_CREATED) {
+                if (response.getCode() == HttpStatus.SC_CREATED) {
                     entity = response.getEntity();
                     JsonNode jsonResponse = JsonUtils.toJson(EntityUtils.toString(entity));
                     cleanup.tagNotebook(jsonResponse.get("id").asText());
                 }
-            } catch (IOException e) {
+            } catch (IOException | ParseException e) {
                 LOG.warn("Cannot extract notebook id from response for later cleanup");
             } finally {
                 EntityUtils.consumeQuietly(entity);
