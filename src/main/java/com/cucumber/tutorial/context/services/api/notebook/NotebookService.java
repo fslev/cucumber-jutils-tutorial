@@ -14,29 +14,29 @@ public class NotebookService extends HttpService {
     public static final String NOTEBOOK_PATH = "/api/notebooks/#[notebookId]";
 
     public HttpService buildGetNotebooks(Map<String, String> queryParams) {
-        request = getDefaultRequest(Method.GET, uri(address(), NOTEBOOKS_PATH, null, queryParams));
+        request = getDefaultRequest(Method.GET, uri(NOTEBOOKS_PATH, null, queryParams));
         return this;
     }
 
     public HttpService buildGetNotebook(String id) {
-        request = getDefaultRequest(Method.GET, uri(address(), NOTEBOOK_PATH, Map.of("notebookId", id)));
+        request = getDefaultRequest(Method.GET, uri(NOTEBOOK_PATH, Map.of("notebookId", id)));
         return this;
     }
 
     public HttpService buildCreateNotebook(String requestBody) {
-        request = getDefaultRequest(Method.POST, uri(address(), NOTEBOOKS_PATH));
+        request = getDefaultRequest(Method.POST, uri(NOTEBOOKS_PATH));
         request.setEntity(new StringEntity(requestBody));
         return this;
     }
 
     public HttpService buildUpdateNotebook(String id, String requestBody) {
-        request = getDefaultRequest(Method.PATCH, uri(address(), NOTEBOOK_PATH, Map.of("notebookId", id)));
+        request = getDefaultRequest(Method.PATCH, uri(NOTEBOOK_PATH, Map.of("notebookId", id)));
         request.setEntity(new StringEntity(requestBody));
         return this;
     }
 
     public HttpService buildDeleteNotebook(String id) {
-        request = getDefaultRequest(Method.DELETE, uri(address(), NOTEBOOK_PATH, Map.of("notebookId", id)));
+        request = getDefaultRequest(Method.DELETE, uri(NOTEBOOK_PATH, Map.of("notebookId", id)));
         return this;
     }
 

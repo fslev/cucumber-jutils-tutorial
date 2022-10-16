@@ -47,8 +47,36 @@ public abstract class HttpService extends BaseScenario {
         return requestBase;
     }
 
+    protected URI uri(String path) {
+        return uri(path, null, null);
+    }
+
+    protected URI uri(String path, Map<String, String> pathParams) {
+        return uri(path, pathParams, null);
+    }
+
+    protected URI uri(String path, Map<String, String> pathParams, Map<String, String> queryParams) {
+        URIBuilder uriBuilder;
+        try {
+            uriBuilder = new URIBuilder(address() + (path != null ? StringFormat.replaceProps(path, pathParams) : ""));
+            if (queryParams != null) {
+                uriBuilder.addParameters(queryParams.entrySet().stream().map(param ->
+                        new BasicNameValuePair(param.getKey(), param.getValue())).collect(Collectors.toList()));
+            }
+            return uriBuilder.build();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     protected static Map<String, String> defaultHeaders() {
         return Map.of("Content-Type", "application/json", "Accept", "application/json");
+    }
+
+    protected static Header[] headers(Map<String, String> headers) {
+        return headers.entrySet().stream()
+                .map(h -> new BasicHeader(h.getKey(), h.getValue())).collect(Collectors.toList())
+                .toArray(Header[]::new);
     }
 
     public CloseableHttpResponse execute() {
@@ -151,35 +179,6 @@ public abstract class HttpService extends BaseScenario {
                 (response.getEntity() != null) ? prettyPrint(response.getEntity().toString()) : "Empty data <∅>",
                 response.getHeaders());
     }
-
-    protected static URI uri(String address, String path) {
-        return uri(address, path, null, null);
-    }
-
-    protected static URI uri(String address, String path, Map<String, String> pathParams) {
-        return uri(address, path, pathParams, null);
-    }
-
-    protected static URI uri(String address, String path, Map<String, String> pathParams, Map<String, String> queryParams) {
-        URIBuilder uriBuilder;
-        try {
-            uriBuilder = new URIBuilder(address + (path != null ? StringFormat.replaceProps(path, pathParams) : ""));
-            if (queryParams != null) {
-                uriBuilder.addParameters(queryParams.entrySet().stream().map(param ->
-                        new BasicNameValuePair(param.getKey(), param.getValue())).collect(Collectors.toList()));
-            }
-            return uriBuilder.build();
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    protected static Header[] headers(Map<String, String> headers) {
-        return headers.entrySet().stream()
-                .map(h -> new BasicHeader(h.getKey(), h.getValue())).collect(Collectors.toList())
-                .toArray(Header[]::new);
-    }
-
 
     private static String prettyPrint(String content) {
         try {
