@@ -14,6 +14,7 @@ import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.core5.http.Header;
 import org.apache.hc.core5.http.Method;
+import org.apache.hc.core5.http.ParseException;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.message.BasicHeader;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
@@ -151,11 +152,11 @@ public abstract class HttpService extends BaseScenario {
             scenarioUtils.log("------- API REQUEST ({}) -------\n{}\nHEADERS: {}\nBODY: {}\n\n",
                     DateUtils.currentDateTime(), request.getMethod() + " " +
                             URLDecoder.decode(request.getUri().toString(), StandardCharsets.UTF_8),
-                    request.getHeaders(), request.getEntity() != null ? "\n" + request.getEntity() : "N/A");
+                    request.getHeaders(), request.getEntity() != null ? "\n" + EntityUtils.toString(request.getEntity()) : "N/A");
             if (request.getConfig() != null && request.getConfig().getProxy() != null) {
                 scenarioUtils.log("via PROXY HOST: {}", request.getConfig().getProxy());
             }
-        } catch (URISyntaxException e) {
+        } catch (URISyntaxException | IOException | ParseException e) {
             throw new RuntimeException(e);
         }
     }
