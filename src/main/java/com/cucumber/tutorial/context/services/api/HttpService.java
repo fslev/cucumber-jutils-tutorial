@@ -12,11 +12,9 @@ import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
-import org.apache.hc.core5.http.Header;
 import org.apache.hc.core5.http.Method;
 import org.apache.hc.core5.http.ParseException;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
-import org.apache.hc.core5.http.message.BasicHeader;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
 import org.apache.hc.core5.net.URIBuilder;
 
@@ -43,7 +41,7 @@ public abstract class HttpService extends BaseScenario {
 
     protected HttpUriRequestBase getDefaultRequest(Method method, URI uri) {
         HttpUriRequestBase requestBase = new HttpUriRequestBase(method.toString(), uri);
-        requestBase.setHeaders(headers(defaultHeaders()));
+        addHeaders(requestBase, defaultHeaders());
         return requestBase;
     }
 
@@ -73,10 +71,8 @@ public abstract class HttpService extends BaseScenario {
         return Map.of("Content-Type", "application/json", "Accept", "application/json");
     }
 
-    protected static Header[] headers(Map<String, String> headers) {
-        return headers.entrySet().stream()
-                .map(h -> new BasicHeader(h.getKey(), h.getValue())).collect(Collectors.toList())
-                .toArray(Header[]::new);
+    public static void addHeaders(HttpUriRequestBase requestBase, Map<String, String> headers) {
+        headers.forEach(requestBase::addHeader);
     }
 
     public CloseableHttpResponse execute() {
