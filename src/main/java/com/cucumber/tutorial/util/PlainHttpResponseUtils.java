@@ -3,6 +3,7 @@ package com.cucumber.tutorial.util;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import io.jtest.utils.matcher.http.PlainHttpResponse;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.core5.http.HttpEntity;
@@ -16,8 +17,10 @@ import java.util.*;
 public class PlainHttpResponseUtils {
 
     public static PlainHttpResponse from(String content) {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.enable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS);
+        ObjectMapper mapper = new ObjectMapper().setNodeFactory(JsonNodeFactory.withExactBigDecimals(true))
+                .enable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS)
+                .configure(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS, true)
+                .configure(DeserializationFeature.ACCEPT_FLOAT_AS_INT, false);
         try {
             return mapper.readValue(content, PlainHttpResponse.class);
         } catch (JsonProcessingException e) {
