@@ -5,6 +5,7 @@ import io.cucumber.guice.ScenarioScoped;
 import org.apache.hc.core5.http.Method;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 @ScenarioScoped
@@ -25,13 +26,13 @@ public class NotebookService extends HttpService {
 
     public HttpService buildCreateNotebook(String requestBody) {
         request = getDefaultRequest(Method.POST, uri(NOTEBOOKS_PATH));
-        request.setEntity(new StringEntity(requestBody));
+        request.setEntity(new StringEntity(requestBody, StandardCharsets.UTF_8));
         return this;
     }
 
     public HttpService buildUpdateNotebook(String id, String requestBody) {
         request = getDefaultRequest(Method.PATCH, uri(NOTEBOOK_PATH, Map.of("notebookId", id)));
-        request.setEntity(new StringEntity(requestBody));
+        request.setEntity(new StringEntity(requestBody, StandardCharsets.UTF_8));
         return this;
     }
 
