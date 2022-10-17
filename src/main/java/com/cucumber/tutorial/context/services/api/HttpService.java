@@ -49,15 +49,15 @@ public abstract class HttpService extends BaseScenario {
         return uri(path, null, null);
     }
 
-    protected URI uri(String path, Map<String, String> pathParams) {
+    protected URI uri(String path, Map<String, Object> pathParams) {
         return uri(path, pathParams, null);
     }
 
-    protected URI uri(String path, Map<String, String> pathParams, Map<String, String> queryParams) {
+    protected URI uri(String path, Map<String, Object> pathParams, Map<String, String> queryParams) {
         return uri(address(), path, pathParams, queryParams);
     }
 
-    public static URI uri(String address, String path, Map<String, String> pathParams, Map<String, String> queryParams) {
+    public static URI uri(String address, String path, Map<String, Object> pathParams, Map<String, String> queryParams) {
         URIBuilder uriBuilder;
         try {
             uriBuilder = new URIBuilder(address + (path != null ? StringFormat.replaceProps(path, pathParams) : ""));
