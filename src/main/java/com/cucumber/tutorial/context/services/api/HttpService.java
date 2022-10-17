@@ -54,12 +54,17 @@ public abstract class HttpService extends BaseScenario {
     }
 
     protected URI uri(String path, Map<String, String> pathParams, Map<String, String> queryParams) {
+        return uri(address(), path, pathParams, queryParams);
+    }
+
+    public static URI uri(String address, String path, Map<String, String> pathParams, Map<String, String> queryParams) {
         URIBuilder uriBuilder;
         try {
-            uriBuilder = new URIBuilder(address() + (path != null ? StringFormat.replaceProps(path, pathParams) : ""));
+            uriBuilder = new URIBuilder(address + (path != null ? StringFormat.replaceProps(path, pathParams) : ""));
             if (queryParams != null) {
-                uriBuilder.addParameters(queryParams.entrySet().stream().map(param ->
-                        new BasicNameValuePair(param.getKey(), param.getValue())).collect(Collectors.toList()));
+                uriBuilder.addParameters(queryParams.entrySet().stream()
+                        .filter(e -> e.getValue() != null && !e.getValue().isEmpty())
+                        .map(param -> new BasicNameValuePair(param.getKey(), param.getValue())).collect(Collectors.toList()));
             }
             return uriBuilder.build();
         } catch (URISyntaxException e) {
