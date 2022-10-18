@@ -42,11 +42,11 @@ import static com.cucumber.tutorial.util.PlainHttpResponseUtils.from;
 
 public abstract class HttpService extends BaseScenario {
 
-    private final static CloseableHttpClient client = client();
+    private final static CloseableHttpClient client = init();
 
     protected HttpUriRequestBase request;
 
-    private static CloseableHttpClient client() {
+    private static CloseableHttpClient init() {
         try {
             SSLContext ctx = SSLContext.getInstance("TLS");
             ctx.init(new KeyManager[0], new TrustManager[]{new DefaultTrustManager()}, new SecureRandom());
