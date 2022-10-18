@@ -20,13 +20,19 @@ import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
 import org.apache.hc.core5.net.URIBuilder;
 
+import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 import java.time.Duration;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -42,11 +48,12 @@ public abstract class HttpService extends BaseScenario {
 
     private static CloseableHttpClient client() {
         try {
+            SSLContext ctx = SSLContext.getInstance("TLS");
+            ctx.init(new KeyManager[0], new TrustManager[]{new DefaultTrustManager()}, new SecureRandom());
             return HttpClients.custom()
                     .setConnectionManager(PoolingHttpClientConnectionManagerBuilder.create()
-                            .setSSLSocketFactory(new SSLConnectionSocketFactory(SSLContext.getInstance("TLS"),
-                                    new NoopHostnameVerifier())).build()).build();
-        } catch (NoSuchAlgorithmException e) {
+                            .setSSLSocketFactory(new SSLConnectionSocketFactory(ctx, new NoopHostnameVerifier())).build()).build();
+        } catch (NoSuchAlgorithmException | KeyManagementException e) {
             throw new RuntimeException(e);
         }
     }
@@ -220,6 +227,22 @@ public abstract class HttpService extends BaseScenario {
 
         public CloseableHttpResponse get() {
             return response;
+        }
+    }
+
+    private static class DefaultTrustManager implements X509TrustManager {
+
+        @Override
+        public void checkClientTrusted(X509Certificate[] arg0, String arg1) {
+        }
+
+        @Override
+        public void checkServerTrusted(X509Certificate[] arg0, String arg1) {
+        }
+
+        @Override
+        public X509Certificate[] getAcceptedIssuers() {
+            return null;
         }
     }
 }
