@@ -50,7 +50,7 @@ public class SqlSteps extends BaseScenario {
         }
     }
 
-    @Then("[util] Execute query {} and check {}s until result is")
+    @Then("[sql] Execute query {} and check {}s until result is")
     public void executeQueryAndMatch(String query, Integer pollingTimeoutSeconds, List<Map<String, Object>> expected) throws SQLException {
         scenarioUtils.log("Execute query '{}' and check for {} until result = {}", query, pollingTimeoutSeconds, expected);
         try {
