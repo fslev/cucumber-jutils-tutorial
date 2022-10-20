@@ -81,7 +81,10 @@ public abstract class HttpService extends BaseScenario {
     public static URI uri(String address, String path, Map<String, Object> pathParams, Map<String, String> queryParams) {
         URIBuilder uriBuilder;
         try {
-            uriBuilder = new URIBuilder(address + (path != null ? StringFormat.replaceProps(path, pathParams) : ""));
+            uriBuilder = new URIBuilder(address);
+            if (path != null) {
+                uriBuilder.appendPath(StringFormat.replaceProps(path, pathParams));
+            }
             if (queryParams != null) {
                 uriBuilder.addParameters(queryParams.entrySet().stream()
                         .filter(e -> e.getValue() != null && !e.getValue().isEmpty())
