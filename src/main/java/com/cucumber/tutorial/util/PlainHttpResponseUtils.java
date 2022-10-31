@@ -46,7 +46,11 @@ public class PlainHttpResponseUtils {
                 }
             }
         }
-        return new PlainHttpResponse(status, reasonPhrase, content, headers);
+        return PlainHttpResponse.Builder.create()
+                .status(status)
+                .reasonPhrase(reasonPhrase)
+                .entity(content)
+                .headers(headers).build();
     }
 
     private static List<Map.Entry<String, String>> extractHeaders(HttpResponse response) {
