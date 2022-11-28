@@ -1,0 +1,16 @@
+{
+  "status": 200,
+  "body": {
+    "_embedded": {
+      "noteBookList": [
+        {
+          "name": "Asus ZEN Pro book",
+          "currentPrice": 1500.0,
+          "id": "#[notebookId1]",
+          "lastUpdate": "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}.*",
+          "_links": {}
+        }
+      ]
+    }
+  }
+}

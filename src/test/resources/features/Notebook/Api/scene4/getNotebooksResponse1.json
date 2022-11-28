@@ -1,0 +1,14 @@
+{
+  "status": 200,
+  "body": {
+    "_embedded": {
+      "noteBookList": [
+        {
+          "#($.[?(@.id == '#[notebookId]')])": [
+            "!.*"
+          ]
+        }
+      ]
+    }
+  }
+}

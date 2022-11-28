@@ -21,14 +21,15 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <cucumber.version>7.8.1</cucumber.version>
-        <cucumber.jutils.version>8.10</cucumber.jutils.version>
-        <guice.version>5.1.0</guice.version>
+        <cucumber.version>[7.4.1,)</cucumber.version>
+        <cucumber.jutils.version>[9.1,)</cucumber.jutils.version>
+        <guice.version>[5.1.0,)</guice.version>
         <junit.platform.version>1.9.1</junit.platform.version>
         <surefire.version>3.0.0-M7</surefire.version>
-        <tags>@all</tags>
+        <http.client.version>5.2</http.client.version>
+        <tags>@notebook</tags>
         <concurrent>false</concurrent>
-        <threads>5</threads>
+        <threads>8</threads>
     </properties>
 
     <dependencies>
@@ -54,6 +55,16 @@
             <artifactId>guice</artifactId>
             <version>${guice.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+            <version>${http.client.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.31</version>
+        </dependency>
         <!--Test dependencies-->
         <dependency>
             <groupId>io.cucumber</groupId>
@@ -75,15 +86,15 @@
             <properties>
                 <env>local</env>
             </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
         </profile>
         <profile>
             <id>prod</id>
             <properties>
                 <env>prod</env>
             </properties>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
         </profile>
     </profiles>
 
@@ -135,9 +146,9 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>net.masterthought</groupId>
-                <artifactId>maven-cucumber-reporting</artifactId>
-                <version>5.5.0</version>
+                <groupId>io.github.fslev</groupId>
+                <artifactId>maven-cucumber-reporting-extended</artifactId>
+                <version>5.4.9</version>
                 <executions>
                     <execution>
                         <id>execution</id>

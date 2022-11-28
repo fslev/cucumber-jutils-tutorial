@@ -12,14 +12,17 @@ public class Config {
 
     public static final Properties PROPS = loadConfig();
     public static final String ENV = PROPS.getProperty("env");
-    public static String AUTH_TOKEN;
+
+    public static boolean isLocalEnv() {
+        return ENV.equals("local");
+    }
 
     public static boolean isProdEnv() {
         return ENV.equals("prod");
     }
 
     private static Properties loadConfig() {
-        LOG.info("Get config properties...");
+        LOG.info("Loading config properties...");
         try {
             return ResourceUtils.readProps("env.properties");
         } catch (IOException e) {
