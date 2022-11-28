@@ -7,9 +7,14 @@ A light tutorial on how to use [**cucumber-jutils**](https://github.com/fslev/cu
 Jdk-11, Maven, Docker & docker-compose 
 
 ## Setup
-Start notebook-manager app
-```
+_Start notebook-manager app:_
+```bash
 src/test/resources/docker
 
 docker-compose up
+```
+
+_Run tests:_
+```bash
+mvn clean verify -Plocal
 ```
