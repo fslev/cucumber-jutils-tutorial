@@ -8,13 +8,13 @@ Jdk-11, Maven, Docker & docker-compose
 
 ## Setup
 _Start notebook-manager app:_
-```bash
+```shell
 src/test/resources/docker
 
 docker-compose up
 ```
 
 _Run tests:_
-```bash
+```shell
 mvn clean verify -Plocal
 ```
