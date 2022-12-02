@@ -161,14 +161,9 @@ public abstract class HttpService extends BaseScenario {
             throw new RuntimeException("Could not execute HTTP request", e);
         } finally {
             if (responseRef.get() != null) {
-                try {
-                    logResponse(responseRef.get());
-                    if (consumer != null) {
-                        consumer.accept(responseRef.get());
-                    }
-                } catch (Exception e) {
-                    scenarioUtils.log(e);
-                    LOG.error(e);
+                logResponse(responseRef.get());
+                if (consumer != null) {
+                    consumer.accept(responseRef.get());
                 }
             }
         }
