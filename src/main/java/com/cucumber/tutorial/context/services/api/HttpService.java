@@ -35,6 +35,7 @@ import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.time.Duration;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -142,7 +143,7 @@ public abstract class HttpService extends BaseScenario {
                                              Double exponentialBackOff, MatchCondition... matchConditions) {
         logRequest();
         logExpected(expected);
-        final HttpResponseReference responseRef = new HttpResponseReference();
+        final AtomicReference<PlainHttpResponse> responseRef = new AtomicReference<>();
         try {
             if (pollingDurationSeconds == null || pollingDurationSeconds == 0) {
                 responseRef.set(client.execute(request, PlainHttpResponseUtils::from));
@@ -200,18 +201,6 @@ public abstract class HttpService extends BaseScenario {
             return JsonUtils.prettyPrint(content);
         } catch (IOException e) {
             return content;
-        }
-    }
-
-    private static class HttpResponseReference {
-        private PlainHttpResponse response;
-
-        public void set(PlainHttpResponse response) {
-            this.response = response;
-        }
-
-        public PlainHttpResponse get() {
-            return response;
         }
     }
 
