@@ -8,10 +8,7 @@ import com.google.inject.Inject;
 import io.cucumber.guice.ScenarioScoped;
 import io.cucumber.java.en.Then;
 import io.json.compare.util.JsonUtils;
-import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.HttpStatus;
-import org.apache.hc.core5.http.ParseException;
-import org.apache.hc.core5.http.io.entity.EntityUtils;
 
 import java.io.IOException;
 import java.util.Map;
@@ -37,17 +34,13 @@ public class NotebookSteps extends BaseScenario {
     public void createNotebookAndMatch(String requestBody, String expected) {
         // If notebook creation was successful, then tag notebook for later cleanup
         notebookService.buildCreateNotebook(requestBody).executeAndMatch(expected, response -> {
-            HttpEntity entity = null;
-            try (response) {
-                if (response.getCode() == HttpStatus.SC_CREATED) {
-                    entity = response.getEntity();
-                    JsonNode jsonResponse = JsonUtils.toJson(EntityUtils.toString(entity));
+            try {
+                if (Integer.parseInt(response.getStatus().toString()) == HttpStatus.SC_CREATED) {
+                    JsonNode jsonResponse = JsonUtils.toJson(response.getEntity());
                     cleanup.tagNotebook(jsonResponse.get("id").asText());
                 }
-            } catch (IOException | ParseException e) {
+            } catch (IOException e) {
                 LOG.warn("Cannot extract notebook id from response for later cleanup");
-            } finally {
-                EntityUtils.consumeQuietly(entity);
             }
         });
     }

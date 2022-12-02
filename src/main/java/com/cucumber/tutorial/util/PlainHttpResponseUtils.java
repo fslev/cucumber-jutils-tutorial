@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import io.jtest.utils.matcher.http.PlainHttpResponse;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.HttpResponse;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
@@ -32,7 +32,7 @@ public class PlainHttpResponseUtils {
         }
     }
 
-    public static PlainHttpResponse from(CloseableHttpResponse response) {
+    public static PlainHttpResponse from(ClassicHttpResponse response) {
         String status = String.valueOf(response.getCode());
         String reasonPhrase = response.getReasonPhrase();
         List<Map.Entry<String, String>> headers = extractHeaders(response);
@@ -44,7 +44,6 @@ public class PlainHttpResponseUtils {
             } catch (Exception e) {
                 throw new RuntimeException("Cannot extract entity from HTTP Response", e);
             } finally {
-                EntityUtils.consumeQuietly(entity);
                 if (content != null) {
                     response.setEntity(new StringEntity(content, StandardCharsets.UTF_8));
                 }

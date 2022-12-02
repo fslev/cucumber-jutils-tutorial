@@ -2,6 +2,7 @@ package com.cucumber.tutorial.context.services.api;
 
 import com.cucumber.tutorial.context.BaseScenario;
 import com.cucumber.tutorial.util.DateUtils;
+import com.cucumber.tutorial.util.PlainHttpResponseUtils;
 import io.json.compare.util.JsonUtils;
 import io.jtest.utils.common.StringFormat;
 import io.jtest.utils.matcher.ObjectMatcher;
@@ -9,7 +10,6 @@ import io.jtest.utils.matcher.condition.MatchCondition;
 import io.jtest.utils.matcher.http.PlainHttpResponse;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
 import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
@@ -104,9 +104,9 @@ public abstract class HttpService extends BaseScenario {
         headers.forEach(requestBase::addHeader);
     }
 
-    public CloseableHttpResponse execute() {
+    public PlainHttpResponse execute() {
         try {
-            return client.execute(request);
+            return client.execute(request, PlainHttpResponseUtils::from);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -116,7 +116,7 @@ public abstract class HttpService extends BaseScenario {
         return executeAndMatch(expected, null, null, matchConditions);
     }
 
-    public PlainHttpResponse executeAndMatch(String expected, Consumer<CloseableHttpResponse> consumer, MatchCondition... matchConditions) {
+    public PlainHttpResponse executeAndMatch(String expected, Consumer<PlainHttpResponse> consumer, MatchCondition... matchConditions) {
         return executeAndMatch(expected, consumer, null, matchConditions);
     }
 
@@ -124,7 +124,7 @@ public abstract class HttpService extends BaseScenario {
         return executeAndMatch(expected, pollingTimeoutSeconds, 3000, matchConditions);
     }
 
-    public PlainHttpResponse executeAndMatch(String expected, Consumer<CloseableHttpResponse> consumer, Integer pollingTimeoutSeconds, MatchCondition... matchConditions) {
+    public PlainHttpResponse executeAndMatch(String expected, Consumer<PlainHttpResponse> consumer, Integer pollingTimeoutSeconds, MatchCondition... matchConditions) {
         return executeAndMatch(expected, consumer, pollingTimeoutSeconds, 3000, matchConditions);
     }
 
@@ -133,29 +133,28 @@ public abstract class HttpService extends BaseScenario {
         return executeAndMatch(expected, null, pollingTimeoutSeconds, retryIntervalMillis, null, matchConditions);
     }
 
-    public PlainHttpResponse executeAndMatch(String expected, Consumer<CloseableHttpResponse> consumer, Integer pollingTimeoutSeconds,
+    public PlainHttpResponse executeAndMatch(String expected, Consumer<PlainHttpResponse> consumer, Integer pollingTimeoutSeconds,
                                              long retryIntervalMillis, MatchCondition... matchConditions) {
         return executeAndMatch(expected, consumer, pollingTimeoutSeconds, retryIntervalMillis, null, matchConditions);
     }
 
-    public PlainHttpResponse executeAndMatch(String expected, Consumer<CloseableHttpResponse> consumer, Integer pollingDurationSeconds, long retryIntervalMillis,
+    public PlainHttpResponse executeAndMatch(String expected, Consumer<PlainHttpResponse> consumer, Integer pollingDurationSeconds, long retryIntervalMillis,
                                              Double exponentialBackOff, MatchCondition... matchConditions) {
         logRequest();
         logExpected(expected);
         final HttpResponseReference responseRef = new HttpResponseReference();
-        PlainHttpResponse plainResponse = null;
         try {
             if (pollingDurationSeconds == null || pollingDurationSeconds == 0) {
-                responseRef.set(client.execute(request));
-                scenarioVars.putAll(ObjectMatcher.matchHttpResponse(null, from(expected), from(responseRef.get()), matchConditions));
+                responseRef.set(client.execute(request, PlainHttpResponseUtils::from));
+                scenarioVars.putAll(ObjectMatcher.matchHttpResponse(null, from(expected), responseRef.get(), matchConditions));
             } else {
                 scenarioVars.putAll(ObjectMatcher.matchHttpResponse(null, from(expected), () -> {
                     try {
-                        responseRef.set(client.execute(request));
+                        responseRef.set(client.execute(request, PlainHttpResponseUtils::from));
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-                    return from(responseRef.get());
+                    return responseRef.get();
                 }, Duration.ofSeconds(pollingDurationSeconds), retryIntervalMillis, exponentialBackOff, matchConditions));
             }
         } catch (IOException e) {
@@ -163,13 +162,9 @@ public abstract class HttpService extends BaseScenario {
         } finally {
             if (responseRef.get() != null) {
                 try {
-                    plainResponse = from(responseRef.get());
-                    logResponse(plainResponse);
+                    logResponse(responseRef.get());
                     if (consumer != null) {
                         consumer.accept(responseRef.get());
-                    } else {
-                        EntityUtils.consumeQuietly(responseRef.get().getEntity());
-                        responseRef.get().close();
                     }
                 } catch (Exception e) {
                     scenarioUtils.log(e);
@@ -177,7 +172,7 @@ public abstract class HttpService extends BaseScenario {
                 }
             }
         }
-        return plainResponse;
+        return responseRef.get();
     }
 
     private void logRequest() {
@@ -214,21 +209,13 @@ public abstract class HttpService extends BaseScenario {
     }
 
     private static class HttpResponseReference {
-        private CloseableHttpResponse response;
+        private PlainHttpResponse response;
 
-        public void set(CloseableHttpResponse response) {
-            if (this.response != null) {
-                try {
-                    EntityUtils.consumeQuietly(this.response.getEntity());
-                    this.response.close();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+        public void set(PlainHttpResponse response) {
             this.response = response;
         }
 
-        public CloseableHttpResponse get() {
+        public PlainHttpResponse get() {
             return response;
         }
     }
