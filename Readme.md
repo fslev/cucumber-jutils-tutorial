@@ -6,9 +6,6 @@ A light tutorial on how to use [**cucumber-jutils**](https://github.com/fslev/cu
 ## Requirements
 JDK11, Maven, Docker & docker-compose 
 
-Notebook manager Swagger:
-http://localhost:8090/swagger-ui.html
-
 ## Setup
 _Start notebook-manager app:_
 ```shell
@@ -16,6 +13,9 @@ src/test/resources/docker
 
 docker-compose up
 ```
+
+Notebook manager Swagger:  
+http://localhost:8090/swagger-ui.html  
 
 _Run tests:_
 ```shell
