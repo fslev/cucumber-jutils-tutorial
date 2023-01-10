@@ -24,11 +24,11 @@
         <cucumber.version>[7.4.1,)</cucumber.version>
         <cucumber.jutils.version>[9.1,)</cucumber.jutils.version>
         <guice.version>[5.1.0,)</guice.version>
-        <junit.platform.version>1.9.1</junit.platform.version>
+        <junit.platform.version>1.9.2</junit.platform.version>
         <surefire.version>3.0.0-M7</surefire.version>
-        <http.client.version>5.2</http.client.version>
+        <http.client.version>5.2.1</http.client.version>
         <tags>@notebook</tags>
-        <concurrent>false</concurrent>
+        <concurrent>true</concurrent>
         <threads>8</threads>
     </properties>
 
@@ -139,6 +139,9 @@
                         <configurationParameters>
                             cucumber.filter.tags=${tags} and not @ignore and not @Ignore
                             cucumber.execution.parallel.enabled=${concurrent}
+                            cucumber.execution.parallel.config.fixed.parallelism=${threads}
+                            cucumber.execution.parallel.config.fixed.max-pool-size=${threads}
+                            cucumber.plugin=junit:output,json:target/cucumber-report/report.json,timeline:target/cucumber-timeline
                         </configurationParameters>
                     </properties>
                     <printSummary>false</printSummary>
