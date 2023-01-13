@@ -19,7 +19,7 @@ public class TestProgressListener implements TestExecutionListener {
 
     @Override
     public void testPlanExecutionStarted(TestPlan testPlan) {
-        LOG.info("TEST PLAN STARTED. Found {} tests", testPlan.countTestIdentifiers(TestIdentifier::isTest));
+        LOG.info("--- TEST PLAN EXECUTION STARTED ---");
     }
 
     @Override
