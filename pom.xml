@@ -141,7 +141,7 @@
                             cucumber.execution.parallel.enabled=${concurrent}
                             cucumber.execution.parallel.config.fixed.parallelism=${threads}
                             cucumber.execution.parallel.config.fixed.max-pool-size=${threads}
-                            cucumber.plugin=junit:output,json:target/cucumber-report/report.json,timeline:target/cucumber-timeline
+                            cucumber.plugin=junit:target/cucumber-junit-report/report.xml,json:target/cucumber-report/report.json,timeline:target/cucumber-timeline
                         </configurationParameters>
                     </properties>
                     <printSummary>false</printSummary>
