@@ -33,7 +33,7 @@ public class PlainHttpResponseUtils {
     }
 
     public static PlainHttpResponse from(ClassicHttpResponse response) {
-        String status = String.valueOf(response.getCode());
+        Integer status = response.getCode();
         String reasonPhrase = response.getReasonPhrase();
         List<Map.Entry<String, String>> headers = extractHeaders(response);
         String content = null;

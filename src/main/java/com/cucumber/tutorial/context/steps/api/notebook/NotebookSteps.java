@@ -35,7 +35,7 @@ public class NotebookSteps extends BaseScenario {
         // If notebook creation was successful, then tag notebook for later cleanup
         notebookService.buildCreateNotebook(requestBody).executeAndMatch(expected, response -> {
             try {
-                if (Integer.parseInt(response.getStatus().toString()) == HttpStatus.SC_CREATED) {
+                if (response.getStatus().equals(HttpStatus.SC_CREATED)) {
                     JsonNode jsonResponse = JsonUtils.toJson(response.getEntity());
                     cleanup.tagNotebook(jsonResponse.get("id").asText());
                 }
