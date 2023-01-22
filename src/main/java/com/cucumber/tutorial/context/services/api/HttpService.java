@@ -68,7 +68,7 @@ public abstract class HttpService extends BaseScenario {
     }
 
     protected URI uri(String path) {
-        return uri(path, null, null);
+        return uri(path, null);
     }
 
     protected URI uri(String path, Map<String, Object> pathParams) {
