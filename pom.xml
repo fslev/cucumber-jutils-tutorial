@@ -142,7 +142,7 @@
                                         <resource>
                                             <directory>${basedir}/src/test/resources</directory>
                                             <includes>
-                                                <include>environment.properties</include>
+                                                <include>allure-env.properties</include>
                                             </includes>
                                             <filtering>true</filtering>
                                         </resource>
