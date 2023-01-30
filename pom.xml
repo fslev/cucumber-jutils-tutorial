@@ -21,15 +21,19 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <cucumber.version>[7.4.1,)</cucumber.version>
-        <cucumber.jutils.version>[9.1,)</cucumber.jutils.version>
-        <guice.version>[5.1.0,)</guice.version>
+        <cucumber.version>7.11.0</cucumber.version>
+        <cucumber.jutils.version>9.10</cucumber.jutils.version>
+        <guice.version>5.1.0</guice.version>
         <junit.platform.version>1.9.2</junit.platform.version>
         <surefire.version>3.0.0-M8</surefire.version>
         <http.client.version>5.2.1</http.client.version>
+        <allure.cucumber.version>2.20.1</allure.cucumber.version>
         <tags>@notebook</tags>
         <concurrent>true</concurrent>
         <threads>8</threads>
+        <cucumber.plugin>
+            junit:target/cucumber-junit-report/report.xml,json:target/cucumber-report/report.json
+        </cucumber.plugin>
     </properties>
 
     <dependencies>
@@ -96,6 +100,29 @@
                 <env>prod</env>
             </properties>
         </profile>
+
+        <profile>
+            <id>allure-reports</id>
+            <properties>
+                <cucumber.plugin>
+                    junit:target/cucumber-junit-report/report.xml,json:target/cucumber-report/report.json,io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm
+                </cucumber.plugin>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>io.qameta.allure</groupId>
+                    <artifactId>allure-cucumber7-jvm</artifactId>
+                    <version>${allure.cucumber.version}</version>
+                    <scope>test</scope>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>io.cucumber</groupId>
+                            <artifactId>gherkin</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+            </dependencies>
+        </profile>
     </profiles>
 
     <build>
@@ -141,7 +168,7 @@
                             cucumber.execution.parallel.enabled=${concurrent}
                             cucumber.execution.parallel.config.fixed.parallelism=${threads}
                             cucumber.execution.parallel.config.fixed.max-pool-size=${threads}
-                            cucumber.plugin=junit:target/cucumber-junit-report/report.xml,json:target/cucumber-report/report.json,timeline:target/cucumber-timeline
+                            cucumber.plugin=${cucumber.plugin}
                         </configurationParameters>
                     </properties>
                     <printSummary>false</printSummary>

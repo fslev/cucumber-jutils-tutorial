@@ -1,8 +1,11 @@
 @notebook
 @local @prod
+@owner=Florin_Slevoaca
 Feature: CRUD notebook feature
   Create, read, update and delete notebooks
 
+  @issue=1
+  @link=https://github.com/fslev/cucumber-jutils-tutorial
   Scenario: Create notebook and check is present inside the list
     * load vars from dir "Notebook/Api/scene1"
     * # Create notebook and extract its id
