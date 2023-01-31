@@ -21,4 +21,4 @@ _Run tests from Maven:_
 ```shell
 mvn clean -Plocal,allure-reports verify
 ```
-Check for Allure reports inside `target/site/allure-maven-plugin/index.html`
+Check for Cucumber Allure reports inside `target/site/allure-maven-plugin/index.html`
