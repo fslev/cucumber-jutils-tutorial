@@ -149,8 +149,7 @@ public abstract class HttpService extends BaseScenario {
 
     public PlainHttpResponse executeAndMatch(String expected, Consumer<PlainHttpResponse> consumer, Integer pollingDurationSeconds, long retryIntervalMillis,
                                              Double exponentialBackOff, MatchCondition... matchConditions) {
-        logRequest();
-        logExpected(expected);
+        logRequestAndExpectedResult(expected);
         final AtomicReference<PlainHttpResponse> responseRef = new AtomicReference<>();
         try {
             if (pollingDurationSeconds == null || pollingDurationSeconds == 0) {
@@ -179,22 +178,19 @@ public abstract class HttpService extends BaseScenario {
         return responseRef.get();
     }
 
-    private void logRequest() {
+    private void logRequestAndExpectedResult(String expected) {
         try {
-            scenarioUtils.log("------- API REQUEST ({}) -------\n{}\nHEADERS: {}\nBODY: {}\n\n",
+            scenarioUtils.log("------- API REQUEST ({}) -------\n{}\nHEADERS: {}\n" +
+                            (request.getConfig() != null && request.getConfig().getProxy() != null ?
+                                    "via PROXY: " + request.getConfig().getProxy() + "\n" : "") +
+                            "BODY: {}\n\n----------------- EXPECTED RESPONSE -----------------\n{}\n\n",
                     DateUtils.currentDateTime(), request.getMethod() + " " +
                             URLDecoder.decode(request.getUri().toString(), StandardCharsets.UTF_8),
-                    request.getHeaders(), request.getEntity() != null ? "\n" + EntityUtils.toString(request.getEntity()) : "N/A");
-            if (request.getConfig() != null && request.getConfig().getProxy() != null) {
-                scenarioUtils.log("via PROXY HOST: {}", request.getConfig().getProxy());
-            }
+                    request.getHeaders(), request.getEntity() != null ? "\n" + EntityUtils.toString(request.getEntity()) : "N/A",
+                    expected);
         } catch (URISyntaxException | IOException | ParseException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private void logExpected(String expected) {
-        scenarioUtils.log("----------------- EXPECTED RESPONSE -----------------\n{}\n\n", expected);
     }
 
     private void logResponse(PlainHttpResponse response) {
