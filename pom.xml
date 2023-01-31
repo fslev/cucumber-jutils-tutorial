@@ -123,6 +123,11 @@
                 </dependency>
             </dependencies>
             <build>
+                <testResources>
+                    <testResource>
+                        <directory>src/test/resources/allure</directory>
+                    </testResource>
+                </testResources>
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -140,9 +145,9 @@
                                     <outputDirectory>${project.build.directory}/allure-results</outputDirectory>
                                     <resources>
                                         <resource>
-                                            <directory>${basedir}/src/test/resources</directory>
+                                            <directory>${basedir}/src/test/resources/allure</directory>
                                             <includes>
-                                                <include>allure-env.properties</include>
+                                                <include>environment.properties</include>
                                             </includes>
                                             <filtering>true</filtering>
                                         </resource>
