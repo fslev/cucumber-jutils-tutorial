@@ -180,7 +180,7 @@ public abstract class HttpService extends BaseScenario {
 
     private void logRequestAndExpectedResult(String expected) {
         try {
-            scenarioUtils.log("------- API REQUEST ({}) -------\n{}\nHEADERS: {}\n" +
+            scenarioUtils.log("------- API REQUEST ({}) -------\n\n{}\nHEADERS: {}\n" +
                             (request.getConfig() != null && request.getConfig().getProxy() != null ?
                                     "via PROXY: " + request.getConfig().getProxy() + "\n" : "") +
                             "BODY: {}\n\n----------------- EXPECTED RESPONSE -----------------\n{}\n\n",
