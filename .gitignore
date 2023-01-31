@@ -71,3 +71,6 @@ pom.xml.tag
 
 # Ignore Cucumber output
 output
+
+# Allure
+.allure
