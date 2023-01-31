@@ -17,7 +17,8 @@ docker-compose up
 Notebook manager Swagger:  
 http://localhost:8090/swagger-ui.html  
 
-_Run tests:_
+_Run tests from Maven:_
 ```shell
-mvn clean verify -Plocal
+mvn clean -Plocal,allure-reports verify
 ```
+Check for Allure reports inside `target/site/allure-maven-plugin/index.html`
