@@ -26,6 +26,7 @@ _Run tests from Maven:_
 mvn clean -Plocal,allure-reports verify
 ```
 Check for Cucumber Allure reports inside `target/site/allure-maven-plugin/index.html`  
-Or, directly inside GitHub pages by clicking on the build status badge or directly at https://fslev.github.io/cucumber-jutils-tutorial
+Or, directly inside GitHub pages by clicking on the build status badge or directly at  
+https://fslev.github.io/cucumber-jutils-tutorial
   
 ![img.png](reports/allure-reports.png)
