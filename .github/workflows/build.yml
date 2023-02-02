@@ -41,7 +41,7 @@ jobs:
           ref: gh-pages
           path: gh-pages
 
-      - name: Generate Allure History
+      - name: Generate Allure reports
         uses: simple-elf/allure-report-action@master
         if: always()
         #id: allure-report
@@ -52,7 +52,7 @@ jobs:
           allure_history: allure-history
           keep_reports: 20
 
-      - name: Deploy Allure report to Github Pages
+      - name: Deploy Allure reports to Github Pages
         if: always()
         uses: peaceiris/actions-gh-pages@v2
         env:
@@ -67,5 +67,5 @@ jobs:
           authToken: ${{secrets.GITHUB_TOKEN}}
           context: 'Test report'
           state: 'success'
-          sha: ${{ github.event.pull_request.head.sha }}
+          sha: ${{ github.event.pull_request.head.sha || github.sha }}
           target_url: fslev.github.io/cucumber-jutils-tutorial/${{ github.run_number }}
