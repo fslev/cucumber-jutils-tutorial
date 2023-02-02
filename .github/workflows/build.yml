@@ -25,9 +25,10 @@ jobs:
           distribution: 'adopt'
       - name: Start Notebook manager
         run: docker-compose -f src/test/resources/docker/docker-compose.yml up -d
-      - name: Build with Maven
+
+      - name: Run tests
         run: mvn clean test -B -Plocal,allure-reports
-#        run: mvn clean compile
+
       - name: Stop Notebook manager
         if: always()
         run: docker-compose -f src/test/resources/docker/docker-compose.yml down
@@ -49,3 +50,13 @@ jobs:
           PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PUBLISH_BRANCH: gh-pages
           PUBLISH_DIR: allure-history
+
+      - name: Post Allure reports link
+        if: always()
+        uses: Sibz/github-status-action@v1
+        with:
+          authToken: ${{secrets.GITHUB_TOKEN}}
+          context: 'Test report'
+          state: 'success'
+          sha: ${{ github.event.pull_request.head.sha }}
+          target_url: cucumber-jutils-tutorial/github-allure-history/${{ github.run_number }}
