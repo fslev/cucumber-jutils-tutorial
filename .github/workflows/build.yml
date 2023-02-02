@@ -68,4 +68,4 @@ jobs:
           context: 'Test report'
           state: 'success'
           sha: ${{ github.event.pull_request.head.sha || github.sha }}
-          target_url: fslev.github.io/cucumber-jutils-tutorial/${{ github.run_number }}
+          target_url: https://fslev.github.io/cucumber-jutils-tutorial/${{ github.run_number }}
