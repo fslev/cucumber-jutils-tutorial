@@ -1,4 +1,4 @@
-![Build status](https://github.com/fslev/cucumber-jutils-tutorial/workflows/Java%20CI%20with%20Maven/badge.svg?branch=main)
+[![Build status](https://github.com/fslev/cucumber-jutils-tutorial/workflows/Java%20CI%20with%20Maven/badge.svg?branch=main)](https://fslev.github.io/cucumber-jutils-tutorial)
 
 # Cucumber JUtils tutorial
 
