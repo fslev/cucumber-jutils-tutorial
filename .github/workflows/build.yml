@@ -1,0 +1,33 @@
+name: Java CI with Maven
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    branches: [ main ]
+    paths-ignore:
+      - '**.md'
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: 11
+          distribution: 'adopt'
+      - name: Start Notebook manager
+        run: docker-compose -f src/test/resources/docker/docker-compose.yml up -d
+      - name: Build with Maven
+        run: mvn clean test -B -Plocal,allure-reports
+#        run: mvn clean compile
+      - name: Stop Notebook manager
+        if: always()
+        run: docker-compose -f src/test/resources/docker/docker-compose.yml down
