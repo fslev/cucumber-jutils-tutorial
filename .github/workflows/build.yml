@@ -33,7 +33,7 @@ jobs:
         if: always()
         run: docker-compose -f src/test/resources/docker/docker-compose.yml down
 
-      - name: Generate Allure Report
+      - name: Generate Allure History
         uses: simple-elf/allure-report-action@master
         if: always()
         #id: allure-report
@@ -51,13 +51,3 @@ jobs:
           PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PUBLISH_BRANCH: gh-pages
           PUBLISH_DIR: allure-history
-
-      - name: Post the link to the report
-        if: always()
-        uses: Sibz/github-status-action@v1
-        with:
-          authToken: ${{secrets.GITHUB_TOKEN}}
-          context: 'Test report'
-          state: 'success'
-          sha: ${{ github.event.pull_request.head.sha }}
-          target_url: fslev.github.io/cucumber-jutils-tutorial/${{ github.run_number }}
