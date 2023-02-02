@@ -48,7 +48,7 @@ jobs:
           ref: gh-pages
           path: gh-pages
 
-      - name: Allure Report action from marketplace
+      - name: Allure Report action
         uses: simple-elf/allure-report-action@master
         if: always()
         #id: allure-report
@@ -59,10 +59,20 @@ jobs:
           allure_history: allure-history
           keep_reports: 20
 
-      - name: Deploy report to Github Pages
+      - name: Deploy Allure report to Github Pages
         if: always()
         uses: peaceiris/actions-gh-pages@v2
         env:
           PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PUBLISH_BRANCH: gh-pages
           PUBLISH_DIR: allure-history
+
+      - name: Post the link to the report
+        if: always()
+        uses: Sibz/github-status-action@v1
+        with:
+          authToken: ${{secrets.GITHUB_TOKEN}}
+          context: 'Test report'
+          state: 'success'
+          sha: ${{ github.event.pull_request.head.sha }}
+          target_url: fslev.github.io/cucumber-jutils-tutorial/${{ github.run_number }}
