@@ -156,6 +156,7 @@
                             </execution>
                         </executions>
                     </plugin>
+                    <!--Used only for local Allure builds with maven `verify` lifecycle phase-->
                     <plugin>
                         <groupId>io.qameta.allure</groupId>
                         <artifactId>allure-maven</artifactId>
