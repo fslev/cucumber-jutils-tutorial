@@ -1,0 +1,10 @@
+------- API REQUEST (2023-02-03 11:35:15 UTC) -------
+
+POST http://localhost:8090/api/notebooks
+HEADERS: [Accept: application/json, Content-Type: application/json]
+BODY: 
+invalid json
+
+----------------- EXPECTED RESPONSE -----------------
+{"status":500}
+
