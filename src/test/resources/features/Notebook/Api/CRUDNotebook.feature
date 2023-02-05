@@ -1,7 +1,8 @@
 @notebook
 @local @prod
 @owner=Florin_Slevoaca
-@Epic=API
+@epic=API
+@severity=BLOCKER
 Feature: CRUD notebook feature
   Create, read, update and delete notebooks
 
