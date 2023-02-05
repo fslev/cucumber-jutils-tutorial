@@ -1,0 +1,11 @@
+------------------ ACTUAL RESPONSE ------------------
+STATUS: 202 
+BODY: 
+{
+  "name" : "Lenovo B1",
+  "currentPrice" : 1679.41,
+  "lastUpdate" : "2023-02-05T23:26:54.986+00:00",
+  "id" : 16
+}
+HEADERS:
+[Content-Type=application/json, Transfer-Encoding=chunked, Date=Sun, 05 Feb 2023 23:26:54 GMT, Keep-Alive=timeout=60, Connection=keep-alive]
