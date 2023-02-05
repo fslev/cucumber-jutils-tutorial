@@ -1,1 +1,0 @@
-Loaded scenario variables having names: [getNotebook2Response_a, updateNotebook1Request, getNotebook1Response, getNotebook1Response_a, updateNotebook2Request_a, getNotebook2Response, updateNotebook2Request, updateNotebook1Request_a]
