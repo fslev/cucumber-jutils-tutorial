@@ -1,5 +1,6 @@
 @notebook
 @local @prod
+@Epic=API
 Feature: CRUD notebook feature [ERROR cases]
   Create, read, update and delete notebooks with invalid data
 
