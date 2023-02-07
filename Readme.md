@@ -1,5 +1,5 @@
 [![Build status](https://github.com/fslev/cucumber-jutils-tutorial/workflows/Java%20CI%20with%20Maven/badge.svg?branch=main)](https://github.com/fslev/cucumber-jutils-tutorial/actions/workflows/build.yml)
-[![Allure test reports](https://img.shields.io/static/v1?label=Go%20To&message=Allure%20Test%20Reports&color=ff69b4)](https://fslev.github.io/cucumber-jutils-tutorial)
+[![Allure test reports](https://img.shields.io/static/v1?label=Go%20To&message=Allure%20Test%20Reports&color=ff69b4&cacheSeconds=10)](https://fslev.github.io/cucumber-jutils-tutorial)
 # Cucumber JUtils tutorial
 
 
