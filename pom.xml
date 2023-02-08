@@ -169,7 +169,7 @@
                                     <goal>report</goal>
                                 </goals>
                                 <configuration>
-                                    <reportVersion>2.20.1</reportVersion>
+                                    <reportVersion>2.21.0</reportVersion>
                                 </configuration>
                             </execution>
                         </executions>
