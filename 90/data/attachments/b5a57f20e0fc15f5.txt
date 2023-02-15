@@ -1,0 +1,9 @@
+------- API REQUEST (2023-02-15 05:04:26 UTC) -------
+
+DELETE http://localhost:8090/api/notebooks/12
+HEADERS: [Accept: application/json, Content-Type: application/json]
+BODY: N/A
+
+----------------- EXPECTED RESPONSE -----------------
+{"status":202}
+
