@@ -1,0 +1,14 @@
+------- API REQUEST (2023-02-15 01:02:43 UTC) -------
+
+PATCH http://localhost:8090/api/notebooks/7
+HEADERS: [Content-Type: application/json, Accept: application/json]
+BODY: 
+{
+  "name": "Asus ZEN Pro book db test2 updated",
+  "currentPrice": 1600.9,
+  "id": "7"
+}
+
+----------------- EXPECTED RESPONSE -----------------
+{"status":202}
+
