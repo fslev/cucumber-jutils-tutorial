@@ -34,7 +34,7 @@ jobs:
         run: docker-compose -f src/test/resources/docker/docker-compose.yml down
 
       - name: Get Allure history
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         if: always()
         continue-on-error: true
         with:
