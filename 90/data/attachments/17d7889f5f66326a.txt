@@ -1,1 +1,0 @@
-Execute query 'select id,name,current_price from note_book where id=13' and match with: []
