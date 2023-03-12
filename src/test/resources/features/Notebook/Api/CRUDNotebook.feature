@@ -9,7 +9,7 @@ Feature: CRUD notebook feature
   @issue=1
   @link=https://github.com/fslev/cucumber-jutils-tutorial
   Scenario: Create notebook and check is present inside the list
-    * load vars from dir "Notebook/Api/scene1"
+    * load vars from dir "features/Notebook/Api/scene1"
     * # Create notebook and extract its id
     * Create notebook with requestBody=#[createNotebookRequest1] and check response={"status":201,"body":{"id":"~[notebookId1]"}}
     * # Get all notebooks and check previous notebook is present inside the list
@@ -21,14 +21,14 @@ Feature: CRUD notebook feature
     * Get notebooks with queryParams={"page":10000,"pageSize":100} and check 0s until response={"status":200, "body":{"!_embedded":".*"}}
 
   Scenario: Create notebook and get it
-    * load vars from dir "Notebook/Api/scene2"
+    * load vars from dir "features/Notebook/Api/scene2"
     * # Create notebook and extract its id
     * Create notebook with requestBody=#[createNotebookRequest1] and check response={"status":201,"body":{"id":"~[notebookId]"}}
     * # Check notebook details
     * Get notebook with id=#[notebookId] and check 0s until response=#[getNotebookResponse1]
 
   Scenario: Create notebook and update it
-    * load vars from dir "Notebook/Api/scene3"
+    * load vars from dir "features/Notebook/Api/scene3"
     * # Create notebook and extract its id
     * Create notebook with requestBody=#[createNotebookRequest1] and check response={"status":201,"body":{"id":"~[notebookId]"}}
     * # Check notebook details
@@ -39,7 +39,7 @@ Feature: CRUD notebook feature
     * Get notebooks with queryParams={"page":0, "pageSize":100} and check 0s until response=#[getNotebooksResponse1]
 
   Scenario Template: Update existing notebook with id <notebookId>
-    * load vars from dir "Notebook/Api/scene3a"
+    * load vars from dir "features/Notebook/Api/scene3a"
     * var id="<notebookId>"
     * Update notebook having id=#[id] with requestBody=<updateNotebookRequest> and check response={"status":202}
     * Get notebook with id=#[id] and check 5s until response=<getNotebookResponse>
@@ -55,7 +55,7 @@ Feature: CRUD notebook feature
       | 2          | #[updateNotebook2Request_a] | #[getNotebook2Response_a] |
 
   Scenario: Create notebook and delete it
-    * load vars from dir "Notebook/Api/scene4"
+    * load vars from dir "features/Notebook/Api/scene4"
     * # Create notebook and extract its id
     * Create notebook with requestBody=#[createNotebookRequest1] and check response={"status":201,"body":{"id":"~[notebookId]"}}
     * # Check notebook details

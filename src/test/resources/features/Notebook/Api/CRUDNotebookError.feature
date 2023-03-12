@@ -39,7 +39,7 @@ Feature: CRUD notebook feature [ERROR cases]
     * Get notebook with id=abc and check 0s until response={"status":400}
 
   Scenario: Create notebook and update it with invalid data
-    * load vars from dir "Notebook/Api/Error/scene1"
+    * load vars from dir "features/Notebook/Api/Error/scene1"
     * # Create notebook and extract its id
     * Create notebook with requestBody=#[createNotebookRequest1] and check response={"status":201,"body":{"id":"~[notebookId]"}}
     * Get notebooks with queryParams={"page":0, "pageSize":100} and check 0s until response=#[getNotebooksResponse1]
