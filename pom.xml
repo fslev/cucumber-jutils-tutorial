@@ -25,7 +25,7 @@
         <cucumber.jutils.version>9.10</cucumber.jutils.version>
         <guice.version>5.1.0</guice.version>
         <junit.platform.version>1.9.2</junit.platform.version>
-        <surefire.version>3.0.0-M9</surefire.version>
+        <surefire.version>3.0.0</surefire.version>
         <http.client.version>5.2.1</http.client.version>
         <allure.cucumber.version>2.21.0</allure.cucumber.version>
         <tags>@notebook</tags>
