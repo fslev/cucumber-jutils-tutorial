@@ -3,7 +3,7 @@
 # Cucumber JUtils showcase
 
 
-A light tutorial on how to use [**cucumber-jutils**](https://github.com/fslev/cucumber-jutils) library  while testing a notebook manager web application.  
+A simple showcase on how to use [**cucumber-jutils**](https://github.com/fslev/cucumber-jutils) library  while testing a notebook manager web application.  
 
 ## Requirements
 JDK11, Maven, Docker & docker-compose 
