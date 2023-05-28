@@ -9,8 +9,8 @@ import java.util.function.Supplier;
 
 public class BaseService extends BaseScenario {
 
-    protected <T> T executeAndMatch(Supplier<T> supplier, Integer pollingTimeoutSeconds,
-                                    Long pollingIntervalInMillis, Double exponentialBackoff, String expected, MatchCondition... matchConditions) {
+    protected <T> T executeAndMatch(String expected, Supplier<T> supplier, Integer pollingTimeoutSeconds,
+                                    Long pollingIntervalInMillis, Double exponentialBackoff, MatchCondition... matchConditions) {
         var wrapper = new Object() {
             T result;
         };

@@ -23,7 +23,7 @@ public class BashService extends BaseService {
     public String executeAndMatch(String cmd, Integer pollingTimeoutSeconds, Double exponentialBackoff, String expected, MatchCondition... matchConditions) {
         scenarioUtils.log("[{}] BASH CMD: -----------------\n\n{}\n\n---------------------- EXPECTED ----------------------\n{}\n",
                 DateUtils.currentDateTime(), cmd, expected);
-        return executeAndMatch(() -> shellClient.execute("bash", "-c", cmd),
-                pollingTimeoutSeconds, 3000L, exponentialBackoff, expected, matchConditions);
+        return executeAndMatch(expected, () -> shellClient.execute("bash", "-c", cmd),
+                pollingTimeoutSeconds, 3000L, exponentialBackoff, matchConditions);
     }
 }
