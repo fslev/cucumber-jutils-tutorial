@@ -1,16 +1,13 @@
 package com.cucumber.tutorial.context.services.bash;
 
 import com.cucumber.tutorial.client.ShellClient;
-import com.cucumber.tutorial.context.BaseScenario;
+import com.cucumber.tutorial.context.services.BaseService;
 import com.cucumber.tutorial.util.DateUtils;
 import io.cucumber.guice.ScenarioScoped;
-import io.jtest.utils.matcher.ObjectMatcher;
 import io.jtest.utils.matcher.condition.MatchCondition;
 
-import java.time.Duration;
-
 @ScenarioScoped
-public class BashService extends BaseScenario {
+public class BashService extends BaseService {
 
     private final ProcessBuilder processBuilder = new ProcessBuilder();
     private final ShellClient shellClient = new ShellClient(processBuilder);
@@ -26,22 +23,7 @@ public class BashService extends BaseScenario {
     public String executeAndMatch(String cmd, Integer pollingTimeoutSeconds, Double exponentialBackoff, String expected, MatchCondition... matchConditions) {
         scenarioUtils.log("[{}] BASH CMD: -----------------\n\n{}\n\n---------------------- EXPECTED ----------------------\n{}\n",
                 DateUtils.currentDateTime(), cmd, expected);
-        var wrapper = new Object() {
-            String output;
-        };
-        try {
-            if (pollingTimeoutSeconds == null || pollingTimeoutSeconds == 0) {
-                wrapper.output = shellClient.execute("bash", "-c", cmd);
-                scenarioVars.putAll(ObjectMatcher.match(null, expected, wrapper.output, matchConditions));
-            } else {
-                scenarioVars.putAll(ObjectMatcher.match(null, expected, () -> {
-                    wrapper.output = shellClient.execute("bash", "-c", cmd);
-                    return wrapper.output;
-                }, Duration.ofSeconds(pollingTimeoutSeconds), null, exponentialBackoff, matchConditions));
-            }
-            return wrapper.output;
-        } finally {
-            scenarioUtils.log("\n----------------------- ACTUAL -----------------------\n{}", wrapper.output);
-        }
+        return executeAndMatch(() -> shellClient.execute("bash", "-c", cmd),
+                pollingTimeoutSeconds, 3000L, exponentialBackoff, expected, matchConditions);
     }
 }

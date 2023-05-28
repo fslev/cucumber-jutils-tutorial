@@ -1,6 +1,6 @@
 package com.cucumber.tutorial.context.services.api;
 
-import com.cucumber.tutorial.context.BaseScenario;
+import com.cucumber.tutorial.context.services.BaseService;
 import com.cucumber.tutorial.util.DateUtils;
 import com.cucumber.tutorial.util.PlainHttpResponseUtils;
 import io.json.compare.util.JsonUtils;
@@ -41,9 +41,9 @@ import java.util.stream.Collectors;
 
 import static com.cucumber.tutorial.util.PlainHttpResponseUtils.from;
 
-public abstract class HttpService extends BaseScenario {
+public abstract class HttpService extends BaseService {
 
-    private final static CloseableHttpClient client = init();
+    private static final CloseableHttpClient client = init();
 
     protected HttpUriRequestBase request;
 
