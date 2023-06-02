@@ -1,0 +1,16 @@
+------------------ ACTUAL RESPONSE ------------------
+STATUS: 200 
+BODY: 
+{
+  "name" : "Lenovo C",
+  "currentPrice" : 6710.08,
+  "lastUpdate" : "2023-06-02T20:58:30.000+00:00",
+  "id" : 11,
+  "_links" : {
+    "self" : {
+      "href" : "http://localhost:8090/api/notebooks/11"
+    }
+  }
+}
+HEADERS:
+[Content-Type=application/json, Transfer-Encoding=chunked, Date=Fri, 02 Jun 2023 20:58:30 GMT, Keep-Alive=timeout=60, Connection=keep-alive]
