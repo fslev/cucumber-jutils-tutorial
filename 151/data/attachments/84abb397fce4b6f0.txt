@@ -1,0 +1,16 @@
+------------------ ACTUAL RESPONSE ------------------
+STATUS: 200 
+BODY: 
+{
+  "name" : "New updated name 1a",
+  "currentPrice" : 1079.91,
+  "lastUpdate" : "2023-06-06T14:10:50.000+00:00",
+  "id" : 1,
+  "_links" : {
+    "self" : {
+      "href" : "http://localhost:8090/api/notebooks/1"
+    }
+  }
+}
+HEADERS:
+[Content-Type=application/json, Transfer-Encoding=chunked, Date=Tue, 06 Jun 2023 14:10:49 GMT, Keep-Alive=timeout=60, Connection=keep-alive]
