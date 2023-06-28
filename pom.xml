@@ -27,7 +27,7 @@
         <junit.platform.version>1.9.3</junit.platform.version>
         <surefire.version>3.1.2</surefire.version>
         <http.client.version>5.2.1</http.client.version>
-        <allure.cucumber.version>2.22.2</allure.cucumber.version>
+        <allure.cucumber.version>2.23.0</allure.cucumber.version>
         <tags>@notebook</tags>
         <concurrent>true</concurrent>
         <threads>8</threads>
