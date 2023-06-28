@@ -1,0 +1,13 @@
+------- API REQUEST (2023-06-28 13:50:28 UTC) -------
+
+POST http://localhost:8090/api/notebooks
+HEADERS: [Content-Type: application/json, Accept: application/json]
+BODY: 
+{
+  "name": "Lenovo C",
+  "currentPrice": 6710.08
+}
+
+----------------- EXPECTED RESPONSE -----------------
+{"status":201,"body":{"id":"~[notebookId]"}}
+
