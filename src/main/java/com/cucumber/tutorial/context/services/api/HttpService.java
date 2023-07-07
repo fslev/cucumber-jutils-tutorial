@@ -181,8 +181,6 @@ public abstract class HttpService extends BaseService {
     private void logRequestAndExpectedResult(String expected) {
         try {
             scenarioUtils.log("------- API REQUEST ({}) -------\n\n{}\nHEADERS: {}\n" +
-                            (request.getConfig() != null && request.getConfig().getProxy() != null ?
-                                    "via PROXY: " + request.getConfig().getProxy() + "\n" : "") +
                             "BODY: {}\n\n----------------- EXPECTED RESPONSE -----------------\n{}\n\n",
                     DateUtils.currentDateTime(), request.getMethod() + " " +
                             URLDecoder.decode(request.getUri().toString(), StandardCharsets.UTF_8),
