@@ -10,6 +10,7 @@ import io.jtest.utils.matcher.condition.MatchCondition;
 import io.jtest.utils.matcher.http.PlainHttpResponse;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
 import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
@@ -43,17 +44,17 @@ import static com.cucumber.tutorial.util.PlainHttpResponseUtils.from;
 
 public abstract class HttpService extends BaseService {
 
-    private static final CloseableHttpClient client = init();
+    private static final CloseableHttpClient CLIENT = defaultHttpClientBuilder().build();
 
     protected HttpUriRequestBase request;
 
-    private static CloseableHttpClient init() {
+    protected static HttpClientBuilder defaultHttpClientBuilder() {
         try {
             SSLContext ctx = SSLContext.getInstance("TLS");
             ctx.init(new KeyManager[0], new TrustManager[]{new DefaultTrustManager()}, new SecureRandom());
             return HttpClients.custom()
                     .setConnectionManager(PoolingHttpClientConnectionManagerBuilder.create()
-                            .setSSLSocketFactory(new SSLConnectionSocketFactory(ctx, new NoopHostnameVerifier())).build()).build();
+                            .setSSLSocketFactory(new SSLConnectionSocketFactory(ctx, new NoopHostnameVerifier())).build());
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
             throw new RuntimeException(e);
         }
@@ -115,7 +116,7 @@ public abstract class HttpService extends BaseService {
 
     public PlainHttpResponse execute() {
         try {
-            return client.execute(request, PlainHttpResponseUtils::from);
+            return CLIENT.execute(request, PlainHttpResponseUtils::from);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -153,12 +154,12 @@ public abstract class HttpService extends BaseService {
         final AtomicReference<PlainHttpResponse> responseRef = new AtomicReference<>();
         try {
             if (pollingDurationSeconds == null || pollingDurationSeconds == 0) {
-                responseRef.set(client.execute(request, PlainHttpResponseUtils::from));
+                responseRef.set(CLIENT.execute(request, PlainHttpResponseUtils::from));
                 scenarioVars.putAll(ObjectMatcher.matchHttpResponse(null, from(expected), responseRef.get(), matchConditions));
             } else {
                 scenarioVars.putAll(ObjectMatcher.matchHttpResponse(null, from(expected), () -> {
                     try {
-                        responseRef.set(client.execute(request, PlainHttpResponseUtils::from));
+                        responseRef.set(CLIENT.execute(request, PlainHttpResponseUtils::from));
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
