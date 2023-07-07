@@ -1,0 +1,18 @@
+------- API REQUEST (2023-07-07 11:34:50 UTC) -------
+
+GET http://localhost:8090/api/notebooks/8
+HEADERS: [Content-Type: application/json, Accept: application/json]
+BODY: N/A
+
+----------------- EXPECTED RESPONSE -----------------
+{
+  "status": 200,
+  "body": {
+    "name": "Lenovo C",
+    "currentPrice": 6710.08,
+    "id": "8",
+    "lastUpdate": "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}.*",
+    "_links": {}
+  }
+}
+
