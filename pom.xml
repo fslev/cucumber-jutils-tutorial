@@ -22,7 +22,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <cucumber.version>7.14.0</cucumber.version>
-        <cucumber.jutils.version>9.13</cucumber.jutils.version>
+        <cucumber.jutils.version>9.14</cucumber.jutils.version>
         <guice.version>7.0.0</guice.version>
         <junit.platform.version>1.10.0</junit.platform.version>
         <surefire.version>3.1.2</surefire.version>
