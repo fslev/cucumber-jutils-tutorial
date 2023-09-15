@@ -1,0 +1,16 @@
+------------------ ACTUAL RESPONSE ------------------
+STATUS: 201 
+BODY: 
+{
+  "name" : "Asus ZEN Pro book db delete test 1",
+  "currentPrice" : 1100.1,
+  "lastUpdate" : "2023-09-15T14:28:12.108+00:00",
+  "id" : 8,
+  "_links" : {
+    "self" : {
+      "href" : "http://localhost:8090/api/notebooks/8"
+    }
+  }
+}
+HEADERS:
+[Content-Type=application/json, Transfer-Encoding=chunked, Date=Fri, 15 Sep 2023 14:28:12 GMT, Keep-Alive=timeout=60, Connection=keep-alive]
