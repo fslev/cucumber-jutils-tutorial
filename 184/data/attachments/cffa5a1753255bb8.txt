@@ -1,0 +1,6 @@
+------------------ ACTUAL RESPONSE ------------------
+STATUS: 400 
+BODY: 
+Bad Request
+HEADERS:
+[Content-Type=application/json, Content-Length=11, Date=Fri, 15 Sep 2023 14:26:00 GMT, Connection=close]
