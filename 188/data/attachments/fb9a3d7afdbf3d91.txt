@@ -1,0 +1,10 @@
+------- API REQUEST (2023-10-19 10:56:59 UTC) -------
+
+PATCH http://localhost:8090/api/notebooks/13
+HEADERS: [Content-Type: application/json, Accept: application/json]
+BODY: 
+{"name":"test"}
+
+----------------- EXPECTED RESPONSE -----------------
+{"status":500}
+
