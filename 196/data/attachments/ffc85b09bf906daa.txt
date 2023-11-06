@@ -1,0 +1,16 @@
+------------------ ACTUAL RESPONSE ------------------
+STATUS: 200 
+BODY: 
+{
+  "name" : "Lenovo B",
+  "currentPrice" : 1670.18,
+  "lastUpdate" : "2023-11-06T11:19:35.000+00:00",
+  "id" : 8,
+  "_links" : {
+    "self" : {
+      "href" : "http://localhost:8090/api/notebooks/8"
+    }
+  }
+}
+HEADERS:
+[Content-Type=application/json, Transfer-Encoding=chunked, Date=Mon, 06 Nov 2023 11:19:34 GMT, Keep-Alive=timeout=60, Connection=keep-alive]
