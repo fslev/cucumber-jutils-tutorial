@@ -1,0 +1,18 @@
+------- API REQUEST (2023-11-07 12:52:50 UTC) -------
+
+GET http://localhost:8090/api/notebooks/1
+HEADERS: [Content-Type: application/json, Accept: application/json]
+BODY: N/A
+
+----------------- EXPECTED RESPONSE -----------------
+{
+  "status": 200,
+  "body": {
+    "name": "New updated name 1a",
+    "currentPrice": 1079.91,
+    "id": "1",
+    "lastUpdate": "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.\\d{3}.*",
+    "_links": {}
+  }
+}
+
