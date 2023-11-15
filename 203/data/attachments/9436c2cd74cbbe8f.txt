@@ -1,0 +1,9 @@
+------- API REQUEST (2023-11-15 16:30:55 UTC) -------
+
+GET http://localhost:8090/api/notebooks?page=1
+HEADERS: [Accept: application/json, Content-Type: application/json]
+BODY: N/A
+
+----------------- EXPECTED RESPONSE -----------------
+{"status":400}
+
