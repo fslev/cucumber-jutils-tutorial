@@ -1,0 +1,16 @@
+------------------ ACTUAL RESPONSE ------------------
+STATUS: 200 
+BODY: 
+{
+  "name" : "Lenovo B1",
+  "currentPrice" : 1679.41,
+  "lastUpdate" : "2023-11-16T11:21:17.000+00:00",
+  "id" : 8,
+  "_links" : {
+    "self" : {
+      "href" : "http://localhost:8090/api/notebooks/8"
+    }
+  }
+}
+HEADERS:
+[Content-Type=application/json, Transfer-Encoding=chunked, Date=Thu, 16 Nov 2023 11:21:15 GMT, Keep-Alive=timeout=60, Connection=keep-alive]
