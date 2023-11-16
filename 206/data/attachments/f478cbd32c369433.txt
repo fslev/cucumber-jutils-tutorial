@@ -1,0 +1,14 @@
+------- API REQUEST (2023-11-16 11:19:21 UTC) -------
+
+PATCH http://localhost:8090/api/notebooks/9
+HEADERS: [Content-Type: application/json, Accept: application/json]
+BODY: 
+{
+  "name": "Lenovo B1",
+  "currentPrice": 1679.41,
+  "id": "9"
+}
+
+----------------- EXPECTED RESPONSE -----------------
+{"status":202}
+
