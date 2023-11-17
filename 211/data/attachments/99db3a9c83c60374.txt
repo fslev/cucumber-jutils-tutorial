@@ -1,0 +1,11 @@
+------------------ ACTUAL RESPONSE ------------------
+STATUS: 202 
+BODY: 
+{
+  "name" : "Asus ZEN Pro book db test2 updated",
+  "currentPrice" : 1600.9,
+  "lastUpdate" : "2023-11-17T16:13:18.777+00:00",
+  "id" : 17
+}
+HEADERS:
+[Content-Type=application/json, Transfer-Encoding=chunked, Date=Fri, 17 Nov 2023 16:13:18 GMT, Keep-Alive=timeout=60, Connection=keep-alive]

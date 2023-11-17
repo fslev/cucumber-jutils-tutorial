@@ -1,0 +1,13 @@
+------- API REQUEST (2023-11-17 16:13:17 UTC) -------
+
+POST http://localhost:8090/api/notebooks
+HEADERS: [Content-Type: application/json, Accept: application/json]
+BODY: 
+{
+  "name": "Asus ZEN Pro book",
+  "currentPrice": 1500
+}
+
+----------------- EXPECTED RESPONSE -----------------
+{"status":201,"body":{"id":"~[notebookId1]"}}
+
