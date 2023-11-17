@@ -27,7 +27,7 @@ jobs:
         run: docker-compose -f src/test/resources/docker/docker-compose.yml up -d
 
       - name: Run tests
-        run: mvn clean test -B -Plocal,allure-reports
+        run: mvn clean test -B -Plocal,allure-reports -DhidePollingProgress
 
       - name: Stop Notebook manager
         if: always()
