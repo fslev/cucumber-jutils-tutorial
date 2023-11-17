@@ -8,6 +8,9 @@ import io.jtest.utils.common.StringFormat;
 import io.jtest.utils.matcher.ObjectMatcher;
 import io.jtest.utils.matcher.condition.MatchCondition;
 import io.jtest.utils.matcher.http.PlainHttpResponse;
+import me.tongfei.progressbar.DelegatingProgressBarConsumer;
+import me.tongfei.progressbar.ProgressBar;
+import me.tongfei.progressbar.ProgressBarBuilder;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
@@ -157,14 +160,23 @@ public abstract class HttpService extends BaseService {
                 responseRef.set(CLIENT.execute(request, PlainHttpResponseUtils::from));
                 scenarioVars.putAll(ObjectMatcher.matchHttpResponse(null, from(expected), responseRef.get(), matchConditions));
             } else {
-                scenarioVars.putAll(ObjectMatcher.matchHttpResponse(null, from(expected), () -> {
-                    try {
-                        responseRef.set(CLIENT.execute(request, PlainHttpResponseUtils::from));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                    return responseRef.get();
-                }, Duration.ofSeconds(pollingDurationSeconds), retryIntervalMillis, exponentialBackOff, matchConditions));
+                try (ProgressBar pb = new ProgressBarBuilder().setTaskName("Polling |" + retryIntervalMillis + "ms / " + pollingDurationSeconds + "s| backoff " + exponentialBackOff + " |")
+                        .setInitialMax(Math.round(pollingDurationSeconds * 1000 / (double) retryIntervalMillis))
+                        .setConsumer(new DelegatingProgressBarConsumer(c -> {
+                            if (System.getProperty("hidePollingProgress") == null) {
+                                System.err.println("\r" + c + PlainHttpResponseUtils.toOnelineReducedString(responseRef.get()));
+                            }
+                        })).build()) {
+                    scenarioVars.putAll(ObjectMatcher.matchHttpResponse(null, from(expected), () -> {
+                        try {
+                            responseRef.set(CLIENT.execute(request, PlainHttpResponseUtils::from));
+                            pb.stepTo(Math.round(pb.getElapsedAfterStart().toMillis() / (float) retryIntervalMillis));
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                        return responseRef.get();
+                    }, Duration.ofSeconds(pollingDurationSeconds), retryIntervalMillis, exponentialBackOff, matchConditions));
+                }
             }
         } catch (IOException e) {
             throw new RuntimeException("Could not execute HTTP request", e);

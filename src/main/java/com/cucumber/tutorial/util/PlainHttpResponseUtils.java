@@ -56,6 +56,12 @@ public class PlainHttpResponseUtils {
                 .headers(headers).build();
     }
 
+    public static String toOnelineReducedString(PlainHttpResponse response) {
+        return response != null ? response.getStatus() + " | "
+                + (response.getEntity() != null ? StringUtils.toOnelineReducedString(response.getEntity().toString(), 70) : "N/A")
+                : "";
+    }
+
     private static List<Map.Entry<String, String>> extractHeaders(HttpResponse response) {
         List<Map.Entry<String, String>> headers = new ArrayList<>();
         Arrays.stream(response.getHeaders()).forEach(h ->
