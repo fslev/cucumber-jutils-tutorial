@@ -26,7 +26,7 @@
         <guice.version>7.0.0</guice.version>
         <junit.platform.version>1.10.1</junit.platform.version>
         <surefire.version>3.2.2</surefire.version>
-        <http.client.version>5.2.1</http.client.version>
+        <http.client.version>5.2.2</http.client.version>
         <allure.cucumber.version>2.24.0</allure.cucumber.version>
         <tags>@notebook</tags>
         <concurrent>true</concurrent>
