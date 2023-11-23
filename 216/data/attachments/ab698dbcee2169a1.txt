@@ -1,0 +1,16 @@
+------------------ ACTUAL RESPONSE ------------------
+STATUS: 201 
+BODY: 
+{
+  "name" : "notebookA",
+  "currentPrice" : 0.0,
+  "lastUpdate" : "2023-11-23T13:10:44.832+00:00",
+  "id" : 9,
+  "_links" : {
+    "self" : {
+      "href" : "http://localhost:8090/api/notebooks/9"
+    }
+  }
+}
+HEADERS:
+[Content-Type=application/json, Transfer-Encoding=chunked, Date=Thu, 23 Nov 2023 13:10:44 GMT, Keep-Alive=timeout=60, Connection=keep-alive]
