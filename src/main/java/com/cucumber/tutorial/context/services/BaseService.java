@@ -23,7 +23,7 @@ public class BaseService extends BaseScenario {
                 wrapper.result = supplier.get();
                 scenarioVars.putAll(ObjectMatcher.match(null, expected, wrapper.result, matchConditions));
             } else {
-                try (ProgressBar pb = new ProgressBarBuilder().setTaskName("Polling |" + pollingIntervalInMillis + "ms / " + pollingTimeoutSeconds + "s| backoff " + exponentialBackoff + " |")
+                try (ProgressBar pb = new ProgressBarBuilder().setTaskName("Polling |" + pollingIntervalInMillis + "ms/" + pollingTimeoutSeconds + "s| backoff " + exponentialBackoff + " |")
                         .setInitialMax(Math.round((double) pollingTimeoutSeconds * 1000 / (pollingIntervalInMillis != null ? pollingIntervalInMillis : 3000)))
                         .setConsumer(new DelegatingProgressBarConsumer(c -> {
                             if (System.getProperty("hidePollingProgress") == null) {
