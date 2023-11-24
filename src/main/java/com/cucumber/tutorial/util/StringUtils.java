@@ -1,6 +1,8 @@
 package com.cucumber.tutorial.util;
 
 public class StringUtils {
+    private StringUtils() {
+    }
 
     public static String toOnelineReducedString(Object s, int limit) {
         return s != null ? crop(s.toString().replace(System.lineSeparator(), ""), limit) : null;

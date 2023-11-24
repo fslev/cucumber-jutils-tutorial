@@ -160,7 +160,7 @@ public abstract class HttpService extends BaseService {
                 responseRef.set(CLIENT.execute(request, PlainHttpResponseUtils::from));
                 scenarioVars.putAll(ObjectMatcher.matchHttpResponse(null, from(expected), responseRef.get(), matchConditions));
             } else {
-                try (ProgressBar pb = new ProgressBarBuilder().setTaskName("Polling |" + retryIntervalMillis + "ms / " + pollingDurationSeconds + "s| backoff " + exponentialBackOff + " |")
+                try (ProgressBar pb = new ProgressBarBuilder().setTaskName("Polling |" + retryIntervalMillis + "ms/" + pollingDurationSeconds + "s| backoff " + exponentialBackOff + " |")
                         .setInitialMax(Math.round(pollingDurationSeconds * 1000 / (double) retryIntervalMillis))
                         .setConsumer(new DelegatingProgressBarConsumer(c -> {
                             if (System.getProperty("hidePollingProgress") == null) {
