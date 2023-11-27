@@ -1,0 +1,22 @@
+------- API REQUEST (2023-11-27 11:12:19 UTC) -------
+
+GET http://localhost:8090/api/notebooks?page=0&pageSize=100
+HEADERS: [Accept: application/json, Content-Type: application/json]
+BODY: N/A
+
+----------------- EXPECTED RESPONSE -----------------
+{
+  "status": 200,
+  "body": {
+    "_embedded": {
+      "noteBookList": [
+        {
+          "#($.[?(@.id == '9')])": [
+            "!.*"
+          ]
+        }
+      ]
+    }
+  }
+}
+
