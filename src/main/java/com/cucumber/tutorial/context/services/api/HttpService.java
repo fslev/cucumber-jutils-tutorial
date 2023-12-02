@@ -39,13 +39,11 @@ import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.time.Duration;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static com.cucumber.tutorial.util.PlainHttpResponseUtils.from;
-import static org.awaitility.Awaitility.await;
 
 public abstract class HttpService extends BaseService {
 
@@ -169,13 +167,15 @@ public abstract class HttpService extends BaseService {
                                 System.err.println("\r" + c + PlainHttpResponseUtils.toOnelineReducedString(responseRef.get()));
                             }
                         })).build()) {
-                    await("Polling HTTP response").pollDelay(Duration.ZERO).pollInterval(Duration.ofMillis(retryIntervalMillis))
-                            .atMost(pollingDurationSeconds, TimeUnit.SECONDS)
-                            .untilAsserted(() -> {
-                                responseRef.set(CLIENT.execute(request, PlainHttpResponseUtils::from));
-                                pb.stepTo(Math.round(pb.getElapsedAfterStart().toMillis() / (float) retryIntervalMillis));
-                                scenarioVars.putAll(ObjectMatcher.matchHttpResponse(null, from(expected), responseRef.get()));
-                            });
+                    scenarioVars.putAll(ObjectMatcher.matchHttpResponse(null, from(expected), () -> {
+                        try {
+                            responseRef.set(CLIENT.execute(request, PlainHttpResponseUtils::from));
+                            pb.stepTo(Math.round(pb.getElapsedAfterStart().toMillis() / (float) retryIntervalMillis));
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                        return responseRef.get();
+                    }, Duration.ofSeconds(pollingDurationSeconds), retryIntervalMillis, exponentialBackOff, matchConditions));
                 }
             }
         } catch (IOException e) {

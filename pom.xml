@@ -27,7 +27,6 @@
         <junit.platform.version>1.10.1</junit.platform.version>
         <surefire.version>3.2.2</surefire.version>
         <http.client.version>5.2.3</http.client.version>
-        <awaitility.version>4.2.0</awaitility.version>
         <allure.cucumber.version>2.24.0</allure.cucumber.version>
         <tags>@notebook</tags>
         <concurrent>true</concurrent>
@@ -64,11 +63,6 @@
             <groupId>org.apache.httpcomponents.client5</groupId>
             <artifactId>httpclient5</artifactId>
             <version>${http.client.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.awaitility</groupId>
-            <artifactId>awaitility</artifactId>
-            <version>${awaitility.version}</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>

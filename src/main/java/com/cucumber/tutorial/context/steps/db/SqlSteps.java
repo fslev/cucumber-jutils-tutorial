@@ -15,9 +15,6 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
-
-import static org.awaitility.Awaitility.await;
 
 @ScenarioScoped
 public class SqlSteps extends BaseScenario {
@@ -59,15 +56,14 @@ public class SqlSteps extends BaseScenario {
         try {
             this.client.connect();
             this.client.prepareStatement(query);
-
-
-            await("Polling HTTP response").pollDelay(Duration.ZERO)
-                    .pollInterval(Duration.ofMillis(3000))
-                    .atMost(pollingTimeoutSeconds, TimeUnit.SECONDS)
-                    .untilAsserted(() ->
-                            scenarioVars.putAll(
-                                    ObjectMatcher.match(null, expected, client.executeQueryAndGetRsAsList(),
-                                            MatchCondition.JSON_NON_EXTENSIBLE_OBJECT, MatchCondition.JSON_NON_EXTENSIBLE_ARRAY)));
+            scenarioVars.putAll(ObjectMatcher.match(null, expected, () -> {
+                        try {
+                            return client.executeQueryAndGetRsAsList();
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }, Duration.ofSeconds(pollingTimeoutSeconds),
+                    null, null, MatchCondition.JSON_NON_EXTENSIBLE_OBJECT, MatchCondition.JSON_NON_EXTENSIBLE_ARRAY));
         } finally {
             this.client.close();
         }
