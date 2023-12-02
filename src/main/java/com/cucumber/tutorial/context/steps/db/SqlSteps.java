@@ -61,7 +61,7 @@ public class SqlSteps extends BaseScenario {
             this.client.connect();
             this.client.prepareStatement(query);
             try {
-                await("Polling HTTP response").pollDelay(Duration.ZERO)
+                await("Polling response").pollDelay(Duration.ZERO)
                         .pollInterval(Duration.ofMillis(3000))
                         .atMost(pollingTimeoutSeconds, TimeUnit.SECONDS)
                         .untilAsserted(() ->
