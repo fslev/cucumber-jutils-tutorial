@@ -69,7 +69,11 @@ public class SqlSteps extends BaseScenario {
                                         ObjectMatcher.match(null, expected, client.executeQueryAndGetRsAsList(),
                                                 MatchCondition.JSON_NON_EXTENSIBLE_OBJECT, MatchCondition.JSON_NON_EXTENSIBLE_ARRAY)));
             } catch (ConditionTimeoutException e) {
-                throw (AssertionError) e.getCause();
+                if (e.getCause() instanceof AssertionError) {
+                    throw (AssertionError) e.getCause();
+                } else {
+                    throw e;
+                }
             }
         } finally {
             this.client.close();

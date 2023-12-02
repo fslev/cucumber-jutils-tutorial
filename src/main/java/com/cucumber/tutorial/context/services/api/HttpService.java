@@ -178,7 +178,11 @@ public abstract class HttpService extends BaseScenario {
                                 });
                     } catch (ConditionTimeoutException e) {
                         pb.stepTo(pb.getElapsedAfterStart().toSeconds());
-                        throw (AssertionError) e.getCause();
+                        if (e.getCause() instanceof AssertionError) {
+                            throw (AssertionError) e.getCause();
+                        } else {
+                            throw e;
+                        }
                     }
                 }
             }
