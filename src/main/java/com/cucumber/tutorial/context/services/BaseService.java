@@ -7,6 +7,7 @@ import io.jtest.utils.matcher.condition.MatchCondition;
 import me.tongfei.progressbar.DelegatingProgressBarConsumer;
 import me.tongfei.progressbar.ProgressBar;
 import me.tongfei.progressbar.ProgressBarBuilder;
+import org.awaitility.core.ConditionTimeoutException;
 
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
@@ -33,15 +34,18 @@ public class BaseService extends BaseScenario {
                                 System.err.println("\r" + c + StringUtils.toOnelineReducedString(wrapper.result, 80));
                             }
                         })).build()) {
-
-                    await("Polling HTTP response").pollDelay(Duration.ZERO)
-                            .pollInterval(Duration.ofMillis(pollingIntervalInMillis != null ? pollingIntervalInMillis : 3000))
-                            .atMost(pollingTimeoutSeconds, TimeUnit.SECONDS)
-                            .untilAsserted(() -> {
-                                wrapper.result = supplier.get();
-                                pb.stepTo(Math.round((float) pb.getElapsedAfterStart().toMillis() / (pollingIntervalInMillis != null ? pollingIntervalInMillis : 3000)));
-                                scenarioVars.putAll(ObjectMatcher.match(null, expected, wrapper.result));
-                            });
+                    try {
+                        await("Polling HTTP response").pollDelay(Duration.ZERO)
+                                .pollInterval(Duration.ofMillis(pollingIntervalInMillis != null ? pollingIntervalInMillis : 3000))
+                                .atMost(pollingTimeoutSeconds, TimeUnit.SECONDS)
+                                .untilAsserted(() -> {
+                                    wrapper.result = supplier.get();
+                                    pb.stepTo(Math.round((float) pb.getElapsedAfterStart().toMillis() / (pollingIntervalInMillis != null ? pollingIntervalInMillis : 3000)));
+                                    scenarioVars.putAll(ObjectMatcher.match(null, expected, wrapper.result));
+                                });
+                    } catch (ConditionTimeoutException e) {
+                        throw (AssertionError) e.getCause();
+                    }
                 }
             }
             return wrapper.result;

@@ -23,6 +23,7 @@ import org.apache.hc.core5.http.ParseException;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
 import org.apache.hc.core5.net.URIBuilder;
+import org.awaitility.core.ConditionTimeoutException;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
@@ -169,13 +170,17 @@ public abstract class HttpService extends BaseService {
                                 System.err.println("\r" + c + PlainHttpResponseUtils.toOnelineReducedString(responseRef.get()));
                             }
                         })).build()) {
-                    await("Polling HTTP response").pollDelay(Duration.ZERO).pollInterval(Duration.ofMillis(retryIntervalMillis))
-                            .atMost(pollingDurationSeconds, TimeUnit.SECONDS)
-                            .untilAsserted(() -> {
-                                responseRef.set(CLIENT.execute(request, PlainHttpResponseUtils::from));
-                                pb.stepTo(Math.round(pb.getElapsedAfterStart().toMillis() / (float) retryIntervalMillis));
-                                scenarioVars.putAll(ObjectMatcher.matchHttpResponse(null, from(expected), responseRef.get()));
-                            });
+                    try {
+                        await("Polling HTTP response").pollDelay(Duration.ZERO).pollInterval(Duration.ofMillis(retryIntervalMillis))
+                                .atMost(pollingDurationSeconds, TimeUnit.SECONDS)
+                                .untilAsserted(() -> {
+                                    responseRef.set(CLIENT.execute(request, PlainHttpResponseUtils::from));
+                                    pb.stepTo(Math.round(pb.getElapsedAfterStart().toMillis() / (float) retryIntervalMillis));
+                                    scenarioVars.putAll(ObjectMatcher.matchHttpResponse(null, from(expected), responseRef.get()));
+                                });
+                    } catch (ConditionTimeoutException e) {
+                        throw (AssertionError) e.getCause();
+                    }
                 }
             }
         } catch (IOException e) {

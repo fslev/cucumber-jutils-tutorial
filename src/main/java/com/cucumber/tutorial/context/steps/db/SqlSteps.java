@@ -8,6 +8,7 @@ import io.cucumber.java.en.Then;
 import io.jtest.utils.common.ResourceUtils;
 import io.jtest.utils.matcher.ObjectMatcher;
 import io.jtest.utils.matcher.condition.MatchCondition;
+import org.awaitility.core.ConditionTimeoutException;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -59,15 +60,17 @@ public class SqlSteps extends BaseScenario {
         try {
             this.client.connect();
             this.client.prepareStatement(query);
-
-
-            await("Polling HTTP response").pollDelay(Duration.ZERO)
-                    .pollInterval(Duration.ofMillis(3000))
-                    .atMost(pollingTimeoutSeconds, TimeUnit.SECONDS)
-                    .untilAsserted(() ->
-                            scenarioVars.putAll(
-                                    ObjectMatcher.match(null, expected, client.executeQueryAndGetRsAsList(),
-                                            MatchCondition.JSON_NON_EXTENSIBLE_OBJECT, MatchCondition.JSON_NON_EXTENSIBLE_ARRAY)));
+            try {
+                await("Polling HTTP response").pollDelay(Duration.ZERO)
+                        .pollInterval(Duration.ofMillis(3000))
+                        .atMost(pollingTimeoutSeconds, TimeUnit.SECONDS)
+                        .untilAsserted(() ->
+                                scenarioVars.putAll(
+                                        ObjectMatcher.match(null, expected, client.executeQueryAndGetRsAsList(),
+                                                MatchCondition.JSON_NON_EXTENSIBLE_OBJECT, MatchCondition.JSON_NON_EXTENSIBLE_ARRAY)));
+            } catch (ConditionTimeoutException e) {
+                throw (AssertionError) e.getCause();
+            }
         } finally {
             this.client.close();
         }
