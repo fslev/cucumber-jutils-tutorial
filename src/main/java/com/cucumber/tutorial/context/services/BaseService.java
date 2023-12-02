@@ -37,7 +37,7 @@ public class BaseService extends BaseScenario {
                             }
                         })).build()) {
                     try {
-                        await("Polling response").pollDelay(Duration.ZERO)
+                        await("Polling response").pollDelay(Duration.ZERO).pollInSameThread()
                                 .pollInterval(pollInterval != null ? pollInterval : FixedPollInterval.fixed(Duration.ofSeconds(3)))
                                 .atMost(pollingTimeoutSeconds, TimeUnit.SECONDS)
                                 .untilAsserted(() -> {
