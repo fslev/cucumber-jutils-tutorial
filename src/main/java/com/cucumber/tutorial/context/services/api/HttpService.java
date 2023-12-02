@@ -1,6 +1,6 @@
 package com.cucumber.tutorial.context.services.api;
 
-import com.cucumber.tutorial.context.services.BaseService;
+import com.cucumber.tutorial.context.BaseScenario;
 import com.cucumber.tutorial.util.DateUtils;
 import com.cucumber.tutorial.util.PlainHttpResponseUtils;
 import io.json.compare.util.JsonUtils;
@@ -24,6 +24,8 @@ import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
 import org.apache.hc.core5.net.URIBuilder;
 import org.awaitility.core.ConditionTimeoutException;
+import org.awaitility.pollinterval.FixedPollInterval;
+import org.awaitility.pollinterval.PollInterval;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
@@ -48,7 +50,7 @@ import java.util.stream.Collectors;
 import static com.cucumber.tutorial.util.PlainHttpResponseUtils.from;
 import static org.awaitility.Awaitility.await;
 
-public abstract class HttpService extends BaseService {
+public abstract class HttpService extends BaseScenario {
 
     private static final CloseableHttpClient CLIENT = defaultHttpClientBuilder().build();
 
@@ -129,7 +131,7 @@ public abstract class HttpService extends BaseService {
     }
 
     public PlainHttpResponse executeAndMatch(String expected, MatchCondition... matchConditions) {
-        return executeAndMatch(expected, null, null, matchConditions);
+        return executeAndMatch(expected, null, null, null, matchConditions);
     }
 
     public PlainHttpResponse executeAndMatch(String expected, Consumer<PlainHttpResponse> consumer, MatchCondition... matchConditions) {
@@ -137,25 +139,20 @@ public abstract class HttpService extends BaseService {
     }
 
     public PlainHttpResponse executeAndMatch(String expected, Integer pollingTimeoutSeconds, MatchCondition... matchConditions) {
-        return executeAndMatch(expected, pollingTimeoutSeconds, 3000, matchConditions);
+        return executeAndMatch(expected, pollingTimeoutSeconds, null, matchConditions);
     }
 
     public PlainHttpResponse executeAndMatch(String expected, Consumer<PlainHttpResponse> consumer, Integer pollingTimeoutSeconds, MatchCondition... matchConditions) {
-        return executeAndMatch(expected, consumer, pollingTimeoutSeconds, 3000, matchConditions);
+        return executeAndMatch(expected, consumer, pollingTimeoutSeconds, null, matchConditions);
     }
 
     public PlainHttpResponse executeAndMatch(String expected, Integer pollingTimeoutSeconds,
-                                             long retryIntervalMillis, MatchCondition... matchConditions) {
-        return executeAndMatch(expected, null, pollingTimeoutSeconds, retryIntervalMillis, null, matchConditions);
+                                             PollInterval pollInterval, MatchCondition... matchConditions) {
+        return executeAndMatch(expected, null, pollingTimeoutSeconds, pollInterval, matchConditions);
     }
 
-    public PlainHttpResponse executeAndMatch(String expected, Consumer<PlainHttpResponse> consumer, Integer pollingTimeoutSeconds,
-                                             long retryIntervalMillis, MatchCondition... matchConditions) {
-        return executeAndMatch(expected, consumer, pollingTimeoutSeconds, retryIntervalMillis, null, matchConditions);
-    }
-
-    public PlainHttpResponse executeAndMatch(String expected, Consumer<PlainHttpResponse> consumer, Integer pollingDurationSeconds, long retryIntervalMillis,
-                                             Double exponentialBackOff, MatchCondition... matchConditions) {
+    public PlainHttpResponse executeAndMatch(String expected, Consumer<PlainHttpResponse> consumer, Integer pollingDurationSeconds,
+                                             PollInterval pollInterval, MatchCondition... matchConditions) {
         logRequestAndExpectedResult(expected);
         final AtomicReference<PlainHttpResponse> responseRef = new AtomicReference<>();
         try {
@@ -163,22 +160,24 @@ public abstract class HttpService extends BaseService {
                 responseRef.set(CLIENT.execute(request, PlainHttpResponseUtils::from));
                 scenarioVars.putAll(ObjectMatcher.matchHttpResponse(null, from(expected), responseRef.get(), matchConditions));
             } else {
-                try (ProgressBar pb = new ProgressBarBuilder().setTaskName("Polling |" + retryIntervalMillis + "ms/" + pollingDurationSeconds + "s| backoff " + exponentialBackOff + " |")
-                        .setInitialMax(Math.round(pollingDurationSeconds * 1000 / (double) retryIntervalMillis))
+                try (ProgressBar pb = new ProgressBarBuilder().setTaskName("Polling")
+                        .setInitialMax(pollingDurationSeconds)
                         .setConsumer(new DelegatingProgressBarConsumer(c -> {
                             if (System.getProperty("hidePollingProgress") == null) {
                                 System.err.println("\r" + c + PlainHttpResponseUtils.toOnelineReducedString(responseRef.get()));
                             }
                         })).build()) {
                     try {
-                        await("Polling HTTP response").pollDelay(Duration.ZERO).pollInterval(Duration.ofMillis(retryIntervalMillis))
+                        await("Polling HTTP response").pollDelay(Duration.ZERO).pollInterval(pollInterval != null ?
+                                        pollInterval : FixedPollInterval.fixed(Duration.ofSeconds(3)))
                                 .atMost(pollingDurationSeconds, TimeUnit.SECONDS)
                                 .untilAsserted(() -> {
                                     responseRef.set(CLIENT.execute(request, PlainHttpResponseUtils::from));
-                                    pb.stepTo(Math.round(pb.getElapsedAfterStart().toMillis() / (float) retryIntervalMillis));
+                                    pb.stepTo(pb.getElapsedAfterStart().toSeconds());
                                     scenarioVars.putAll(ObjectMatcher.matchHttpResponse(null, from(expected), responseRef.get()));
                                 });
                     } catch (ConditionTimeoutException e) {
+                        pb.stepTo(pb.getElapsedAfterStart().toSeconds());
                         throw (AssertionError) e.getCause();
                     }
                 }

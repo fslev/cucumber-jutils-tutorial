@@ -5,6 +5,7 @@ import com.cucumber.tutorial.context.services.BaseService;
 import com.cucumber.tutorial.util.DateUtils;
 import io.cucumber.guice.ScenarioScoped;
 import io.jtest.utils.matcher.condition.MatchCondition;
+import org.awaitility.pollinterval.PollInterval;
 
 @ScenarioScoped
 public class BashService extends BaseService {
@@ -20,10 +21,10 @@ public class BashService extends BaseService {
         return executeAndMatch(cmd, pollingTimeoutSeconds, null, expected, matchConditions);
     }
 
-    public String executeAndMatch(String cmd, Integer pollingTimeoutSeconds, Double exponentialBackoff, String expected, MatchCondition... matchConditions) {
+    public String executeAndMatch(String cmd, Integer pollingTimeoutSeconds, PollInterval pollInterval, String expected, MatchCondition... matchConditions) {
         scenarioUtils.log("[{}] BASH CMD: -----------------\n\n{}\n\n---------------------- EXPECTED ----------------------\n{}\n",
                 DateUtils.currentDateTime(), cmd, expected);
         return executeAndMatch(expected, () -> shellClient.execute("bash", "-c", cmd),
-                pollingTimeoutSeconds, 3000L, exponentialBackoff, matchConditions);
+                pollingTimeoutSeconds, pollInterval, matchConditions);
     }
 }

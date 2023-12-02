@@ -8,6 +8,8 @@ import me.tongfei.progressbar.DelegatingProgressBarConsumer;
 import me.tongfei.progressbar.ProgressBar;
 import me.tongfei.progressbar.ProgressBarBuilder;
 import org.awaitility.core.ConditionTimeoutException;
+import org.awaitility.pollinterval.FixedPollInterval;
+import org.awaitility.pollinterval.PollInterval;
 
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
@@ -18,7 +20,7 @@ import static org.awaitility.Awaitility.await;
 public class BaseService extends BaseScenario {
 
     protected <T> T executeAndMatch(String expected, Supplier<T> supplier, Integer pollingTimeoutSeconds,
-                                    Long pollingIntervalInMillis, Double exponentialBackoff, MatchCondition... matchConditions) {
+                                    PollInterval pollInterval, MatchCondition... matchConditions) {
         var wrapper = new Object() {
             T result;
         };
@@ -27,23 +29,24 @@ public class BaseService extends BaseScenario {
                 wrapper.result = supplier.get();
                 scenarioVars.putAll(ObjectMatcher.match(null, expected, wrapper.result, matchConditions));
             } else {
-                try (ProgressBar pb = new ProgressBarBuilder().setTaskName("Polling |" + pollingIntervalInMillis + "ms/" + pollingTimeoutSeconds + "s| backoff " + exponentialBackoff + " |")
-                        .setInitialMax(Math.round((double) pollingTimeoutSeconds * 1000 / (pollingIntervalInMillis != null ? pollingIntervalInMillis : 3000)))
+                try (ProgressBar pb = new ProgressBarBuilder().setTaskName("Polling")
+                        .setInitialMax(pollingTimeoutSeconds)
                         .setConsumer(new DelegatingProgressBarConsumer(c -> {
                             if (System.getProperty("hidePollingProgress") == null) {
                                 System.err.println("\r" + c + StringUtils.toOnelineReducedString(wrapper.result, 80));
                             }
                         })).build()) {
                     try {
-                        await("Polling HTTP response").pollDelay(Duration.ZERO)
-                                .pollInterval(Duration.ofMillis(pollingIntervalInMillis != null ? pollingIntervalInMillis : 3000))
+                        await("Polling for response").pollDelay(Duration.ZERO)
+                                .pollInterval(pollInterval != null ? pollInterval : FixedPollInterval.fixed(Duration.ofSeconds(3)))
                                 .atMost(pollingTimeoutSeconds, TimeUnit.SECONDS)
                                 .untilAsserted(() -> {
                                     wrapper.result = supplier.get();
-                                    pb.stepTo(Math.round((float) pb.getElapsedAfterStart().toMillis() / (pollingIntervalInMillis != null ? pollingIntervalInMillis : 3000)));
+                                    pb.stepTo(pb.getElapsedAfterStart().toSeconds());
                                     scenarioVars.putAll(ObjectMatcher.match(null, expected, wrapper.result));
                                 });
                     } catch (ConditionTimeoutException e) {
+                        pb.stepTo(pb.getElapsedAfterStart().toSeconds());
                         throw (AssertionError) e.getCause();
                     }
                 }
