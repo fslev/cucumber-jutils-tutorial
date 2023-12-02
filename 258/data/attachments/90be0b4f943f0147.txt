@@ -1,0 +1,16 @@
+------------------ ACTUAL RESPONSE ------------------
+STATUS: 201 
+BODY: 
+{
+  "name" : "Notebook without price",
+  "currentPrice" : 0.0,
+  "lastUpdate" : "2023-12-02T22:43:37.427+00:00",
+  "id" : 12,
+  "_links" : {
+    "self" : {
+      "href" : "http://localhost:8090/api/notebooks/12"
+    }
+  }
+}
+HEADERS:
+[Content-Type=application/json, Transfer-Encoding=chunked, Date=Sat, 02 Dec 2023 22:43:36 GMT, Keep-Alive=timeout=60, Connection=keep-alive]
