@@ -174,7 +174,7 @@ public abstract class HttpService extends BaseScenario {
                                 .untilAsserted(() -> {
                                     responseRef.set(CLIENT.execute(request, PlainHttpResponseUtils::from));
                                     pb.stepTo(pb.getElapsedAfterStart().toSeconds());
-                                    scenarioVars.putAll(ObjectMatcher.matchHttpResponse(null, from(expected), responseRef.get()));
+                                    scenarioVars.putAll(ObjectMatcher.matchHttpResponse(null, from(expected), responseRef.get(), matchConditions));
                                 });
                     } catch (ConditionTimeoutException e) {
                         pb.stepTo(pb.getElapsedAfterStart().toSeconds());

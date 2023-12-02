@@ -43,7 +43,7 @@ public class BaseService extends BaseScenario {
                                 .untilAsserted(() -> {
                                     wrapper.result = supplier.get();
                                     pb.stepTo(pb.getElapsedAfterStart().toSeconds());
-                                    scenarioVars.putAll(ObjectMatcher.match(null, expected, wrapper.result));
+                                    scenarioVars.putAll(ObjectMatcher.match(null, expected, wrapper.result, matchConditions));
                                 });
                     } catch (ConditionTimeoutException e) {
                         pb.stepTo(pb.getElapsedAfterStart().toSeconds());
