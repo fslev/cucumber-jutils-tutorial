@@ -9,7 +9,10 @@ import me.tongfei.progressbar.ProgressBar;
 import me.tongfei.progressbar.ProgressBarBuilder;
 
 import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
+
+import static org.awaitility.Awaitility.await;
 
 public class BaseService extends BaseScenario {
 
@@ -30,11 +33,15 @@ public class BaseService extends BaseScenario {
                                 System.err.println("\r" + c + StringUtils.toOnelineReducedString(wrapper.result, 80));
                             }
                         })).build()) {
-                    scenarioVars.putAll(ObjectMatcher.match(null, expected, () -> {
-                        wrapper.result = supplier.get();
-                        pb.stepTo(Math.round((float) pb.getElapsedAfterStart().toMillis() / (pollingIntervalInMillis != null ? pollingIntervalInMillis : 3000)));
-                        return wrapper.result;
-                    }, Duration.ofSeconds(pollingTimeoutSeconds), pollingIntervalInMillis, exponentialBackoff, matchConditions));
+
+                    await("Polling HTTP response").pollDelay(Duration.ZERO)
+                            .pollInterval(Duration.ofMillis(pollingIntervalInMillis != null ? pollingIntervalInMillis : 3000))
+                            .atMost(pollingTimeoutSeconds, TimeUnit.SECONDS)
+                            .untilAsserted(() -> {
+                                wrapper.result = supplier.get();
+                                pb.stepTo(Math.round((float) pb.getElapsedAfterStart().toMillis() / (pollingIntervalInMillis != null ? pollingIntervalInMillis : 3000)));
+                                scenarioVars.putAll(ObjectMatcher.match(null, expected, wrapper.result));
+                            });
                 }
             }
             return wrapper.result;
