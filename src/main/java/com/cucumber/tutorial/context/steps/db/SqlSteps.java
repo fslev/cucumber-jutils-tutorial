@@ -66,7 +66,7 @@ public class SqlSteps extends BaseScenario {
                         .atMost(pollingTimeoutSeconds, TimeUnit.SECONDS)
                         .untilAsserted(() ->
                                 scenarioVars.putAll(
-                                        ObjectMatcher.match(null, expected, client.executeQueryAndGetRsAsList(),
+                                        ObjectMatcher.matchJson(null, expected, client.executeQueryAndGetRsAsList(),
                                                 MatchCondition.JSON_NON_EXTENSIBLE_OBJECT, MatchCondition.JSON_NON_EXTENSIBLE_ARRAY)));
             } catch (ConditionTimeoutException e) {
                 if (e.getCause() instanceof AssertionError) {
