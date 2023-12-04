@@ -29,7 +29,7 @@ public class BaseService extends BaseScenario {
                 wrapper.result = supplier.get();
                 scenarioVars.putAll(ObjectMatcher.match(null, expected, wrapper.result, matchConditions));
             } else {
-                try (ProgressBar pb = new ProgressBarBuilder().setTaskName("Polling")
+                try (ProgressBar pb = new ProgressBarBuilder().setTaskName("Polling | " + pollingTimeoutSeconds + "s")
                         .setInitialMax(pollingTimeoutSeconds)
                         .setConsumer(new DelegatingProgressBarConsumer(c -> {
                             if (System.getProperty("hidePollingProgress") == null) {

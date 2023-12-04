@@ -160,7 +160,7 @@ public abstract class HttpService extends BaseScenario {
                 responseRef.set(CLIENT.execute(request, PlainHttpResponseUtils::from));
                 scenarioVars.putAll(ObjectMatcher.matchHttpResponse(null, from(expected), responseRef.get(), matchConditions));
             } else {
-                try (ProgressBar pb = new ProgressBarBuilder().setTaskName("Polling")
+                try (ProgressBar pb = new ProgressBarBuilder().setTaskName("Polling | " + pollingDurationSeconds + "s")
                         .setInitialMax(pollingDurationSeconds)
                         .setConsumer(new DelegatingProgressBarConsumer(c -> {
                             if (System.getProperty("hidePollingProgress") == null) {
