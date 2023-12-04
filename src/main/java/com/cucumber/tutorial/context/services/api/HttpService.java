@@ -168,7 +168,7 @@ public abstract class HttpService extends BaseScenario {
                             }
                         })).build()) {
                     try {
-                        await("Polling HTTP response").pollDelay(Duration.ofSeconds(-1)).pollInterval(pollInterval != null ?
+                        await("Polling HTTP response").pollDelay(Duration.ZERO).pollInterval(pollInterval != null ?
                                         pollInterval : FixedPollInterval.fixed(Duration.ofSeconds(3))).pollInSameThread()
                                 .atMost(pollingDurationSeconds, TimeUnit.SECONDS)
                                 .untilAsserted(() -> {
