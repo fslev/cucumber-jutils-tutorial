@@ -60,19 +60,25 @@ public class SqlSteps extends BaseScenario {
         try {
             this.client.connect();
             this.client.prepareStatement(query);
-            try {
-                await("Polling response").pollDelay(Duration.ZERO)
-                        .pollInterval(Duration.ofMillis(3000)).pollInSameThread()
-                        .atMost(pollingTimeoutSeconds, TimeUnit.SECONDS)
-                        .untilAsserted(() ->
-                                scenarioVars.putAll(
-                                        ObjectMatcher.matchJson(null, expected, client.executeQueryAndGetRsAsList(),
-                                                MatchCondition.JSON_NON_EXTENSIBLE_OBJECT, MatchCondition.JSON_NON_EXTENSIBLE_ARRAY)));
-            } catch (ConditionTimeoutException e) {
-                if (e.getCause() instanceof AssertionError) {
-                    throw (AssertionError) e.getCause();
-                } else {
-                    throw e;
+            if (pollingTimeoutSeconds == null || pollingTimeoutSeconds == 0) {
+                scenarioVars.putAll(
+                        ObjectMatcher.matchJson(null, expected, client.executeQueryAndGetRsAsList(),
+                                MatchCondition.JSON_NON_EXTENSIBLE_OBJECT, MatchCondition.JSON_NON_EXTENSIBLE_ARRAY));
+            } else {
+                try {
+                    await("Polling response").pollDelay(Duration.ZERO)
+                            .pollInterval(Duration.ofMillis(3000)).pollInSameThread()
+                            .atMost(pollingTimeoutSeconds, TimeUnit.SECONDS)
+                            .untilAsserted(() ->
+                                    scenarioVars.putAll(
+                                            ObjectMatcher.matchJson(null, expected, client.executeQueryAndGetRsAsList(),
+                                                    MatchCondition.JSON_NON_EXTENSIBLE_OBJECT, MatchCondition.JSON_NON_EXTENSIBLE_ARRAY)));
+                } catch (ConditionTimeoutException e) {
+                    if (e.getCause() instanceof AssertionError) {
+                        throw (AssertionError) e.getCause();
+                    } else {
+                        throw e;
+                    }
                 }
             }
         } finally {
