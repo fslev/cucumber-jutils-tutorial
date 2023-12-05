@@ -1,0 +1,11 @@
+------------------ ACTUAL RESPONSE ------------------
+STATUS: 202 
+BODY: 
+{
+  "name" : "New updated name 1",
+  "currentPrice" : 1079.11,
+  "lastUpdate" : "2023-12-05T11:51:09.986+00:00",
+  "id" : 1
+}
+HEADERS:
+[Content-Type=application/json, Transfer-Encoding=chunked, Date=Tue, 05 Dec 2023 11:51:09 GMT, Keep-Alive=timeout=60, Connection=keep-alive]
