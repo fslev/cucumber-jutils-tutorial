@@ -1,0 +1,10 @@
+------- API REQUEST (2023-12-05 11:52:55 UTC) -------
+
+PATCH http://localhost:8090/api/notebooks/0
+HEADERS: [Content-Type: application/json, Accept: application/json]
+BODY: 
+{"name":"test","currentPrice":101.0,"id":"13"}
+
+----------------- EXPECTED RESPONSE -----------------
+{"status":404}
+
