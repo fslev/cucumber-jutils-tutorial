@@ -1,0 +1,16 @@
+------------------ ACTUAL RESPONSE ------------------
+STATUS: 201 
+BODY: 
+{
+  "name" : "Asus ZEN Pro book invalid test",
+  "currentPrice" : 1500.0,
+  "lastUpdate" : "2023-12-12T12:59:47.300+00:00",
+  "id" : 14,
+  "_links" : {
+    "self" : {
+      "href" : "http://localhost:8090/api/notebooks/14"
+    }
+  }
+}
+HEADERS:
+[Content-Type=application/json, Transfer-Encoding=chunked, Date=Tue, 12 Dec 2023 12:59:46 GMT, Keep-Alive=timeout=60, Connection=keep-alive]
