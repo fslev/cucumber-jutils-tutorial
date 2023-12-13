@@ -1,6 +1,0 @@
------------------- ACTUAL RESPONSE ------------------
-STATUS: 202 
-BODY: 
-
-HEADERS:
-[Content-Length=0, Date=Wed, 06 Dec 2023 13:07:26 GMT, Keep-Alive=timeout=60, Connection=keep-alive]
