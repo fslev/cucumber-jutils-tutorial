@@ -1,6 +1,0 @@
------------------- ACTUAL RESPONSE ------------------
-STATUS: 404 
-BODY: 
-
-HEADERS:
-[Content-Length=0, Date=Tue, 12 Dec 2023 12:57:56 GMT, Keep-Alive=timeout=60, Connection=keep-alive]
