@@ -19,9 +19,29 @@ docker-compose up
 Notebook manager Swagger:  
 http://localhost:8090/swagger-ui.html  
 
+## Configure Cucumber tests from Intellij Idea
+
+### Requirements
+- __Intellij Idea__ version >= 2019.3
+- Latest version of [Cucumber for Java](https://plugins.jetbrains.com/plugin/7212-cucumber-for-java) and [Gherkin](https://plugins.jetbrains.com/plugin/9164-gherkin) plugins
+
+### Cucumber for Java plugin configuration
+
+[Cucumber for Java](https://plugins.jetbrains.com/plugin/7212-cucumber-for-java) plugin should by default read configuration from _junit-platform.properties_
+
+Also, for newer versions of Idea (>=2022) you need the following plugin setup:   
+`Run -> Edit configurations... -> Edit configuration templates -> Cucumber for Java -> Before launch -> Build project`
+
 ## Execution and Reports
 
-_Run tests from Maven:_
+### Run tests from Idea
+
+_src/test/resources/features:_
+```
+Right click any feature file or inside any feature file -> Run feature / Run scenario
+```
+
+### Run tests from Maven
 ```shell
 mvn clean -Plocal,allure-reports verify
 ```
