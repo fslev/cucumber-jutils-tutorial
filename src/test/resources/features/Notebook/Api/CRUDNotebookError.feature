@@ -47,6 +47,7 @@ Feature: CRUD notebook feature [ERROR cases]
     * # Invalid request body
     * Update notebook having id=#[notebookId] with requestBody=invalid and check response={"status":500}
     * Update notebook having id=#[notebookId] with requestBody={} and check response={"status":500}
+    * # Missing id inside request body
     * Update notebook having id=#[notebookId] with requestBody={"name":"test"} and check response={"status":500}
     * # Invalid id
     * Update notebook having id=0 with requestBody={"name":"test","currentPrice":101.0,"id":"#[notebookId]"} and check response={"status":404}
