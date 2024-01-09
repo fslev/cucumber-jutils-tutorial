@@ -1,0 +1,16 @@
+------------------ ACTUAL RESPONSE ------------------
+STATUS: 201 
+BODY: 
+{
+  "name" : "Asus ZEN Pro book db test",
+  "currentPrice" : 1500.0,
+  "lastUpdate" : "2024-01-09T21:31:26.354+00:00",
+  "id" : 16,
+  "_links" : {
+    "self" : {
+      "href" : "http://localhost:8090/api/notebooks/16"
+    }
+  }
+}
+HEADERS:
+[Content-Type=application/json, Transfer-Encoding=chunked, Date=Tue, 09 Jan 2024 21:31:25 GMT, Keep-Alive=timeout=60, Connection=keep-alive]
