@@ -1,0 +1,10 @@
+------- API REQUEST (2024-01-23 10:53:20 UTC) -------
+
+POST http://localhost:8090/api/notebooks
+HEADERS: [Content-Type: application/json, Accept: application/json]
+BODY: 
+{"name":"Notebook without price"}
+
+----------------- EXPECTED RESPONSE -----------------
+{"status":201,"body":{"id":"~[notebookId2]"}}
+
