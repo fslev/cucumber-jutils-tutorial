@@ -22,7 +22,7 @@ public class ScenarioInit extends BaseScenario {
     }
 
     @Before(order = 1)
-    public void initScenarioProps() {
+    public void initScenarioVars() {
         scenarioVars.putAll((Map) PROPS);
     }
 
