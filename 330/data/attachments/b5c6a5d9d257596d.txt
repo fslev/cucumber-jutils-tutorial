@@ -1,0 +1,9 @@
+------- API REQUEST (2024-03-22 15:29:46 UTC) -------
+
+GET http://localhost:8090/api/notebooks?page=10000&pageSize=100
+HEADERS: [Content-Type: application/json, Accept: application/json]
+BODY: N/A
+
+----------------- EXPECTED RESPONSE -----------------
+{"status":200, "body":{"!_embedded":".*"}}
+
