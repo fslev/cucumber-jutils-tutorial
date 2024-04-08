@@ -1,0 +1,10 @@
+------- API REQUEST (2024-04-08 15:37:40 UTC) -------
+
+PATCH http://localhost:8090/api/notebooks/13
+HEADERS: [Accept: application/json, Content-Type: application/json]
+BODY: 
+invalid
+
+----------------- EXPECTED RESPONSE -----------------
+{"status":500}
+
