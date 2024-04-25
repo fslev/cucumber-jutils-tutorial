@@ -1,1 +1,0 @@
-Execute query 'select id,name,current_price from note_book where id=12' and match with: [{name=Asus ZEN Pro book db delete test 1, id=12, current_price=1100.1}]
