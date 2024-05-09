@@ -1,0 +1,6 @@
+------------------ ACTUAL RESPONSE ------------------
+STATUS: 500 
+BODY: 
+
+HEADERS:
+[Content-Length=0, Date=Thu, 09 May 2024 15:23:01 GMT, Connection=close]
