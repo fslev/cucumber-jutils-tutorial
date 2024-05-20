@@ -1,0 +1,14 @@
+------- API REQUEST (2024-05-20 12:31:44 UTC) -------
+
+PATCH http://localhost:8090/api/notebooks/2
+HEADERS: [Content-Type: application/json, Accept: application/json]
+BODY: 
+{
+  "name": "New updated name 2a",
+  "currentPrice": 79.09,
+  "id": "2"
+}
+
+----------------- EXPECTED RESPONSE -----------------
+{"status":202}
+
