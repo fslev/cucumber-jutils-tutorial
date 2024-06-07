@@ -1,0 +1,16 @@
+------------------ ACTUAL RESPONSE ------------------
+STATUS: 201 
+BODY: 
+{
+  "name" : "Lenovo A",
+  "currentPrice" : 2500.98,
+  "lastUpdate" : "2024-06-07T15:13:19.336+00:00",
+  "id" : 9,
+  "_links" : {
+    "self" : {
+      "href" : "http://localhost:8090/api/notebooks/9"
+    }
+  }
+}
+HEADERS:
+[Content-Type=application/json, Transfer-Encoding=chunked, Date=Fri, 07 Jun 2024 15:13:19 GMT, Keep-Alive=timeout=60, Connection=keep-alive]
