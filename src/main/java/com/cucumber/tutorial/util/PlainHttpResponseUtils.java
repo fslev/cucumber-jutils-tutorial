@@ -38,7 +38,7 @@ public class PlainHttpResponseUtils {
     public static PlainHttpResponse from(ClassicHttpResponse response) {
         Integer status = response.getCode();
         String reasonPhrase = response.getReasonPhrase();
-        List<Map.Entry<String, String>> headers = extractHeaders(response);
+        List<Map.Entry<String, Object>> headers = extractHeaders(response);
         String content = null;
         HttpEntity entity = response.getEntity();
         if (entity != null) {
@@ -65,8 +65,8 @@ public class PlainHttpResponseUtils {
                 : "";
     }
 
-    private static List<Map.Entry<String, String>> extractHeaders(HttpResponse response) {
-        List<Map.Entry<String, String>> headers = new ArrayList<>();
+    private static List<Map.Entry<String, Object>> extractHeaders(HttpResponse response) {
+        List<Map.Entry<String, Object>> headers = new ArrayList<>();
         Arrays.stream(response.getHeaders()).forEach(h ->
                 headers.add(new AbstractMap.SimpleEntry<>(h.getName(), h.getValue())));
         return headers;
