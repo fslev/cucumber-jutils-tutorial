@@ -21,7 +21,6 @@ import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
 import org.apache.hc.core5.http.Method;
 import org.apache.hc.core5.http.ParseException;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
-import org.apache.hc.core5.http.message.BasicNameValuePair;
 import org.apache.hc.core5.net.URIBuilder;
 import org.awaitility.core.ConditionTimeoutException;
 import org.awaitility.pollinterval.FixedPollInterval;
@@ -41,11 +40,11 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.time.Duration;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import static com.cucumber.tutorial.util.PlainHttpResponseUtils.from;
 import static org.awaitility.Awaitility.await;
@@ -81,7 +80,7 @@ public abstract class HttpService extends BaseScenario {
     }
 
     protected URI uri(String path, Map<String, Object> pathParams) {
-        return uri(path, pathParams, null);
+        return uri(path, pathParams, (Map<String, String>) null);
     }
 
     protected URI uri(String path, Map<String, Object> pathParams, Map<String, String> nonEmptyQueryParams) {
@@ -89,24 +88,30 @@ public abstract class HttpService extends BaseScenario {
     }
 
     protected URI uri(String path, Map<String, Object> pathParams, Map<String, String> nonEmptyQueryParams, Map<String, String> rawQueryParams) {
-        return uri(address(), path, pathParams, nonEmptyQueryParams, rawQueryParams);
+        return uri(address(), path, pathParams,
+                nonEmptyQueryParams != null ? List.of(nonEmptyQueryParams) : null, rawQueryParams != null ? List.of(rawQueryParams) : null);
     }
 
-    public static URI uri(String address, String path, Map<String, Object> pathParams, Map<String, String> nonEmptyQueryParams, Map<String, String> rawQueryParams) {
+    protected URI uri(String path, Map<String, Object> pathParams, List<Map<String, String>> rawQueryParams) {
+        return uri(address(), path, pathParams, null, rawQueryParams);
+    }
+
+    public static URI uri(String address, String path, Map<String, Object> pathParams,
+                          List<Map<String, String>> nonEmptyQueryParamsList, List<Map<String, String>> rawQueryParamsList) {
         URIBuilder uriBuilder;
         try {
             uriBuilder = new URIBuilder(address);
             if (path != null) {
                 uriBuilder.appendPath(StringFormat.replaceProps(path, pathParams));
             }
-            if (nonEmptyQueryParams != null) {
-                uriBuilder.addParameters(nonEmptyQueryParams.entrySet().stream()
-                        .filter(e -> e.getValue() != null && !e.getValue().isEmpty())
-                        .map(param -> new BasicNameValuePair(param.getKey(), param.getValue())).collect(Collectors.toList()));
+            if (nonEmptyQueryParamsList != null) {
+                nonEmptyQueryParamsList
+                        .forEach(queryParam ->
+                                queryParam.entrySet().stream().filter(e -> e.getValue() != null && !e.getValue().isEmpty())
+                                        .forEach(entry -> uriBuilder.addParameter(entry.getKey(), entry.getValue())));
             }
-            if (rawQueryParams != null) {
-                uriBuilder.addParameters(rawQueryParams.entrySet().stream()
-                        .map(param -> new BasicNameValuePair(param.getKey(), param.getValue())).collect(Collectors.toList()));
+            if (rawQueryParamsList != null) {
+                rawQueryParamsList.forEach(queryParam -> queryParam.forEach(uriBuilder::addParameter));
             }
             return uriBuilder.build();
         } catch (URISyntaxException e) {
