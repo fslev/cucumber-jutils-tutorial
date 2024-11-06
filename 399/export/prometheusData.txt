@@ -7,5 +7,7 @@ launch_time_duration 0
 launch_time_min_duration 0
 launch_time_max_duration 0
 launch_time_sum_duration 0
+launch_time_start 0
+launch_time_stop 0
 launch_retries_retries 0
 launch_retries_run 0
