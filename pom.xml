@@ -21,13 +21,14 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <cucumber.version>7.18.0</cucumber.version>
-        <cucumber.jutils.version>9.21</cucumber.jutils.version>
+        <cucumber.jutils.version>9.24</cucumber.jutils.version>
+        <cucumber.bom.version>7.21.1</cucumber.bom.version>
+        <junit.bom.version>5.12.0</junit.bom.version>
+        <jackson.bom.version>2.18.3</jackson.bom.version>
         <guice.version>7.0.0</guice.version>
-        <junit.platform.version>1.10.2</junit.platform.version>
-        <surefire.version>3.2.5</surefire.version>
+        <surefire.version>3.5.2</surefire.version>
         <http.client.version>5.3.1</http.client.version>
-        <awaitility.version>4.2.1</awaitility.version>
+        <awaitility.version>4.3.0</awaitility.version>
         <allure.cucumber.version>2.27.0</allure.cucumber.version>
         <tags>@notebook</tags>
         <concurrent>true</concurrent>
@@ -37,17 +38,41 @@
         </cucumber.plugin>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>${junit.bom.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.cucumber</groupId>
+                <artifactId>cucumber-bom</artifactId>
+                <version>${cucumber.bom.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>${jackson.bom.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <!--Cucumber dependencies-->
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-java</artifactId>
-            <version>${cucumber.version}</version>
         </dependency>
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-guice</artifactId>
-            <version>${cucumber.version}</version>
         </dependency>
         <dependency>
             <groupId>io.github.fslev</groupId>
@@ -84,13 +109,11 @@
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-junit-platform-engine</artifactId>
-            <version>${cucumber.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-suite</artifactId>
-            <version>${junit.platform.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -125,12 +148,6 @@
                     <artifactId>allure-cucumber7-jvm</artifactId>
                     <version>${allure.cucumber.version}</version>
                     <scope>test</scope>
-                    <exclusions>
-                        <exclusion>
-                            <groupId>io.cucumber</groupId>
-                            <artifactId>gherkin</artifactId>
-                        </exclusion>
-                    </exclusions>
                 </dependency>
             </dependencies>
             <build>
@@ -208,7 +225,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
+                <version>3.14.0</version>
                 <configuration>
                     <source>11</source>
                     <target>11</target>
