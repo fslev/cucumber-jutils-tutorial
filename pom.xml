@@ -23,7 +23,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <cucumber.jutils.version>9.24</cucumber.jutils.version>
         <cucumber.bom.version>7.21.1</cucumber.bom.version>
-        <junit.bom.version>5.12.0</junit.bom.version>
+        <junit.bom.version>5.12.1</junit.bom.version>
         <jackson.bom.version>2.18.3</jackson.bom.version>
         <guice.version>7.0.0</guice.version>
         <surefire.version>3.5.2</surefire.version>
