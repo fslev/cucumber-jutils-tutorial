@@ -30,7 +30,6 @@ import org.apache.hc.core5.http.ParseException;
 import org.apache.hc.core5.http.io.SocketConfig;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.protocol.HttpContext;
-import org.apache.hc.core5.http.ssl.TLS;
 import org.apache.hc.core5.net.URIBuilder;
 import org.apache.hc.core5.pool.PoolConcurrencyPolicy;
 import org.apache.hc.core5.pool.PoolReusePolicy;
@@ -77,7 +76,6 @@ public abstract class HttpService extends BaseScenario {
                     .setTlsSocketStrategy((TlsSocketStrategy) ClientTlsStrategyBuilder.create()
                             .setSslContext(ctx)
                             .setHostnameVerifier(new NoopHostnameVerifier())
-                            .setTlsVersions(TLS.V_1_3)
                             .build())
                     .setDefaultSocketConfig(SocketConfig.custom().setSoTimeout(Timeout.ofSeconds(601)).build())
                     .setPoolConcurrencyPolicy(PoolConcurrencyPolicy.STRICT)
