@@ -11,17 +11,31 @@ import io.jtest.utils.matcher.http.PlainHttpResponse;
 import me.tongfei.progressbar.DelegatingProgressBarConsumer;
 import me.tongfei.progressbar.ProgressBar;
 import me.tongfei.progressbar.ProgressBarBuilder;
+import org.apache.hc.client5.http.HttpRequestRetryStrategy;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
+import org.apache.hc.client5.http.config.ConnectionConfig;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
+import org.apache.hc.client5.http.ssl.ClientTlsStrategyBuilder;
 import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
-import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.client5.http.ssl.TlsSocketStrategy;
+import org.apache.hc.core5.http.HttpRequest;
+import org.apache.hc.core5.http.HttpResponse;
+import org.apache.hc.core5.http.HttpStatus;
 import org.apache.hc.core5.http.Method;
 import org.apache.hc.core5.http.ParseException;
+import org.apache.hc.core5.http.io.SocketConfig;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.hc.core5.http.protocol.HttpContext;
+import org.apache.hc.core5.http.ssl.TLS;
 import org.apache.hc.core5.net.URIBuilder;
+import org.apache.hc.core5.pool.PoolConcurrencyPolicy;
+import org.apache.hc.core5.pool.PoolReusePolicy;
+import org.apache.hc.core5.util.TimeValue;
+import org.apache.hc.core5.util.Timeout;
 import org.awaitility.core.ConditionTimeoutException;
 import org.awaitility.pollinterval.FixedPollInterval;
 import org.awaitility.pollinterval.PollInterval;
@@ -59,9 +73,26 @@ public abstract class HttpService extends BaseScenario {
         try {
             SSLContext ctx = SSLContext.getInstance("TLS");
             ctx.init(new KeyManager[0], new TrustManager[]{new DefaultTrustManager()}, new SecureRandom());
+            PoolingHttpClientConnectionManager connectionManager = PoolingHttpClientConnectionManagerBuilder.create()
+                    .setTlsSocketStrategy((TlsSocketStrategy) ClientTlsStrategyBuilder.create()
+                            .setSslContext(ctx)
+                            .setHostnameVerifier(new NoopHostnameVerifier())
+                            .setTlsVersions(TLS.V_1_3)
+                            .build())
+                    .setDefaultSocketConfig(SocketConfig.custom().setSoTimeout(Timeout.ofSeconds(601)).build())
+                    .setPoolConcurrencyPolicy(PoolConcurrencyPolicy.STRICT)
+                    .setConnPoolPolicy(PoolReusePolicy.FIFO)
+                    .setDefaultConnectionConfig(ConnectionConfig.custom()
+                            .setSocketTimeout(Timeout.ofSeconds(601))
+                            .setConnectTimeout(Timeout.ofSeconds(601))
+                            .setTimeToLive(TimeValue.ofSeconds(601))
+                            .build())
+                    .setMaxConnPerRoute(10)
+                    .build();
+
             return HttpClients.custom()
-                    .setConnectionManager(PoolingHttpClientConnectionManagerBuilder.create()
-                            .setSSLSocketFactory(new SSLConnectionSocketFactory(ctx, new NoopHostnameVerifier())).build());
+                    .setConnectionManager(connectionManager)
+                    .setRetryStrategy(new CustomRequestRetryStrategy());
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
             throw new RuntimeException(e);
         }
@@ -229,6 +260,39 @@ public abstract class HttpService extends BaseScenario {
             return JsonUtils.prettyPrint(content);
         } catch (IOException e) {
             return content;
+        }
+    }
+
+    protected static class CustomRequestRetryStrategy implements HttpRequestRetryStrategy {
+        private static final int MAX_RETRIES = 5;
+
+        @Override
+        public boolean retryRequest(HttpRequest httpRequest, IOException e, int count, HttpContext httpContext) {
+            if (count < MAX_RETRIES) {
+                LOG.error("Got request error {}. Retry {}...", e.getMessage(), count);
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public boolean retryRequest(HttpResponse response, int count, HttpContext httpContext) {
+            if (count <= MAX_RETRIES && (response.getCode() == HttpStatus.SC_GATEWAY_TIMEOUT
+                    || response.getCode() == HttpStatus.SC_SERVICE_UNAVAILABLE)) {
+                LOG.warn("Got {} {}. Retry {}...", response.getCode(), response.getReasonPhrase(), count);
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public TimeValue getRetryInterval(HttpResponse response, int count, HttpContext context) {
+            return TimeValue.ofSeconds(10);
+        }
+
+        @Override
+        public TimeValue getRetryInterval(HttpRequest request, IOException e, int count, HttpContext context) {
+            return TimeValue.ofSeconds(5);
         }
     }
 
