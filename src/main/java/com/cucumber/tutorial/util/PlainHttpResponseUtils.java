@@ -31,7 +31,7 @@ public class PlainHttpResponseUtils {
         try {
             return mapper.readValue(content, PlainHttpResponse.class);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Cannot convert to PlainHttpResponse object:\n" + content, e);
         }
     }
 
