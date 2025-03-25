@@ -32,11 +32,12 @@ public class PlainHttpResponseUtils {
             return mapper.readValue(content, PlainHttpResponse.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Cannot convert to PlainHttpResponse object:\n" + content+"\n\nExpected:\n{\n" +
-                    "  [optional] \"status\": <object>,\n" +
-                    "  [optional] \"reason\": \"<text>\",\n" +
-                    "  [optional] \"body\": <object>,\n" +
-                    "  [optional] \"headers\": <json array> ex: [ {\"h1\": \"v1\"}, {\"h2\": \"v2\"} ]\n" +
-                    "}", e);        }
+                    "  [optional] \"status\": <JsonNode>,\n" +
+                    "  [optional] \"reason\": \"<TextNode>\",\n" +
+                    "  [optional] \"body\": <JsonNode>,\n" +
+                    "  [optional] \"headers\": <ArrayNode> ex: [ {\"h1\": \"v1\"}, {\"h2\": \"v2\"} ]\n" +
+                    "}", e);
+        }
     }
 
     public static PlainHttpResponse from(ClassicHttpResponse response) {
