@@ -19,9 +19,9 @@ import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
-import org.apache.hc.client5.http.ssl.ClientTlsStrategyBuilder;
+import org.apache.hc.client5.http.ssl.DefaultClientTlsStrategy;
+import org.apache.hc.client5.http.ssl.HostnameVerificationPolicy;
 import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
-import org.apache.hc.client5.http.ssl.TlsSocketStrategy;
 import org.apache.hc.core5.http.HttpRequest;
 import org.apache.hc.core5.http.HttpResponse;
 import org.apache.hc.core5.http.HttpStatus;
@@ -73,10 +73,8 @@ public abstract class HttpService extends BaseScenario {
             SSLContext ctx = SSLContext.getInstance("TLS");
             ctx.init(new KeyManager[0], new TrustManager[]{new DefaultTrustManager()}, new SecureRandom());
             PoolingHttpClientConnectionManager connectionManager = PoolingHttpClientConnectionManagerBuilder.create()
-                    .setTlsSocketStrategy((TlsSocketStrategy) ClientTlsStrategyBuilder.create()
-                            .setSslContext(ctx)
-                            .setHostnameVerifier(new NoopHostnameVerifier())
-                            .build())
+                    .setTlsSocketStrategy(new DefaultClientTlsStrategy(ctx, HostnameVerificationPolicy.CLIENT,
+                            NoopHostnameVerifier.INSTANCE))
                     .setDefaultSocketConfig(SocketConfig.custom().setSoTimeout(Timeout.ofSeconds(601)).build())
                     .setPoolConcurrencyPolicy(PoolConcurrencyPolicy.STRICT)
                     .setConnPoolPolicy(PoolReusePolicy.FIFO)
