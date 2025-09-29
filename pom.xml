@@ -29,7 +29,7 @@
         <surefire.version>3.5.4</surefire.version>
         <http.client.version>5.5.1</http.client.version>
         <awaitility.version>4.3.0</awaitility.version>
-        <allure.cucumber.version>2.27.0</allure.cucumber.version>
+        <allure.cucumber.version>2.30.0</allure.cucumber.version>
         <tags>@notebook</tags>
         <concurrent>true</concurrent>
         <threads>8</threads>
