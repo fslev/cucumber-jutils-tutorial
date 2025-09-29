@@ -27,7 +27,7 @@
         <jackson.bom.version>2.20.0</jackson.bom.version>
         <guice.version>7.0.0</guice.version>
         <surefire.version>3.5.4</surefire.version>
-        <http.client.version>5.4.3</http.client.version>
+        <http.client.version>5.5.1</http.client.version>
         <awaitility.version>4.3.0</awaitility.version>
         <allure.cucumber.version>2.27.0</allure.cucumber.version>
         <tags>@notebook</tags>
