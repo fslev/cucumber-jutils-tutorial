@@ -21,7 +21,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <cucumber.jutils.version>9.24</cucumber.jutils.version>
+        <cucumber.jutils.version>9.29</cucumber.jutils.version>
         <cucumber.bom.version>7.34.3</cucumber.bom.version>
         <junit.bom.version>6.1.0</junit.bom.version>
         <jackson.bom.version>2.21.3</jackson.bom.version>
