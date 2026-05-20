@@ -65,8 +65,8 @@ public class PlainHttpResponseUtils {
     }
 
     public static String toOnelineReducedString(PlainHttpResponse response) {
-        return response != null ? response.getStatus() + " | "
-                + (response.getEntity() != null ? StringUtils.toOnelineReducedString(response.getEntity().toString(), 70) : "N/A")
+        return response != null ? response.status() + " | "
+                + (response.entity() != null ? StringUtils.toOnelineReducedString(response.entity().toString(), 70) : "N/A")
                 : "";
     }
 

@@ -21,13 +21,13 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <cucumber.jutils.version>9.29</cucumber.jutils.version>
+        <cucumber.jutils.version>10.0</cucumber.jutils.version>
         <cucumber.bom.version>7.34.3</cucumber.bom.version>
         <junit.bom.version>6.1.0</junit.bom.version>
         <jackson.bom.version>2.21.3</jackson.bom.version>
         <guice.version>7.0.0</guice.version>
         <surefire.version>3.5.5</surefire.version>
-        <http.client.version>5.5.1</http.client.version>
+        <http.client.version>5.6.1</http.client.version>
         <awaitility.version>4.3.0</awaitility.version>
         <allure.cucumber.version>2.34.0</allure.cucumber.version>
         <tags>@notebook</tags>

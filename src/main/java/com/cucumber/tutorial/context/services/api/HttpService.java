@@ -246,9 +246,9 @@ public abstract class HttpService extends BaseScenario {
 
     private void logResponse(PlainHttpResponse response) {
         scenarioUtils.log("------------------ ACTUAL RESPONSE ------------------\nSTATUS: {} {}\nBODY: \n{}\nHEADERS:\n{}\n",
-                response.getStatus(), response.getReasonPhrase(),
-                (response.getEntity() != null) ? prettyPrint(response.getEntity().toString()) : "Empty data <∅>",
-                response.getHeaders());
+                response.status(), response.reasonPhrase(),
+                (response.entity() != null) ? prettyPrint(response.entity().toString()) : "Empty data <∅>",
+                response.headers());
     }
 
     private static String prettyPrint(String content) {
